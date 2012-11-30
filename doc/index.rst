@@ -7,16 +7,21 @@ Collections can be seen as more specialized arrays for which certain contracts a
 Supported Collections:
 
 - Sequences
+
   - Keys: numerical, consequentially increasing, no gaps
   - Values: anything, duplicates allowed
   - Classes: ``Sequence``, ``SortedSequence``
 
+
 - Maps
+
   - Keys: strings or objects, duplicate keys not allowed
   - Values: anything, duplicates allowed
   - Classes: ``Map``, ``ObjectMap`` (not yet implemented)
 
+
 - Sets (not yet implemented)
+
   - Keys: not meaningful
   - Values: anything, each value must be unique (===)
   - Classes: ``Set``
