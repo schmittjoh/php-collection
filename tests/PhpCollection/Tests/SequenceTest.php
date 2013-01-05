@@ -14,8 +14,8 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        $this->assertSame(0, $this->seq->get(0)->get());
-        $this->assertSame($this->a, $this->seq->get(1)->get());
+        $this->assertSame(0, $this->seq->get(0));
+        $this->assertSame($this->a, $this->seq->get(1));
     }
 
     public function testIndexOf()
@@ -131,9 +131,9 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdate()
     {
-        $this->assertSame(0, $this->seq->get(0)->get());
+        $this->assertSame(0, $this->seq->get(0));
         $this->seq->update(0, 5);
-        $this->assertSame(5, $this->seq->get(0)->get());
+        $this->assertSame(5, $this->seq->get(0));
     }
 
     /**

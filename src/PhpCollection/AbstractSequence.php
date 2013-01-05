@@ -44,7 +44,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      */
     public function __construct(array $elements = array())
     {
-        $this->elements = $elements;
+        $this->elements = array_values($elements);
     }
 
     public function addSequence(SequenceInterface $seq)
@@ -141,10 +141,10 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     public function get($index)
     {
         if ( ! isset($this->elements[$index])) {
-            return None::create();
+            throw new OutOfBoundsException(sprintf('The index "%s" does not exist in this sequence.', $index));
         }
 
-        return new Some($this->elements[$index]);
+        return $this->elements[$index];
     }
 
     /**

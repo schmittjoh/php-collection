@@ -112,7 +112,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * @param integer $index (0-based)
      *
-     * @return Option<T>
+     * @return T
      */
     public function get($index);
 
