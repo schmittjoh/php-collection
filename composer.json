@@ -7,7 +7,7 @@
         {"name": "Johannes M. Schmitt", "email": "schmittjoh@gmail.com"}
     ],
     "require": {
-        "phpoption/phpoption": ">=0.9,<2.0-dev"
+        "phpoption/phpoption": "1.*"
     },
     "autoload": {
         "psr-0": {
@@ -16,7 +16,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.1-dev"
+            "dev-master": "0.2-dev"
         }
     }
 }

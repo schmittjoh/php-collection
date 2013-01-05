@@ -55,8 +55,7 @@ Sequences
 
     // Read Operations
     $seq = new Sequence([0, 2, 3, 2]);
-    $seq->get(2); // Some(2)
-    $seq->get(2)->get(); // int(2)
+    $seq->get(2); // int(2)
     $seq->all(); // [0, 2, 3, 2]
 
     $seq->first(); // Some(0)
@@ -64,11 +63,11 @@ Sequences
 
     // Write Operations
     $seq = new Sequence([1, 5]);
-    $seq->get(0)->get(); // int(1)
+    $seq->get(0); // int(1)
     $seq->update(0, 4);
-    $seq->get(0)->get(); // int(4)
+    $seq->get(0); // int(4)
     $seq->remove(0);
-    $seq->get(0)->get(); // int(5)
+    $seq->get(0); // int(5)
 
     $seq = new Sequence([1, 4]);
     $seq->add(2);
