@@ -24,6 +24,7 @@ use PhpOption\None;
 /**
  * A simple map implementation which basically wraps an array with an object oriented interface.
  *
+ * @IgnoreAnnotation("template")
  * @template {K extends string} This implementation only supports strings as keys.
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>

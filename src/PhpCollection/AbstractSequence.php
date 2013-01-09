@@ -31,6 +31,7 @@ use OutOfBoundsException;
  *
  * This sequence is mutable.
  *
+ * @IgnoreAnnotation("template")
  * @template T The type that this sequence contains.
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>

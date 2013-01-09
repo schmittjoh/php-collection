@@ -21,6 +21,7 @@ namespace PhpCollection;
 /**
  * Basic map interface.
  *
+ * @IgnoreAnnotation("template")
  * @template K the type of the keys
  * @template V the type of the values
  *
