@@ -43,7 +43,7 @@ class SortedSequenceTest extends \PHPUnit_Framework_TestCase
                     return -1;
                 }
 
-                return $a > $b ? 1 : -1;
+                return $a - $b;
             }
 
             if (is_integer($b)) {
