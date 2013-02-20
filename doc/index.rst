@@ -55,7 +55,7 @@ Sequences
 
     // Read Operations
     $seq = new Sequence([0, 2, 3, 2]);
-    $seq->get(2); // int(2)
+    $seq->get(2); // int(3)
     $seq->all(); // [0, 2, 3, 2]
 
     $seq->first(); // Some(0)
