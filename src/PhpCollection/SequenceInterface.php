@@ -18,6 +18,8 @@
 
 namespace PhpCollection;
 
+use PhpOption\Option;
+
 /**
  * Interface for mutable sequences.
  *
