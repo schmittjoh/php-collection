@@ -169,6 +169,26 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $this->createNew($newElements);
     }
 
+    public function foldLeft($initialValue, $callable)
+    {
+        $value = $initialValue;
+        foreach ($this->elements as $elem) {
+            $value = call_user_func($callable, $value, $elem);
+        }
+
+        return $value;
+    }
+
+    public function foldRight($initialValue, $callable)
+    {
+        $value = $initialValue;
+        foreach (array_reverse($this->elements) as $elem) {
+            $value = call_user_func($callable, $elem, $value);
+        }
+
+        return $value;
+    }
+
     public function dropWhile($callable)
     {
         $newElements = array();

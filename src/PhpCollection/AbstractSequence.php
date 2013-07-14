@@ -118,6 +118,26 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this->createNew($newElements);
     }
 
+    public function foldLeft($initialValue, $callable)
+    {
+        $value = $initialValue;
+        foreach ($this->elements as $elem) {
+            $value = call_user_func($callable, $value, $elem);
+        }
+
+        return $value;
+    }
+
+    public function foldRight($initialValue, $callable)
+    {
+        $value = $initialValue;
+        foreach (array_reverse($this->elements) as $elem) {
+            $value = call_user_func($callable, $elem, $value);
+        }
+
+        return $value;
+    }
+
     /**
      * Finds the first index where the given callable returns true.
      *

@@ -112,6 +112,16 @@ class MapTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('a' => 'b', 'e' => 'f'), iterator_to_array($newMap));
     }
 
+    public function testFoldLeftRight()
+    {
+        $map = new Map(array('a' => 'b', 'c' => 'd', 'e' => 'f'));
+        $rsLeft = $map->foldLeft('', function($a, $b) { return $a.$b; });
+        $rsRight = $map->foldRight('', function($a, $b) { return $a.$b; });
+
+        $this->assertEquals('bdf', $rsLeft);
+        $this->assertEquals('bdf', $rsRight);
+    }
+
     public function testDropWhile()
     {
         $newMap = $this->map->dropWhile(function($k, $v) { return 'foo' === $k || 'baz' === $v; });

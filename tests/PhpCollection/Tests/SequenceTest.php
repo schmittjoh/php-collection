@@ -57,6 +57,16 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(3, $newSeq->get(1));
     }
 
+    public function testFoldLeftRight()
+    {
+        $seq = new Sequence(array('a', 'b', 'c'));
+        $rsLeft = $seq->foldLeft('', function($a, $b) { return $a.$b; });
+        $rsRight = $seq->foldRight('', function($a, $b) { return $a.$b; });
+
+        $this->assertEquals('abc', $rsLeft);
+        $this->assertEquals('abc', $rsRight);
+    }
+
     public function testAddSequence()
     {
         $seq = new Sequence();
