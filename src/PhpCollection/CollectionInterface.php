@@ -40,4 +40,26 @@ interface CollectionInterface extends \Traversable, \Countable
      * @return boolean
      */
     public function isEmpty();
+
+    /**
+     * Returns a filtered collection of the same type.
+     *
+     * Removes all elements for which the provided callable returns false.
+     *
+     * @param callable $callable receives an element of the collection and must return true (= keep) or false (= remove).
+     *
+     * @return CollectionInterface
+     */
+    public function filter($callable);
+
+    /**
+     * Returns a filtered collection of the same type.
+     *
+     * Removes all elements for which the provided callable returns true.
+     *
+     * @param callable $callable receives an element of the collection and must return true (= remove) or false (= keep).
+     *
+     * @return CollectionInterface
+     */
+    public function filterNot($callable);
 }

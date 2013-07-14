@@ -131,6 +131,44 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return empty($this->elements);
     }
 
+    /**
+     * Returns a new filtered map.
+     *
+     * @param callable $callable receives the element and must return true (= keep), or false (= remove).
+     *
+     * @return AbstractMap
+     */
+    public function filter($callable)
+    {
+        return $this->filterInternal($callable, true);
+    }
+
+    /**
+     * Returns a new filtered map.
+     *
+     * @param callable $callable receives the element and must return true (= remove), or false (= keep).
+     *
+     * @return AbstractMap
+     */
+    public function filterNot($callable)
+    {
+        return $this->filterInternal($callable, false);
+    }
+
+    private function filterInternal($callable, $booleanKeep)
+    {
+        $newElements = array();
+        foreach ($this->elements as $k => $element) {
+            if ($booleanKeep !== call_user_func($callable, $element)) {
+                continue;
+            }
+
+            $newElements[$k] = $element;
+        }
+
+        return $this->createNew($newElements);
+    }
+
     public function dropWhile($callable)
     {
         $newElements = array();

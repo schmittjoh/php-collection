@@ -34,6 +34,29 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(-1, $this->seq->lastIndexOf(1));
     }
 
+    public function testFilter()
+    {
+        $seq = new Sequence(array(1, 2, 3));
+        $newSeq = $seq->filter(function($n) { return $n === 2; });
+
+        $this->assertNotSame($newSeq, $seq);
+        $this->assertCount(3, $seq);
+        $this->assertCount(1, $newSeq);
+        $this->assertSame(2, $newSeq->get(0));
+    }
+
+    public function testFilterNot()
+    {
+        $seq = new Sequence(array(1, 2, 3));
+        $newSeq = $seq->filterNot(function($n) { return $n === 2; });
+
+        $this->assertNotSame($newSeq, $seq);
+        $this->assertCount(3, $seq);
+        $this->assertCount(2, $newSeq);
+        $this->assertSame(1, $newSeq->get(0));
+        $this->assertSame(3, $newSeq->get(1));
+    }
+
     public function testAddSequence()
     {
         $seq = new Sequence();

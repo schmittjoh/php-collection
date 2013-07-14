@@ -90,6 +90,28 @@ class MapTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->map->isEmpty());
     }
 
+    public function testFilter()
+    {
+        $map = new Map(array('a' => 'b', 'c' => 'd', 'e' => 'f'));
+        $newMap = $map->filter(function($v) { return $v === 'd'; });
+
+        $this->assertNotSame($newMap, $map);
+        $this->assertCount(3, $map);
+        $this->assertCount(1, $newMap);
+        $this->assertEquals(array('c' => 'd'), iterator_to_array($newMap));
+    }
+
+    public function testFilterNot()
+    {
+        $map = new Map(array('a' => 'b', 'c' => 'd', 'e' => 'f'));
+        $newMap = $map->filterNot(function($v) { return $v === 'd'; });
+
+        $this->assertNotSame($newMap, $map);
+        $this->assertCount(3, $map);
+        $this->assertCount(2, $newMap);
+        $this->assertEquals(array('a' => 'b', 'e' => 'f'), iterator_to_array($newMap));
+    }
+
     public function testDropWhile()
     {
         $newMap = $this->map->dropWhile(function($k, $v) { return 'foo' === $k || 'baz' === $v; });

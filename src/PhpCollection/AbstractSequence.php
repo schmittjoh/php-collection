@@ -81,6 +81,44 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     }
 
     /**
+     * Returns a filtered sequence.
+     *
+     * @param callable $callable receives the element and must return true (= keep) or false (= remove).
+     *
+     * @return AbstractSequence
+     */
+    public function filter($callable)
+    {
+        return $this->filterInternal($callable, true);
+    }
+
+    /**
+     * Returns a filtered sequence.
+     *
+     * @param callable $callable receives the element and must return true (= remove) or false (= keep).
+     *
+     * @return AbstractSequence
+     */
+    public function filterNot($callable)
+    {
+        return $this->filterInternal($callable, false);
+    }
+
+    private function filterInternal($callable, $booleanKeep)
+    {
+        $newElements = array();
+        foreach ($this->elements as $element) {
+            if ($booleanKeep !== call_user_func($callable, $element)) {
+                continue;
+            }
+
+            $newElements[] = $element;
+        }
+
+        return $this->createNew($newElements);
+    }
+
+    /**
      * Finds the first index where the given callable returns true.
      *
      * @param callable $callable
