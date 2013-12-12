@@ -208,4 +208,13 @@ interface SequenceInterface extends CollectionInterface
      * @return CollectionInterface<T>
      */
     public function takeWhile($callable);
+
+    /**
+     * Creates a new collection by applying the passed callable to all elements
+     * of the current collection.
+     *
+     * @param callable $callable
+     * @return CollectionInterface
+     */
+    public function map($callable);
 }

@@ -92,6 +92,16 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this->filterInternal($callable, true);
     }
 
+    public function map($callable)
+    {
+        $newElements = array();
+        foreach ($this->elements as $i => $element) {
+            $newElements[$i] = $callable($element);
+        }
+
+        return $this->createNew($newElements);
+    }
+
     /**
      * Returns a filtered sequence.
      *

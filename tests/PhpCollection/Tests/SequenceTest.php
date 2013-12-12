@@ -8,6 +8,7 @@ use stdClass;
 
 class SequenceTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var Sequence */
     private $seq;
     private $a;
     private $b;
@@ -285,6 +286,29 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
     public function testRemoveWithInvalidIndex()
     {
         $this->seq->remove(9999);
+    }
+
+    public function testMap()
+    {
+        $this->seq->add('a');
+        $this->seq->add('b');
+
+        $newSeq = $this->seq->map(function($elem) {
+            switch ($elem) {
+                case 'a':
+                    return 'c';
+
+                case 'b':
+                    return 'd';
+
+                default:
+                    $this->fail('Unexpected element.');
+            }
+        });
+
+        $this->assertInstanceOf('PhpCollection\Sequence', $newSeq);
+        $this->assertNotSame($newSeq, $this->seq);
+        $this->assertEquals(array('c', 'd'), $newSeq->all());
     }
 
     protected function setUp()
