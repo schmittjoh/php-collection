@@ -293,7 +293,8 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
         $this->seq->add('a');
         $this->seq->add('b');
 
-        $newSeq = $this->seq->map(function($elem) {
+        $self = $this;
+        $newSeq = $this->seq->map(function($elem) use ($self) {
             switch ($elem) {
                 case 'a':
                     return 'c';
@@ -302,7 +303,7 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
                     return 'd';
 
                 default:
-                    $this->fail('Unexpected element.');
+                    $self->fail('Unexpected element.');
             }
         });
 
