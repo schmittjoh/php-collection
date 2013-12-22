@@ -290,11 +290,12 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
 
     public function testMap()
     {
-        $this->seq->add('a');
-        $this->seq->add('b');
+        $seq = new Sequence();
+        $seq->add('a');
+        $seq->add('b');
 
         $self = $this;
-        $newSeq = $this->seq->map(function($elem) use ($self) {
+        $newSeq = $seq->map(function($elem) use ($self) {
             switch ($elem) {
                 case 'a':
                     return 'c';
@@ -303,12 +304,12 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
                     return 'd';
 
                 default:
-                    $self->fail('Unexpected element.');
+                    $self->fail('Unexpected element: ' . var_export($elem, true));
             }
         });
 
         $this->assertInstanceOf('PhpCollection\Sequence', $newSeq);
-        $this->assertNotSame($newSeq, $this->seq);
+        $this->assertNotSame($newSeq, $seq);
         $this->assertEquals(array('c', 'd'), $newSeq->all());
     }
 
