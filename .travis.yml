@@ -3,6 +3,8 @@ language: php
 php:
   - 5.3
   - 5.4
+  - 5.5
+  - hhvm
 
 before_script:
     - curl -s http://getcomposer.org/installer | php
@@ -13,3 +15,6 @@ script: phpunit --coverage-clover clover
 after_success:
     - curl -sL https://bit.ly/artifact-uploader | php
 
+matrix:
+  allow_failures:
+    - php: hhvm
