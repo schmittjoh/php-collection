@@ -335,6 +335,17 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this->createNew(array_slice($this->elements, $i));
     }
 
+    public function exists($callable)
+    {
+        foreach ($this as $elem) {
+            if ($callable($elem) === true) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function count()
     {
         return count($this->elements);

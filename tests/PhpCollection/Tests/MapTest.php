@@ -6,7 +6,16 @@ use PhpCollection\Map;
 
 class MapTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var Map */
     private $map;
+
+    public function testExists()
+    {
+        $this->assertFalse($this->map->exists(function($k) { return $k === 0; }));
+
+        $this->map->set('foo', 'bar');
+        $this->assertTrue($this->map->exists(function($k, $v) { return $k === 'foo' && $v === 'bar'; }));
+    }
 
     public function testSet()
     {

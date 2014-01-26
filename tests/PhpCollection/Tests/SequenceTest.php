@@ -124,6 +124,17 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->seq->contains(new stdClass()));
     }
 
+    public function testExists()
+    {
+        $this->assertTrue($this->seq->exists(function($v) { return $v === 0; }));
+
+        $a = $this->a;
+        $this->assertTrue($this->seq->exists(function($v) use ($a) { return $v === $a; }));
+
+        $this->assertFalse($this->seq->exists(function($v) { return $v === 9999; }));
+        $this->assertFalse($this->seq->exists(function($v) { return $v === new \stdClass; }));
+    }
+
     public function testFind()
     {
         $a = $this->a;

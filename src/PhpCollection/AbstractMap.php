@@ -43,6 +43,17 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         $this->elements[$key] = $value;
     }
 
+    public function exists($callable)
+    {
+        foreach ($this as $k => $v) {
+            if ($callable($k, $v) === true) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Sets all key/value pairs in the map.
      *
