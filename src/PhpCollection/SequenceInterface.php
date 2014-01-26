@@ -32,37 +32,37 @@ interface SequenceInterface extends CollectionInterface
     /**
      * Returns the first element in the collection if available.
      *
-     * @return Option<T>
+     * @return Option
      */
     public function first();
 
     /**
      * Returns the last element in the collection if available.
      *
-     * @return Option<T>
+     * @return Option
      */
     public function last();
 
     /**
      * Returns all elements in this sequence.
      *
-     * @return array<T>
+     * @return array
      */
     public function all();
 
     /**
      * Adds the elements of another sequence to this sequence.
      *
-     * @param SequenceInterface<T> $seq
+     * @param SequenceInterface $seq
      *
-     * @return SequenceInterface<T>
+     * @return SequenceInterface
      */
     public function addSequence(SequenceInterface $seq);
 
     /**
      * Returns the index of the passed element.
      *
-     * @param T $elem
+     * @param mixed $elem
      *
      * @return integer the index (0-based), or -1 if not found
      */
@@ -71,7 +71,7 @@ interface SequenceInterface extends CollectionInterface
     /**
      * Returns the last index of the passed element.
      *
-     * @param T $elem
+     * @param mixed $elem
      * @return integer the index (0-based), or -1 if not found
      */
     public function lastIndexOf($elem);
@@ -105,7 +105,7 @@ interface SequenceInterface extends CollectionInterface
     /**
      * Returns all indices of this collection.
      *
-     * @return array<integer>
+     * @return integer[]
      */
     public function indices();
 
@@ -114,14 +114,14 @@ interface SequenceInterface extends CollectionInterface
      *
      * @param integer $index (0-based)
      *
-     * @return T
+     * @return mixed
      */
     public function get($index);
 
     /**
      * Adds an element to the sequence.
      *
-     * @param T $elem
+     * @param mixed $elem
      *
      * @return void
      */
@@ -132,14 +132,14 @@ interface SequenceInterface extends CollectionInterface
      *
      * @param integer $index
      *
-     * @return T
+     * @return mixed
      */
     public function remove($index);
 
     /**
      * Adds all elements to the sequence.
      *
-     * @param array<T> $elements
+     * @param array $elements
      *
      * @return void
      */
@@ -149,7 +149,7 @@ interface SequenceInterface extends CollectionInterface
      * Updates the value at the given index.
      *
      * @param integer $index
-     * @param T $value
+     * @param mixed $value
      *
      * @return void
      */
@@ -195,7 +195,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * @param integer $number
      *
-     * @return CollectionInterface<T>
+     * @return CollectionInterface
      */
     public function take($number);
 
@@ -205,7 +205,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * @param callable $callable
      *
-     * @return CollectionInterface<T>
+     * @return CollectionInterface
      */
     public function takeWhile($callable);
 

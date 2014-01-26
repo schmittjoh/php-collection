@@ -31,9 +31,6 @@ use OutOfBoundsException;
  *
  * This sequence is mutable.
  *
- * @IgnoreAnnotation("template")
- * @template T The type that this sequence contains.
- *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
 class AbstractSequence extends AbstractCollection implements \IteratorAggregate, SequenceInterface
@@ -41,7 +38,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     protected $elements;
 
     /**
-     * @param array<T> $elements
+     * @param array $elements
      */
     public function __construct(array $elements = array())
     {
@@ -289,7 +286,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      *
      * @param callable $callable receives elements of this sequence as first argument, and returns true/false.
      *
-     * @return Sequence<T>
+     * @return Sequence
      */
     public function takeWhile($callable)
     {

@@ -23,10 +23,6 @@ use PhpOption\Option;
 /**
  * Basic map interface.
  *
- * @IgnoreAnnotation("template")
- * @template K the type of the keys
- * @template V the type of the values
- *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
 interface MapInterface extends CollectionInterface
@@ -34,14 +30,14 @@ interface MapInterface extends CollectionInterface
     /**
      * Returns the first element in the collection if available.
      *
-     * @return Option<array<K,V>>
+     * @return Option on array<K,V>
      */
     public function first();
 
     /**
      * Returns the last element in the collection if available.
      *
-     * @return Option<array<K,V>>
+     * @return Option on array<K,V>
      */
     public function last();
 
@@ -50,23 +46,23 @@ interface MapInterface extends CollectionInterface
      *
      * @param callable $callable receives the element as first argument, and returns true, or false
      *
-     * @return Option<array<K,V>>
+     * @return Option on array<K,V>
      */
     public function find($callable);
 
     /**
      * Returns the value associated with the given key.
      *
-     * @param K $key
+     * @param mixed $key
      *
-     * @return Option<V>
+     * @return Option on V
      */
     public function get($key);
 
     /**
      * Returns whether this map contains a given key.
      *
-     * @param K $key
+     * @param mixed $key
      *
      * @return boolean
      */
@@ -75,8 +71,8 @@ interface MapInterface extends CollectionInterface
     /**
      * Puts a new element in the map.
      *
-     * @param K $key
-     * @param V $value
+     * @param mixed $key
+     * @param mixed $value
      *
      * @return void
      */
@@ -85,32 +81,32 @@ interface MapInterface extends CollectionInterface
     /**
      * Removes an element from the map.
      *
-     * @param K $key
+     * @param mixed $key
      *
-     * @return V
+     * @return mixed
      */
     public function remove($key);
 
     /**
      * Adds all another map to this map, and returns itself.
      *
-     * @param MapInterface<K,V> $map
+     * @param MapInterface $map
      *
-     * @return MapInterface<K,V>
+     * @return MapInterface
      */
     public function addMap(MapInterface $map);
 
     /**
      * Returns an array with the keys.
      *
-     * @return array<K>
+     * @return array
      */
     public function keys();
 
     /**
      * Returns an array with the values.
      *
-     * @return array<V>
+     * @return array
      */
     public function values();
 
@@ -121,7 +117,7 @@ interface MapInterface extends CollectionInterface
      *
      * @param integer $number
      *
-     * @return MapInterface<K,V>
+     * @return MapInterface
      */
     public function drop($number);
 
@@ -132,7 +128,7 @@ interface MapInterface extends CollectionInterface
      *
      * @param integer $number
      *
-     * @return MapInterface<K,V>
+     * @return MapInterface
      */
     public function dropRight($number);
 
@@ -141,7 +137,7 @@ interface MapInterface extends CollectionInterface
      *
      * @param callable $callable Receives the element to drop as first argument, and returns true (drop), or false (stop).
      *
-     * @return MapInterface<K,V>
+     * @return MapInterface
      */
     public function dropWhile($callable);
 
@@ -154,7 +150,7 @@ interface MapInterface extends CollectionInterface
      *
      * @param integer $number
      *
-     * @return MapInterface<K,V>
+     * @return MapInterface
      */
     public function take($number);
 
@@ -164,7 +160,7 @@ interface MapInterface extends CollectionInterface
      *
      * @param callable $callable
      *
-     * @return MapInterface<K,V>
+     * @return MapInterface
      */
     public function takeWhile($callable);
 }

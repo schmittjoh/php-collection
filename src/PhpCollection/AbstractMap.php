@@ -24,9 +24,6 @@ use PhpOption\None;
 /**
  * A simple map implementation which basically wraps an array with an object oriented interface.
  *
- * @IgnoreAnnotation("template")
- * @template {K extends string} This implementation only supports strings as keys.
- *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
 class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapInterface
@@ -57,7 +54,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     /**
      * Sets all key/value pairs in the map.
      *
-     * @param array<string,T> $kvMap
+     * @param array $kvMap
      *
      * @return void
      */
