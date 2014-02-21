@@ -26,7 +26,7 @@ use PhpOption\None;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapInterface
+class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapInterface, \ArrayAccess
 {
     protected $elements;
 
@@ -35,11 +35,36 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         $this->elements = $elements;
     }
 
+    /**
+     * Sets an entry in the map
+     * 
+     * @param mixed $key
+     * @param mixed $value
+     */
     public function set($key, $value)
     {
+        // To prevent adding a NULL key, the construction $map[] will 
+        // execute with $key == null and a map doest not support that.
+        if ($key == NULL) { 
+            throw new \InvalidArgumentException("Map cannot be used with an empty key");
+        }
         $this->elements[$key] = $value;
     }
 
+    /**
+     * Executes a function to find out if an element exists in the map
+     * The function will be executed with $key, $value as arguments and 
+     * should return a boolean. The function will return on the first 
+     * 
+     * For example:
+     * 
+     * function ($key, $value) { 
+     *    return ($value->getId() == 5);
+     * }
+     *  
+     * @param function $callable
+     * @return boolean
+     */
     public function exists($callable)
     {
         foreach ($this as $k => $v) {
@@ -70,6 +95,12 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         }
     }
 
+    /**
+     * Get an element from the map by key
+     * 
+     * @param mixed $key
+     * @return \PhpOption\Some
+     */
     public function get($key)
     {
         if (isset($this->elements[$key])) {
@@ -79,6 +110,14 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return None::create();
     }
 
+    /**
+     * Removes an entry by key, returns the element removed or an exception 
+     * when the element does not exist.
+     * 
+     * @param mixed $key
+     * @return mixed
+     * @throws \InvalidArgumentException
+     */
     public function remove($key)
     {
         if ( ! isset($this->elements[$key])) {
@@ -91,11 +130,20 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $element;
     }
 
+    /**
+     *  Empties the map
+     * 
+     */
     public function clear()
     {
         $this->elements = array();
     }
 
+    /**
+     * Get the first element of the map
+     * 
+     * @return \PhpOption\Some
+     */
     public function first()
     {
         if (empty($this->elements)) {
@@ -107,6 +155,11 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return new Some(array(key($this->elements), $elem));
     }
 
+    /**
+     * Get the last element of the map
+     * 
+     * @return \PhpOption\Some
+     */
     public function last()
     {
         if (empty($this->elements)) {
@@ -118,6 +171,12 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return new Some(array(key($this->elements), $elem));
     }
 
+    /**
+     * Checks if an element exists at least once
+     * 
+     * @param mixed $elem
+     * @return boolean
+     */
     public function contains($elem)
     {
         foreach ($this->elements as $existingElem) {
@@ -129,16 +188,26 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return false;
     }
 
+    /**
+     * Check is a key exists
+     * 
+     * @param mixed $key
+     * @return boolean
+     */
     public function containsKey($key)
     {
         return isset($this->elements[$key]);
     }
 
+    /**
+     * 
+     * @return type
+     */
     public function isEmpty()
     {
         return empty($this->elements);
     }
-
+    
     /**
      * Returns a new filtered map.
      *
@@ -177,6 +246,22 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $this->createNew($newElements);
     }
 
+    /**
+     * Executes a function to 'fold' the map beginning from 
+     * the first element until the last.
+     * 
+     * The function should be in the following form, $a will 
+     * be the initial value and $b the first element. After the $a 
+     * will be the result of the funtion and $b the next element.
+     * 
+     * function ($a, $b) {
+     *    return $result;
+     * }
+     * 
+     * @param mixed $initialValue
+     * @param function $callable
+     * @return mixed
+     */
     public function foldLeft($initialValue, $callable)
     {
         $value = $initialValue;
@@ -187,6 +272,14 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $value;
     }
 
+    /**
+     * Works the same as foldLeft but starts at the end and 
+     * works until the beginning.
+     * 
+     * @param mixed $initialValue
+     * @param function $callable
+     * @return mixed
+     */
     public function foldRight($initialValue, $callable)
     {
         $value = $initialValue;
@@ -292,4 +385,21 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     {
         return new static($elements);
     }
+
+    public function offsetExists($offset) {
+        return $this->containsKey($offset);
+    }
+
+    public function offsetGet($offset) {
+        return $this->get($offset);
+    }
+
+    public function offsetSet($offset, $value) {
+        return $this->set($offset, $value);
+    }
+
+    public function offsetUnset($offset) {
+        return $this->remove($offset);
+    }
+
 }

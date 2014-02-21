@@ -28,6 +28,24 @@ class MapTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('asdf', $this->map->get('foo')->get());
     }
 
+    public function testArrayAccess() 
+    {
+        $map = new Map();
+        $map[1] = 1;
+        $map[2] = 2;
+        $map[3] = 3;
+        
+        $this->assertSame(count($map), 3);
+        
+        $map[4] = 4;
+        
+        $this->assertSame(count($map), 4);
+        
+        unset($map[2]);
+        
+        $this->assertSame(count($map), 3);
+    }
+    
     public function testSetSetAll()
     {
         $this->map->setAll(array('foo' => 'asdf', 'bar' => array('foo')));

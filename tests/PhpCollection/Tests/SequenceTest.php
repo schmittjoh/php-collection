@@ -190,6 +190,24 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
         $this->seq->update(99999, 0);
     }
 
+    public function testArrayAccess() 
+    {
+        $seq = new Sequence();
+        $seq[] = 1;
+        $seq[] = 2;
+        $seq[] = 3;
+        
+        $this->assertSame(count($seq), 3);
+        
+        $seq[3] = 4;
+        
+        $this->assertSame(count($seq), 4);
+        
+        unset($seq[2]);
+        
+        $this->assertSame(count($seq), 3);
+    }
+    
     public function testAddAll()
     {
         $this->seq->addAll(array(2, 1, 3));
