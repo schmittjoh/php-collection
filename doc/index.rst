@@ -69,6 +69,11 @@ Sequences
     $seq->remove(0);
     $seq->get(0); // int(5)
 
+    // Array access, both operations works the same
+    $seq[] = 5;
+    $seq->add(5);
+    
+
     $seq = new Sequence([1, 4]);
     $seq->add(2);
     $seq->all(); // [1, 4, 2]
@@ -79,6 +84,11 @@ Sequences
     $seq = new Sequence([0, 5, 4, 2]);
     $seq->sortWith(function($a, $b) { return $a - $b; });
     $seq->all(); // [0, 2, 4, 5]
+
+    // Foldleft
+    $seq = new Sequence([1, 2, 3, 4]);
+    $seq->foldLeft(0, function($a, $b) { return $a + $b; }); // 10
+
 
 Maps
 ~~~~
@@ -104,6 +114,12 @@ Maps
 
     // Sort
     $map->sortWith('strcmp');
+
+    // With normal arrayaccess
+    $map = new Map();
+
+    $map[1] = 10;
+    $map[2] = 5;
 
 License
 -------
