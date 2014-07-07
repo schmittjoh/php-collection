@@ -224,4 +224,12 @@ interface SequenceInterface extends CollectionInterface
      * @return CollectionInterface
      */
     public function map($callable);
+
+    /**
+     * Iteratively reduce the collection to a single value using a callable
+     *
+     * @param callable $callable
+     * @return mixed
+     */
+    public function reduce($callable);
 }
