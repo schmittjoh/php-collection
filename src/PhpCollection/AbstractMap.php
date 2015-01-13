@@ -70,6 +70,11 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         }
     }
 
+    /**
+     * @param mixed $key
+     *
+     * @return \PhpOption\Option
+     */
     public function get($key)
     {
         if (isset($this->elements[$key])) {
