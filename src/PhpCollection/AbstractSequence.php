@@ -270,7 +270,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         $this->elements[] = $newElement;
     }
 
-    public function addAll(array $addedElements)
+    public function addAll($addedElements)
     {
         foreach ($addedElements as $newElement) {
             $this->elements[] = $newElement;
@@ -361,5 +361,35 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     protected function createNew(array $elements)
     {
         return new static($elements);
+    }
+
+   /**
+    * Creates a new collection by applying the passed callable to all elements
+    * of the current collection.
+    *
+    * @param callable $callable Callable takes (x : \Traversable) => \Traversable
+    *
+    * @return CollectionInterface
+    */
+    public function flatMap($callable)
+    {
+        return $this->map($callable)->flatten();
+    }
+
+    /**
+     * Returns a collection when any first level nesting is flattened into the single
+     * returned collection
+     *
+     * @return CollectionInterface
+     */
+    public function flatten()
+    {
+        $res = $this->createNew(array());
+
+        foreach ($this->elements as $elem){
+            $res->addAll($elem);
+        }
+
+        return $res;
     }
 }

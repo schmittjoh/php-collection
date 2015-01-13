@@ -146,11 +146,11 @@ interface SequenceInterface extends CollectionInterface
     /**
      * Adds all elements to the sequence.
      *
-     * @param array $elements
+     * @param array|\Traversable $elements
      *
      * @return void
      */
-    public function addAll(array $elements);
+    public function addAll($elements);
 
     /**
      * Updates the value at the given index.
@@ -224,4 +224,21 @@ interface SequenceInterface extends CollectionInterface
      * @return CollectionInterface
      */
     public function map($callable);
+
+    /**
+     * Creates a new collection by applying the passed callable to all elements
+     * of the current collection.
+     *
+     * @param callable $callable  Callable takes (x : \Traversable) => \Traversable
+     * @return CollectionInterface
+     */
+    public function flatMap($callable);
+
+    /**
+     * Returns a collection when any first level nesting is flattened into the single
+     * returned collection
+     *
+     * @return CollectionInterface
+     */
+    public function flatten();
 }

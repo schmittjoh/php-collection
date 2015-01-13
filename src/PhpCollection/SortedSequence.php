@@ -55,7 +55,7 @@ class SortedSequence extends AbstractSequence
         $this->elements = $newElements;
     }
 
-    public function addAll(array $addedElements)
+    public function addAll($addedElements)
     {
         usort($addedElements, $this->sortFunc);
 
