@@ -45,7 +45,7 @@ class LRUMap extends Map implements SortableInterface
      * Get the value cached with this key
      *
      * @param int|string $key     The key. Strings that are ints are cast to ints.
-     * @param mixed      $default The value to be returned if key not found. (Optional)
+     *
      * @return \PhpOption\Option
      */
     public function get($key)

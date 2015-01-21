@@ -7,7 +7,7 @@ use PhpCollection\Map;
 class MapTest extends \PHPUnit_Framework_TestCase
 {
     /** @var Map */
-    public $map;
+    protected $map;
 
     public function testExists()
     {

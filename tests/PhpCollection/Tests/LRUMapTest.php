@@ -8,7 +8,6 @@ use PhpCollection\Tests\MapTest;
 
 class LRUMapTest extends MapTest
 {
-
     public function testRecentHead()
     {
         $lru = new LRUMap(3);
