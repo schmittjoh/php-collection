@@ -6,9 +6,9 @@
     "authors": [
         {"name": "Johannes M. Schmitt", "email": "schmittjoh@gmail.com"}
     ],
-    "replace": {
-	"phpcollection/phpcollection" : "<=0.4.0"
-    },
+    "replace": [
+        "phpcollection/phpcollection"
+    ],
     "require": {
         "phpoption/phpoption": "1.*"
     },
