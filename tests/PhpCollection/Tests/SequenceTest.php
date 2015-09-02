@@ -4,6 +4,10 @@ namespace PhpCollection\Tests;
 
 use PhpCollection\Sequence;
 use OutOfBoundsException;
+use PhpOption\Option;
+use PhpOption\Some;
+use PhpOption\None;
+
 use stdClass;
 
 class SequenceTest extends \PHPUnit_Framework_TestCase
@@ -329,6 +333,48 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('PhpCollection\Sequence', $newSeq);
         $this->assertNotSame($newSeq, $seq);
         $this->assertEquals(array('c', 'd'), $newSeq->all());
+    }
+
+    public function testFlatMap()
+    {
+        $seq = new Sequence();
+        $seq->addAll(array(new Some('a'), new Some('b'), None::create(), new Some('c')));
+
+        $this->assertEquals(array('aA', 'bA', 'cA'), iterator_to_array(
+            $seq->flatMap(
+                function ($x) { return $x->map(function ($v) { return $v.'A';}); } // identity
+            )
+        ));
+
+
+        $seq = new Sequence();
+        $seq->addAll(array(array(1,2,3,4), array(5,6), array(7)));
+
+        $this->assertEquals(array(2,3,4,5,6,7,8), iterator_to_array(
+            $seq->flatMap(
+                function ($x) { return array_map(function ($v) { return $v + 1;}, $x); } // identity
+            )
+        ));
+
+    }
+
+    public function testFlatten()
+    {
+        $seq = new Sequence();
+        $seq->addAll(array(new Some('a'), new Some('b'), None::create(), new Some('c')));
+
+        $this->assertEquals(array('a', 'b', 'c'), iterator_to_array(
+            $seq->flatten()
+        ));
+
+
+        $seq = new Sequence();
+        $seq->addAll(array(array(1,2,3,4), array(5,6), array(7)));
+
+        $this->assertEquals(array(1,2,3,4,5,6,7), iterator_to_array(
+            $seq->flatten()
+        ));
+
     }
 
     protected function setUp()
