@@ -1,11 +1,14 @@
 {
-    "name": "phpcollection/phpcollection",
+    "name": "centraldesktop/phpcollection",
     "description": "General-Purpose Collection Library for PHP",
     "keywords": ["collection", "list", "sequence", "map", "set"],
     "license": "Apache2",
     "authors": [
         {"name": "Johannes M. Schmitt", "email": "schmittjoh@gmail.com"}
     ],
+    "replace": {
+	"phpcollection/phpcollection" : "<=0.4.0"
+    },
     "require": {
         "phpoption/phpoption": "1.*"
     },
