@@ -25,5 +25,5 @@ namespace PhpCollection;
  */
 interface SortableInterface
 {
-    public function sortWith($callable);
+    public function sortWith(callable $callable);
 }

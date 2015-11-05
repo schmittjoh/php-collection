@@ -20,8 +20,14 @@ namespace PhpCollection;
 
 class Map extends AbstractMap implements SortableInterface
 {
-    public function sortWith($callable)
+    /**
+     * @param $callable
+     * @return $this
+     */
+    public function sortWith(callable $callable)
     {
         uksort($this->elements, $callable);
+
+        return $this;
     }
 }

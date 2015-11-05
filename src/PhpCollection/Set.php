@@ -34,13 +34,22 @@ class Set implements SetInterface
         }
     }
 
+    /**
+     * @param \Traversable $elements
+     * @return $this
+     */
     public function addAll(\Traversable $elements)
     {
         foreach ($elements as $elem) {
             $this->add($elem);
         }
+
+        return $this;
     }
 
+    /**
+     * @return None|Some
+     */
     public function first()
     {
         if (empty($this->elements)) {
@@ -50,6 +59,9 @@ class Set implements SetInterface
         return new Some(reset($this->elements));
     }
 
+    /**
+     * @return None|Some
+     */
     public function last()
     {
         if (empty($this->elements)) {
@@ -59,14 +71,23 @@ class Set implements SetInterface
         return new Some(end($this->elements));
     }
 
+    /**
+     * @return \ArrayIterator
+     */
     public function getIterator()
     {
         return new \ArrayIterator(array_values($this->elements));
     }
 
+    /**
+     * @param SetInterface $set
+     * @return $this
+     */
     public function addSet(SetInterface $set)
     {
         $this->addAll($set);
+
+        return $this;
     }
 
     public function take($number)
@@ -85,12 +106,12 @@ class Set implements SetInterface
      *
      * @return Set
      */
-    public function takeWhile($callable)
+    public function takeWhile(callable $callable)
     {
         $newElements = [];
 
         for ($i = 0, $c = count($this->elements); $i < $c; $i++) {
-            if (call_user_func($callable, $this->elements[$i]) !== true) {
+            if ($callable($this->elements[$i]) !== true) {
                 break;
             }
 
@@ -118,10 +139,10 @@ class Set implements SetInterface
         return $this->createNew(array_slice($this->elements, 0, -1 * $number));
     }
 
-    public function dropWhile($callable)
+    public function dropWhile(callable $callable)
     {
         for ($i = 0, $c = count($this->elements); $i < $c; $i++) {
-            if (true !== call_user_func($callable, $this->elements[$i])) {
+            if (true !== $callable($this->elements[$i])) {
                 break;
             }
         }
@@ -159,31 +180,31 @@ class Set implements SetInterface
         return array_values($this->elements);
     }
 
-    public function filterNot($callable)
+    public function filterNot(callable $callable)
     {
         return $this->filterInternal($callable, false);
     }
 
-    public function filter($callable)
+    public function filter(callable $callable)
     {
         return $this->filterInternal($callable, true);
     }
 
-    public function foldLeft($initialValue, $callable)
+    public function foldLeft($initialValue, callable $callable)
     {
         $value = $initialValue;
         foreach ($this->elements as $elem) {
-            $value = call_user_func($callable, $value, $elem);
+            $value = $callable($value, $elem);
         }
 
         return $value;
     }
 
-    public function foldRight($initialValue, $callable)
+    public function foldRight($initialValue, callable $callable)
     {
         $value = $initialValue;
         foreach (array_reverse($this->elements) as $elem) {
-            $value = call_user_func($callable, $elem, $value);
+            $value = $callable($elem, $value);
         }
 
         return $value;
@@ -238,6 +259,8 @@ class Set implements SetInterface
                 $this->removeScalar($elem);
             }
         }
+
+        return $this;
     }
 
     public function isEmpty()
@@ -267,7 +290,7 @@ class Set implements SetInterface
             if ($elem instanceof ObjectBasics) {
                 $this->addObject($elem);
 
-                return;
+                return $this;
             }
 
             if (is_object($elem)) {
@@ -280,7 +303,7 @@ class Set implements SetInterface
             if (is_object($elem)) {
                 $this->addObjectWithHandler($elem, ObjectBasicsHandlerRegistry::getHandler(get_class($elem)));
 
-                return;
+                return $this;
             }
 
             throw new \LogicException(sprintf('This Set already contains object with an external handler, and cannot be mixed with elements of type "%s".', gettype($elem)));
@@ -289,7 +312,7 @@ class Set implements SetInterface
             if (is_scalar($elem)) {
                 $this->addScalar($elem);
 
-                return;
+                return $this;
             }
 
             throw new \LogicException(sprintf('This Set already contains scalars, and cannot be mixed with elements of type "%s".', gettype($elem)));
@@ -297,6 +320,8 @@ class Set implements SetInterface
         else {
             throw new \LogicException('Unknown element type in Set - should never be reached.');
         }
+
+        return $this;
     }
 
     protected function createNew(array $elements)
@@ -304,11 +329,11 @@ class Set implements SetInterface
         return new static($elements);
     }
 
-    private function filterInternal($callable, $booleanKeep)
+    private function filterInternal(callable $callable, $booleanKeep)
     {
         $newElements = [];
         foreach ($this->elements as $element) {
-            if ($booleanKeep !== call_user_func($callable, $element)) {
+            if ($booleanKeep !== $callable($element)) {
                 continue;
             }
 

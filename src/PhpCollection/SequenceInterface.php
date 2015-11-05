@@ -98,7 +98,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * @return integer the index (0-based), or -1 if the callable returns false for all elements
      */
-    public function indexWhere($callable);
+    public function indexWhere(callable $callable);
 
     /**
      * Returns the last index where the given callable returns true.
@@ -107,7 +107,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * @return integer the index (0-based), or -1 if the callable returns false for all elements
      */
-    public function lastIndexWhere($callable);
+    public function lastIndexWhere(callable $callable);
 
     /**
      * Returns all indices of this collection.
@@ -191,7 +191,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * @return SequenceInterface
      */
-    public function dropWhile($callable);
+    public function dropWhile(callable $callable);
 
     /**
      * Creates a new collection by taking the given number of elements from the beginning
@@ -214,7 +214,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * @return CollectionInterface
      */
-    public function takeWhile($callable);
+    public function takeWhile(callable $callable);
 
     /**
      * Creates a new collection by applying the passed callable to all elements
@@ -223,7 +223,7 @@ interface SequenceInterface extends CollectionInterface
      * @param callable $callable
      * @return CollectionInterface
      */
-    public function map($callable);
+    public function map(callable $callable);
 
     /**
      * Creates a new collection by applying the passed callable to all elements
@@ -232,7 +232,7 @@ interface SequenceInterface extends CollectionInterface
      * @param callable $callable  Callable takes (x : \Traversable) => \Traversable
      * @return CollectionInterface
      */
-    public function flatMap($callable);
+    public function flatMap(callable $callable);
 
     /**
      * Returns a collection when any first level nesting is flattened into the single

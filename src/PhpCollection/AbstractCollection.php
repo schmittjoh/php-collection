@@ -35,7 +35,7 @@ abstract class AbstractCollection
         return false;
     }
 
-    public function find($callable)
+    public function find(callable $callable)
     {
         $self = $this;
 

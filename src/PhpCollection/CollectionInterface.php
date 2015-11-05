@@ -50,7 +50,7 @@ interface CollectionInterface extends \Traversable, \Countable
      *
      * @return CollectionInterface
      */
-    public function filter($callable);
+    public function filter(callable $callable);
 
     /**
      * Returns a filtered collection of the same type.
@@ -61,7 +61,7 @@ interface CollectionInterface extends \Traversable, \Countable
      *
      * @return CollectionInterface
      */
-    public function filterNot($callable);
+    public function filterNot(callable $callable);
 
     /**
      * Applies the callable to an initial value and each element, going left to right.

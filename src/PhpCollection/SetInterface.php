@@ -96,7 +96,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      *
      * @return SetInterface
      */
-    public function dropWhile($callable);
+    public function dropWhile(callable $callable);
 
     /**
      * Creates a new collection by taking the given number of elements from the beginning
@@ -119,7 +119,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      *
      * @return CollectionInterface
      */
-    public function takeWhile($callable);
+    public function takeWhile(callable $callable);
 
     /**
      * Builds a new collection by applying a function to all elements of this immutable set.

@@ -31,8 +31,14 @@ namespace PhpCollection;
  */
 class Sequence extends AbstractSequence implements SortableInterface
 {
-    public function sortWith($callable)
+    /**
+     * @param $callable
+     * @return $this
+     */
+    public function sortWith(callable $callable)
     {
         usort($this->elements, $callable);
+
+        return $this;
     }
 }

@@ -55,7 +55,7 @@ interface MapInterface extends CollectionInterface
      *
      * @return Option on array<K,V>
      */
-    public function find($callable);
+    public function find(callable $callable);
 
     /**
      * Returns the value associated with the given key.
@@ -146,7 +146,7 @@ interface MapInterface extends CollectionInterface
      *
      * @return MapInterface
      */
-    public function dropWhile($callable);
+    public function dropWhile(callable $callable);
 
     /**
      * Creates a new collection by taking the given number of elements from the beginning
@@ -169,5 +169,5 @@ interface MapInterface extends CollectionInterface
      *
      * @return MapInterface
      */
-    public function takeWhile($callable);
+    public function takeWhile(callable $callable);
 }
