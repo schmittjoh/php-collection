@@ -30,7 +30,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 {
     protected $elements;
 
-    public function __construct(array $elements = array())
+    public function __construct(array $elements = [])
     {
         $this->elements = $elements;
     }
@@ -83,7 +83,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
         return None::create();
     }
-    
+
     public function all()
     {
         return $this->elements;
@@ -91,7 +91,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
     public function remove($key)
     {
-        if ( ! isset($this->elements[$key])) {
+        if (!isset($this->elements[$key])) {
             throw new \InvalidArgumentException(sprintf('The map has no key named "%s".', $key));
         }
 
@@ -103,7 +103,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
     public function clear()
     {
-        $this->elements = array();
+        $this->elements = [];
     }
 
     public function first()
@@ -114,7 +114,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
         $elem = reset($this->elements);
 
-        return new Some(array(key($this->elements), $elem));
+        return new Some([key($this->elements), $elem]);
     }
 
     public function last()
@@ -125,7 +125,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
         $elem = end($this->elements);
 
-        return new Some(array(key($this->elements), $elem));
+        return new Some([key($this->elements), $elem]);
     }
 
     public function contains($elem)
@@ -175,11 +175,11 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
     /**
      * @param callable $callable
-     * @param boolean $booleanKeep
+     * @param boolean  $booleanKeep
      */
-    private function filterInternal($callable, $booleanKeep)
+    private function filterInternal(callable $callable, $booleanKeep)
     {
-        $newElements = array();
+        $newElements = [];
         foreach ($this->elements as $k => $element) {
             if ($booleanKeep !== call_user_func($callable, $element)) {
                 continue;
@@ -191,7 +191,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $this->createNew($newElements);
     }
 
-    public function foldLeft($initialValue, $callable)
+    public function foldLeft($initialValue, callable $callable)
     {
         $value = $initialValue;
         foreach ($this->elements as $elem) {
@@ -201,7 +201,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $value;
     }
 
-    public function foldRight($initialValue, $callable)
+    public function foldRight($initialValue, callable $callable)
     {
         $value = $initialValue;
         foreach (array_reverse($this->elements) as $elem) {
@@ -211,12 +211,22 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $value;
     }
 
+    public function map(callable $callable)
+    {
+        $newMap = new static;
+        foreach ($this->elements as $k => $e) {
+            $newMap->set($k, $callable($k, $e));
+        }
+
+        return $newMap;
+    }
+
     public function dropWhile($callable)
     {
-        $newElements = array();
+        $newElements = [];
         $stopped = false;
         foreach ($this->elements as $k => $v) {
-            if ( ! $stopped) {
+            if (!$stopped) {
                 if (call_user_func($callable, $k, $v) === true) {
                     continue;
                 }
@@ -259,7 +269,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
     public function takeWhile($callable)
     {
-        $newElements = array();
+        $newElements = [];
         foreach ($this->elements as $k => $v) {
             if (call_user_func($callable, $k, $v) !== true) {
                 break;
@@ -275,7 +285,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     {
         foreach ($this->elements as $k => $v) {
             if (call_user_func($callable, $k, $v) === true) {
-                return new Some(array($k, $v));
+                return new Some([$k, $v]);
             }
         }
 

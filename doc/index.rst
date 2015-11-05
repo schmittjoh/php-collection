@@ -80,6 +80,8 @@ is determined via the following steps.
     $set->all();
     $set->addSet($otherSet);
     $set->addAll($someElements);
+
+    // Traverse
     $set->map(function($x) { return $x*2; });
     $set->flatMap(function($x) { return [$x*2, $x*4]; });
 
@@ -140,6 +142,9 @@ Maps
 
     // Sort
     $map->sortWith('strcmp');
+
+    // Traverse
+    $map->map(function($key, $value) { return $value * 2; });
 
 License
 -------

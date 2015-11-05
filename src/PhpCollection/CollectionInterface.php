@@ -71,7 +71,7 @@ interface CollectionInterface extends \Traversable, \Countable
      *
      * @return mixed the last value returned by $callable, or $initialValue if collection is empty.
      */
-    public function foldLeft($initialValue, $callable);
+    public function foldLeft($initialValue, callable $callable);
 
     /**
      * Applies the callable to each element, and an initial value, going right to left.
@@ -80,5 +80,13 @@ interface CollectionInterface extends \Traversable, \Countable
      * @param callable $callable receives the element, and the current value (the first time this equals $initialValue).
      * @return mixed the last value returned by $callable, or $initialValue if collection is empty.
      */
-    public function foldRight($initialValue, $callable);
+    public function foldRight($initialValue, callable $callable);
+
+    /**
+     * Builds a new collection by applying a function to all elements of this map.
+     *
+     * @param callable $callable receives the element, and the current value (the first time this equals $initialValue).
+     * @return Map
+     */
+    public function map(callable $callable);
 }

@@ -127,7 +127,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      * @param callable $callable
      * @return CollectionInterface
      */
-    public function map($callable);
+    public function map(callable $callable);
 
     /**
      * Builds a new collection by applying a function to all elements of this immutable set
@@ -136,5 +136,5 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      * @param callable $callable
      * @return CollectionInterface
      */
-    public function flatMap($callable);
+    public function flatMap(callable $callable);
 }

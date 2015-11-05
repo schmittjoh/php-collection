@@ -129,7 +129,7 @@ class Set implements SetInterface
         return $this->createNew(array_slice($this->elements, $i));
     }
 
-    public function map($callable)
+    public function map(callable $callable)
     {
         $newElements = [];
         foreach ($this->elements as $i => $element) {
@@ -139,7 +139,7 @@ class Set implements SetInterface
         return $this->createNew($newElements);
     }
 
-    public function flatMap($callable)
+    public function flatMap(callable $callable)
     {
         $newElements = new Set();
         foreach ($this->elements as $i => $element) {
