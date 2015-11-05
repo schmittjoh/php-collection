@@ -80,6 +80,8 @@ is determined via the following steps.
     $set->all();
     $set->addSet($otherSet);
     $set->addAll($someElements);
+    $set->map(function($x) { return $x*2; });
+    $set->flatMap(function($x) { return [$x*2, $x*4]; });
 
 
 Sequences
