@@ -22,7 +22,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      * @param object|scalar $elements
      * @return void
      */
-    public function addAll(array $elements);
+    public function addAll(\Traversable $elements);
 
     /**
      * @param object|scalar $elem
@@ -122,11 +122,19 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
     public function takeWhile($callable);
 
     /**
-     * Creates a new collection by applying the passed callable to all elements
-     * of the current collection.
+     * Builds a new collection by applying a function to all elements of this immutable set.
      *
      * @param callable $callable
      * @return CollectionInterface
      */
     public function map($callable);
+
+    /**
+     * Builds a new collection by applying a function to all elements of this immutable set
+     * and using the elements of the resulting collections.
+     *
+     * @param callable $callable
+     * @return CollectionInterface
+     */
+    public function flatMap($callable);
 }
