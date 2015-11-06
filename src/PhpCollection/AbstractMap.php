@@ -188,6 +188,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     /**
      * @param callable $callable
      * @param boolean  $booleanKeep
+     * @return Map
      */
     private function filterInternal(callable $callable, $booleanKeep)
     {
@@ -203,6 +204,11 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $this->createNew($newElements);
     }
 
+    /**
+     * @param mixed    $initialValue
+     * @param callable $callable
+     * @return Map
+     */
     public function foldLeft($initialValue, callable $callable)
     {
         $value = $initialValue;
@@ -213,6 +219,11 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $value;
     }
 
+    /**
+     * @param mixed    $initialValue
+     * @param callable $callable
+     * @return Map
+     */
     public function foldRight($initialValue, callable $callable)
     {
         $value = $initialValue;
@@ -223,6 +234,10 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $value;
     }
 
+    /**
+     * @param callable $callable
+     * @return Map
+     */
     public function map(callable $callable)
     {
         $newMap = new static;
@@ -233,6 +248,10 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $newMap;
     }
 
+    /**
+     * @param callable $callable
+     * @return Map
+     */
     public function dropWhile(callable $callable)
     {
         $newElements = [];

@@ -139,6 +139,10 @@ class Set implements SetInterface
         return $this->createNew(array_slice($this->elements, 0, -1 * $number));
     }
 
+    /**
+     * @param callable $callable
+     * @return Set
+     */
     public function dropWhile(callable $callable)
     {
         for ($i = 0, $c = count($this->elements); $i < $c; $i++) {
@@ -150,6 +154,10 @@ class Set implements SetInterface
         return $this->createNew(array_slice($this->elements, $i));
     }
 
+    /**
+     * @param callable $callable
+     * @return Set
+     */
     public function map(callable $callable)
     {
         $newElements = [];
@@ -160,6 +168,10 @@ class Set implements SetInterface
         return $this->createNew($newElements);
     }
 
+    /**
+     * @param callable $callable
+     * @return Set
+     */
     public function flatMap(callable $callable)
     {
         $newElements = new Set();
@@ -190,6 +202,11 @@ class Set implements SetInterface
         return $this->filterInternal($callable, true);
     }
 
+    /**
+     * @param mixed    $initialValue
+     * @param callable $callable
+     * @return mixed
+     */
     public function foldLeft($initialValue, callable $callable)
     {
         $value = $initialValue;
@@ -200,6 +217,11 @@ class Set implements SetInterface
         return $value;
     }
 
+    /**
+     * @param mixed    $initialValue
+     * @param callable $callable
+     * @return mixed
+     */
     public function foldRight($initialValue, callable $callable)
     {
         $value = $initialValue;
