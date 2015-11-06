@@ -19,10 +19,10 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
     public function add($elem);
 
     /**
-     * @param object|scalar $elements
+     * @param \Traversable|array $elements
      * @return void
      */
-    public function addAll(\Traversable $elements);
+    public function addAll($elements);
 
     /**
      * @param object|scalar $elem

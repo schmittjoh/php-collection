@@ -29,19 +29,22 @@ class Set implements SetInterface
 
     public function __construct(array $elements = [])
     {
-        foreach ($elements as $elem) {
-            $this->add($elem);
-        }
+        $this->addAll($elements);
     }
 
     /**
-     * @param \Traversable $elements
+     * @param \Traversable|array $elements
      * @return $this
      */
-    public function addAll(\Traversable $elements)
+    public function addAll($elements)
     {
-        foreach ($elements as $elem) {
-            $this->add($elem);
+        if(is_array($elements) or ($elements instanceof \Traversable)){
+            foreach ($elements as $elem) {
+                $this->add($elem);
+            }
+        }
+        else {
+            $this->add($elements);
         }
 
         return $this;
