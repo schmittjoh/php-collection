@@ -49,7 +49,7 @@ Usage
 Collection classes provide a rich API.
 
 Sets
-~~~~
+-----
 In a Set each value is guaranteed to be unique. The ``Set`` class supports objects, and scalars as value. Equality
 is determined via the following steps.
 
@@ -87,7 +87,7 @@ is determined via the following steps.
 
 
 Sequences
-~~~~~~~~~
+---------
 
 .. code-block :: php
 
@@ -119,7 +119,7 @@ Sequences
     $seq->all(); // [0, 2, 4, 5]
 
 Maps
-~~~~
+----
 
 .. code-block :: php
 
