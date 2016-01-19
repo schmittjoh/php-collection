@@ -162,4 +162,6 @@ license`_.
 
 Learn more
 -----------
+Be adviced,that this documentation is not full and refers to forked repository of @schmittjoh. Original code was refactored and now requires PHP 5.5, updated with several usefull methods like ::flatMap(), ::map(), ::foldLeft(), ::head(), ::tail()  and e.t.c. Inspired by Scala collections.
+
 [documentation](http://jmsyst.com/libs/php-collection).
