@@ -118,7 +118,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $this;
     }
 
-    public function first()
+    public function head()
     {
         if (empty($this->elements)) {
             return None::create();
@@ -129,7 +129,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return new Some([key($this->elements), $elem]);
     }
 
-    public function last()
+    public function tail()
     {
         if (empty($this->elements)) {
             return None::create();
@@ -138,6 +138,24 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         $elem = end($this->elements);
 
         return new Some([key($this->elements), $elem]);
+    }
+
+    /**
+     * @deprecated Use head() method
+     * @return None|Some
+     */
+    public function first()
+    {
+        return $this->head();
+    }
+
+    /**
+     * @deprecated Use tail() method
+     * @return None|Some
+     */
+    public function last()
+    {
+        return $this->tail();
     }
 
     public function contains($elem)

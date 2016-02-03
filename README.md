@@ -96,8 +96,8 @@ Sequences
     $seq->get(2); // int(3)
     $seq->all(); // [0, 2, 3, 2]
 
-    $seq->first(); // Some(0)
-    $seq->last(); // Some(2)
+    $seq->head(); // Some(0)
+    $seq->tail(); // Some(2)
 
     // Write Operations
     $seq = new Sequence([1, 5]);
@@ -129,6 +129,10 @@ Maps
     $map->get('foo')->get(); // string('bar')
     $map->keys(); // ['foo', 'baz']
     $map->values(); // ['bar', 'boo']
+
+    $map->head(); // Some(['key', 'value'])
+    $map->tail(); // Some(['key', 'value'])
+
     iterator_to_array($map); // ['foo' => 'bar', 'baz' => 'boo']
 
     $map->first()->get(); // ['foo', 'bar']
