@@ -118,6 +118,9 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $this;
     }
 
+    /**
+     * @return Some
+     */
     public function head()
     {
         if (empty($this->elements)) {
@@ -129,15 +132,12 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return new Some([key($this->elements), $elem]);
     }
 
+    /**
+     * @return Map
+     */
     public function tail()
     {
-        if (empty($this->elements)) {
-            return None::create();
-        }
-
-        $elem = end($this->elements);
-
-        return new Some([key($this->elements), $elem]);
+        return new static(array_slice($this->elements, 1));
     }
 
     /**
@@ -150,12 +150,17 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     }
 
     /**
-     * @deprecated Use tail() method
      * @return None|Some
      */
     public function last()
     {
-        return $this->tail();
+        if (empty($this->elements)) {
+            return None::create();
+        }
+
+        $elem = end($this->elements);
+
+        return new Some([key($this->elements), $elem]);
     }
 
     public function contains($elem)

@@ -82,20 +82,12 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
             return None::create();
         }
 
-        $elem = reset($this->elements);
-
-        return new Some($elem);
+        return new Some(reset($this->elements));
     }
 
     function tail()
     {
-        if (empty($this->elements)) {
-            return None::create();
-        }
-
-        $elem = end($this->elements);
-
-        return new Some($elem);
+        return new static(array_slice($this->elements, 1));
     }
 
     function reverse()
@@ -244,13 +236,13 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return new Some(end($this->elements));
     }
 
+    /**
+     * @deprecated Use head() method
+     * @return Some
+     */
     function first()
     {
-        if (empty($this->elements)) {
-            return None::create();
-        }
-
-        return new Some(reset($this->elements));
+        return $this->head();
     }
 
     function indices()
