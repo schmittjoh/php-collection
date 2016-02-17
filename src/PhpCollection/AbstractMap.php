@@ -216,12 +216,12 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     private function filterInternal(callable $callable, $booleanKeep)
     {
         $newElements = [];
-        foreach ($this->elements as $k => $element) {
-            if ($booleanKeep !== $callable($element)) {
+        foreach ($this->elements as $k => $e) {
+            if ($booleanKeep !== $callable($e)) {
                 continue;
             }
 
-            $newElements[$k] = $element;
+            $newElements[$k] = $e;
         }
 
         return $this->createNew($newElements);
@@ -235,8 +235,8 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     public function foldLeft($startValue, callable $callable)
     {
         $value = $startValue;
-        foreach ($this->elements as $key => $elem) {
-            $value = $callable($value, [$key, $elem]);
+        foreach ($this->elements as $k => $e) {
+            $value = $callable($value, $k, $e);
         }
 
         return $value;
@@ -250,8 +250,8 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     public function foldRight($startValue, callable $callable)
     {
         $value = $startValue;
-        foreach (array_reverse($this->elements) as $key => $elem) {
-            $value = $callable($value, [$key, $elem]);
+        foreach (array_reverse($this->elements) as $k => $e) {
+            $value = $callable($value, $k, $e);
         }
 
         return $value;
