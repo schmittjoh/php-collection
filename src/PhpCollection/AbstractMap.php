@@ -228,30 +228,30 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     }
 
     /**
-     * @param mixed    $initialValue
+     * @param mixed    $startValue
      * @param callable $callable
      * @return Map
      */
-    public function foldLeft($initialValue, callable $callable)
+    public function foldLeft($startValue, callable $callable)
     {
-        $value = $initialValue;
-        foreach ($this->elements as $elem) {
-            $value = $callable($value, $elem);
+        $value = $startValue;
+        foreach ($this->elements as $key => $elem) {
+            $value = $callable($value, [$key, $elem]);
         }
 
         return $value;
     }
 
     /**
-     * @param mixed    $initialValue
+     * @param mixed    $startValue
      * @param callable $callable
      * @return Map
      */
-    public function foldRight($initialValue, callable $callable)
+    public function foldRight($startValue, callable $callable)
     {
-        $value = $initialValue;
-        foreach (array_reverse($this->elements) as $elem) {
-            $value = $callable($elem, $value);
+        $value = $startValue;
+        foreach (array_reverse($this->elements) as $key => $elem) {
+            $value = $callable($value, [$key, $elem]);
         }
 
         return $value;
