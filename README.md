@@ -149,6 +149,9 @@ Maps
 
     // Traverse
     $map->map(function($key, $value) { return $value * 2; });
+    
+    // Transformation
+    $map->foldLeft($s, function($s, $k, $v){ $s[$k] = $v * 2; return $s; })
 
 
 License
