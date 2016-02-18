@@ -217,7 +217,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     {
         $newElements = [];
         foreach ($this->elements as $k => $e) {
-            if ($booleanKeep !== $callable($e)) {
+            if ($booleanKeep !== $callable($k, $e)) {
                 continue;
             }
 
