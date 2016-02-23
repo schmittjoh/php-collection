@@ -270,6 +270,20 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
         return $newMap;
     }
+    
+    /**
+     * @param callable $callable:Map
+     * @return Map
+     */
+    public function flatMap(callable $callable)
+    {
+        $newMap = new static;
+        foreach ($this->elements as $k => $e) {
+            $newMap->addMap($callable($k, $e));
+        }
+
+        return $newMap;
+    }
 
     /**
      * @param callable $callable
