@@ -4,13 +4,10 @@
     "keywords": ["collection", "list", "sequence", "map", "set"],
     "license": "Apache2",
     "authors": [
-        {"name": "Johannes M. Schmitt", "email": "schmittjoh@gmail.com"}
+        {"name": "Artyom Sukharev & Johannes M. Schmitt", "email": "aly.casus@gmail.com, schmittjoh@gmail.com"}
     ],
-    "replace": {
-        "phpcollection/phpcollection" : "<=0.4.0"
-    },
     "require": {
-        "php": ">=5.4",
+        "php": ">=5.5.3",
         "phpoption/phpoption": "1.*"
     },
     "require-dev": {
