@@ -1,6 +1,12 @@
 PHP Collection
 ==============
-This library adds basic collections for PHP.
+This library adds basic collections for PHP. It's based on J. M. Schmitt work. The reason behind this fork is that original repository haven't been updated for quite some time aтd it laсks some musthave functionality.
+
+Original code was refactored and now requires PHP 5.5, updated with several usefull methods like ::flatMap(), ::map(), ::foldLeft(), ::headOption(),  ::lastOption(), ::tail()  and e.t.c. Inspired by Scala collections. Added type-hinting.
+
+Note
+-------
+Be adviced,that this documentation is not full and refers to forked repository of @schmittjoh. 
 
 Collections can be seen as more specialized arrays for which certain contracts are guaranteed.
 
@@ -17,7 +23,7 @@ Supported Collections:
 
   - Keys: strings or objects, duplicate keys not allowed
   - Values: anything, duplicates allowed
-  - Classes: ``Map``, ``ObjectMap`` (not yet implemented)
+  - Classes: ``Map``, ``LRUMap``
 
 
 - Sets
@@ -36,7 +42,7 @@ General Characteristics:
 
 Installation
 ------------
-PHP Collection can easily be installed via composer
+PHP Collection can easily be installed via composer (in process)
 
 .. code-block :: bash
 
@@ -130,13 +136,18 @@ Maps
     $map->keys(); // ['foo', 'baz']
     $map->values(); // ['bar', 'boo']
 
-    $map->head(); // Some(['key', 'value'])
-    $map->tail(); // Some(['key', 'value'])
+    $map->headOption(); // Some(['key', 'value'])
+    $map->head();       // null | ['key', 'value']
+    $map->lastOption(); // Some(['key', 'value'])
+    $map->last();       // null | ['key', 'value']
+    
+    $map->headOption()->get(); // ['foo', 'bar']
+    $map->lastOption()->get(); // ['baz', 'boo']
+    
+    $map->tail();            // ['baz' => 'boo']
 
     iterator_to_array($map); // ['foo' => 'bar', 'baz' => 'boo']
-
-    $map->first()->get(); // ['foo', 'bar']
-    $map->last()->get(); // ['baz', 'boo']
+    $map->all()              // ['foo' => 'bar', 'baz' => 'boo']
 
     // Write Operations
     $map = new Map();
@@ -147,11 +158,11 @@ Maps
     // Sort
     $map->sortWith('strcmp');
 
-    // Traverse
-    $map->map(function($key, $value) { return $value * 2; });
-    
     // Transformation
-    $map->foldLeft($s, function($s, $k, $v){ $s[$k] = $v * 2; return $s; })
+    $map->map(function($key, $value) { return $value * 2; });
+    $map->flatMap(function($key, $value) { return (new Map())->set($key, $value * 2); });
+    
+    $map->foldLeft(Object $s, function(SomeObject $s, $k, $v){ $s->add([$k, $v * 2]); return $s; })
 
 
 License
@@ -164,11 +175,3 @@ license`_.
 
 .. _Apache2 license: http://www.apache.org/licenses/LICENSE-2.0.html
 .. _Attribution-NonCommercial-NoDerivs 3.0 Unported license: http://creativecommons.org/licenses/by-nc-nd/3.0/
-
-
-
-Learn more
------------
-Be adviced,that this documentation is not full and refers to forked repository of @schmittjoh. Original code was refactored and now requires PHP 5.5, updated with several usefull methods like ::flatMap(), ::map(), ::foldLeft(), ::head(), ::tail()  and e.t.c. Inspired by Scala collections.
-
-[documentation](http://jmsyst.com/libs/php-collection).
