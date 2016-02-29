@@ -1,8 +1,8 @@
 <?php
 
-namespace PhpCollection\ObjectBasicsHandler;
+namespace Collection\ObjectBasicsHandler;
 
-use PhpCollection\ObjectBasicsHandler;
+use Collection\ObjectBasicsHandler;
 
 class IdentityHandler implements ObjectBasicsHandler
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace PhpCollection\Tests;
+namespace Collection\Tests;
 
-use PhpCollection\LRUMap;
-use PhpCollection\Map;
-use PhpCollection\Tests\MapTest;
+use Collection\LRUMap;
+use Collection\Map;
+use Collection\Tests\MapTest;
 
 class LRUMapTest extends MapTest
 {
@@ -15,17 +15,17 @@ class LRUMapTest extends MapTest
         $lru->set('two', 2);
         $lru->set('three', 3);
 
-        $first = $lru->first();
+        $first = $lru->headOption();
         $this->assertTrue($first->isDefined());
         $this->assertEquals(1, $first->get()[1]);
 
-        $last = $lru->last();
+        $last = $lru->lastOption();
         $this->assertTrue($last->isDefined());
         $this->assertEquals(3, $last->get()[1]);
 
         // make 'two' most recent
         $lru->get('two');
-        $last = $lru->last();
+        $last = $lru->lastOption();
         $this->assertTrue($last->isDefined());
         $this->assertEquals(2, $last->get()[1]);
     }

@@ -1,10 +1,10 @@
 <?php
 
-namespace PhpCollection\Tests;
+namespace Collection\Tests;
 
-use PhpCollection\ObjectBasics;
-use PhpCollection\ObjectBasicsHandlerRegistry;
-use PhpCollection\Set;
+use Collection\ObjectBasics;
+use Collection\ObjectBasicsHandlerRegistry;
+use Collection\Set;
 
 class SetTest extends \PHPUnit_Framework_TestCase
 {

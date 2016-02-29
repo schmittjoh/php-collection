@@ -1,8 +1,8 @@
 <?php
 
-namespace PhpCollection\Tests;
+namespace Collection\Tests;
 
-use PhpCollection\SortedSequence;
+use Collection\SortedSequence;
 
 class SortedSequenceTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,7 +31,7 @@ class SortedSequenceTest extends \PHPUnit_Framework_TestCase
     public function testTake()
     {
         $seq = $this->seq->take(2);
-        $this->assertInstanceOf('PhpCollection\SortedSequence', $seq);
+        $this->assertInstanceOf('Collection\SortedSequence', $seq);
         $this->assertSame(array(0, 0), $seq->all());
     }
 

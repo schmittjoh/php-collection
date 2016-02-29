@@ -1,13 +1,13 @@
 <?php
 
-namespace PhpCollection;
+namespace Collection;
 
 /**
  * Implementation for ObjectBasics for entity-like objects.
  *
  * Two objects are considered equal if they refer to the same instance.
  *
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
  */
 trait EntityLikeObject
 {

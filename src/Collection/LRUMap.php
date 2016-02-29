@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2012 Johannes M. Schmitt <schmittjoh@gmail.com>
+ * Copyright 2016 Johannes M. Schmitt, Artyom Sukharev <aly.casus@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,13 @@
  * limitations under the License.
  */
 
-namespace PhpCollection;
+namespace Collection;
 
 class LRUMap extends Map implements SortableInterface
 {
 
     /** @var int */
     protected $maximumSize;
-
 
     /**
      * Create a LRU Map
@@ -37,14 +36,13 @@ class LRUMap extends Map implements SortableInterface
             throw new \InvalidArgumentException();
         }
         $this->maximumSize = $size;
-
-        $this->elements = array();
+        $this->elements = [];
     }
 
     /**
      * Get the value cached with this key
      *
-     * @param int|string $key     The key. Strings that are ints are cast to ints.
+     * @param int|string $key The key. Strings that are ints are cast to ints.
      *
      * @return \PhpOption\Option
      */
@@ -60,12 +58,15 @@ class LRUMap extends Map implements SortableInterface
      *
      * @param int|string $key   The key. Strings that are ints are cast to ints.
      * @param mixed      $value The value to cache
+     *
+     * @return LRUMap
      */
     public function set($key, $value)
     {
 
         if (parent::get($key)->isDefined()) {
             parent::set($key, $value);
+
             $this->recordAccess($key);
         }
         else {
@@ -76,26 +77,31 @@ class LRUMap extends Map implements SortableInterface
                 unset($this->elements[key($this->elements)]);
             }
         }
-    }
 
+        return $this;
+    }
 
     /**
      * Moves the element from current position to end of array
      *
      * @param int|string $key The key
+     * @return LRUMap
      */
     protected function recordAccess($key)
     {
-        foreach (parent::get($key) as $value){
+        foreach (parent::get($key) as $value) {
             unset($this->elements[$key]);
             $this->elements[$key] = $value;
         }
+
+        return $this;
     }
 
     protected function createNew(array $elements)
     {
         $newMap = new static($this->maximumSize);
         $newMap->setAll($elements);
+
         return $newMap;
     }
 

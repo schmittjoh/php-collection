@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpCollection;
+namespace Collection;
 use PhpOption\Option;
 
 /**
@@ -8,7 +8,7 @@ use PhpOption\Option;
  *
  * Each Set contains equal values only once.
  *
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
  */
 interface SetInterface extends CollectionInterface, \IteratorAggregate
 {

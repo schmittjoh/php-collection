@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpCollection;
+namespace Collection;
 
 use PhpOption\None;
 use PhpOption\Some;
@@ -13,7 +13,7 @@ use PhpOption\Some;
  * This implementation constraints Sets to either consist of objects that implement ObjectBasics, or objects that have
  * an external ObjectBasicsHandler implementation, or simple scalars. These types cannot be mixed within the same Set.
  *
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
  */
 class Set implements SetInterface
 {

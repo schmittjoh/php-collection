@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2012 Johannes M. Schmitt <schmittjoh@gmail.com>
+ * Copyright 2016 Johannes M. Schmitt, Artyom Sukharev <aly.casus@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace PhpCollection;
+namespace Collection;
 
 use PhpOption\Some;
 use PhpOption\None;
@@ -31,7 +31,7 @@ use OutOfBoundsException;
  *
  * This sequence is mutable.
  *
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
  */
 class AbstractSequence extends AbstractCollection implements \IteratorAggregate, SequenceInterface
 {
@@ -77,6 +77,15 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     }
 
     function head()
+    {
+        if (empty($this->elements)) {
+            return null;
+        }
+
+        return reset($this->elements);
+    }
+
+    function headOption()
     {
         if (empty($this->elements)) {
             return None::create();
@@ -218,7 +227,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     function lastIndexWhere(callable $callable)
     {
-        for ($i = $this->length; $i >= 0; $i--) {
+        for ($i = $this->length - 1; $i >= 0; $i--) {
             if ($callable($this->elements[$i]) === true) {
                 return $i;
             }
@@ -230,19 +239,19 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     function last()
     {
         if (empty($this->elements)) {
+            return null;
+        }
+
+        return end($this->elements);
+    }
+
+    function lastOption()
+    {
+        if (empty($this->elements)) {
             return None::create();
         }
 
         return new Some(end($this->elements));
-    }
-
-    /**
-     * @deprecated Use head() method
-     * @return Some
-     */
-    function first()
-    {
-        return $this->head();
     }
 
     function indices()
@@ -282,7 +291,10 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         }
 
         $element = $this->elements[$index];
+
         unset($this->elements[$index]);
+        $this->length--;
+
         $this->elements = array_values($this->elements);
 
         return $element;

@@ -1,13 +1,13 @@
 <?php
 
-namespace PhpCollection;
+namespace Collection;
 
 /**
  * Interface that must be implemented by objects that are used as keys, or in sets.
  *
  * For entities, you can use the "EntityLikeObject" trait.
  *
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
  */
 interface ObjectBasics
 {

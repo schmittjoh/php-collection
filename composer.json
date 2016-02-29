@@ -1,26 +1,21 @@
 {
-    "name": "imunhatep/phpcollection",
+    "name": "imunhatep/collection",
     "description": "General-Purpose Collection Library for PHP",
     "keywords": ["collection", "list", "sequence", "map", "set"],
     "license": "Apache2",
     "authors": [
-        {"name": "Artyom Sukharev & Johannes M. Schmitt", "email": "aly.casus@gmail.com, schmittjoh@gmail.com"}
+        {"name": "Artyom Sukharev, Johannes M. Schmitt", "email": "aly.casus@gmail.com"}
     ],
     "require": {
         "php": ">=5.5.3",
-        "phpoption/phpoption": "1.*"
+        "phpoption/phpoption": "~1.5.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.*"
+        "phpunit/phpunit": "~5.2.9"
     },
     "autoload": {
         "psr-0": {
-            "PhpCollection": "src/"
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "0.4-dev"
+            "Collection": "src/"
         }
     }
 }

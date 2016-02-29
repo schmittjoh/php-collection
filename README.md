@@ -40,7 +40,7 @@ PHP Collection can easily be installed via composer
 
 .. code-block :: bash
 
-    composer require phpcollection/phpcollection
+    composer require imunhatep/collection
 
 or add it to your ``composer.json`` file.
 

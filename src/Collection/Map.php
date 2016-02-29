@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2012 Johannes M. Schmitt <schmittjoh@gmail.com>
+ * Copyright 2016 Johannes M. Schmitt, Artyom Sukharev <aly.casus@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,9 @@
  * limitations under the License.
  */
 
-namespace PhpCollection;
+namespace Collection;
 
-/**
- * Unsorted sequence implementation.
- *
- * Characteristics:
- *
- *     - Keys: consequentially numbered, without gaps
- *     - Values: anything, duplicates allowed
- *     - Ordering: same as input unless when explicitly sorted
- *
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
- */
-class Sequence extends AbstractSequence implements SortableInterface
+class Map extends AbstractMap implements SortableInterface
 {
     /**
      * @param $callable
@@ -37,7 +26,7 @@ class Sequence extends AbstractSequence implements SortableInterface
      */
     public function sortWith(callable $callable)
     {
-        usort($this->elements, $callable);
+        uksort($this->elements, $callable);
 
         return $this;
     }

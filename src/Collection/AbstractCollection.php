@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2012 Johannes M. Schmitt <schmittjoh@gmail.com>
+ * Copyright 2016 Johannes M. Schmitt, Artyom Sukharev <aly.casus@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace PhpCollection;
+namespace Collection;
 
 use PhpOption\LazyOption;
 use PhpOption\Some;

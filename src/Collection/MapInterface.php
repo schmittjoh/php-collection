@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2012 Johannes M. Schmitt <schmittjoh@gmail.com>
+ * Copyright 2016 Johannes M. Schmitt, Artyom Sukharev <aly.casus@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
-namespace PhpCollection;
+namespace Collection;
 
 use PhpOption\Option;
 
 /**
  * Basic map interface.
  *
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
  */
 interface MapInterface extends CollectionInterface
 {
@@ -32,12 +32,26 @@ interface MapInterface extends CollectionInterface
      *
      * @return Option on array<K,V>
      */
-    public function first();
+    public function headOption();
+
+    /**
+     * Returns the first element in the collection if available.
+     *
+     * @return null|array(K => V)
+     */
+    public function head();
 
     /**
      * Returns the last element in the collection if available.
      *
      * @return Option on array<K,V>
+     */
+    public function lastOption();
+
+    /**
+     * Returns the last element in the collection if available.
+     *
+     * @return null|array(K => V)
      */
     public function last();
     

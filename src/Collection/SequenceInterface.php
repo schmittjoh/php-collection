@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2012 Johannes M. Schmitt <schmittjoh@gmail.com>
+ * Copyright 2016 Johannes M. Schmitt, Artyom Sukharev <aly.casus@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace PhpCollection;
+namespace Collection;
 
 use PhpOption\Option;
 
@@ -25,7 +25,7 @@ use PhpOption\Option;
  *
  * Equality of elements in the sequence is established via a shallow comparison (===).
  *
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
  */
 interface SequenceInterface extends CollectionInterface
 {
@@ -34,12 +34,26 @@ interface SequenceInterface extends CollectionInterface
      *
      * @return Option
      */
-    public function first();
+    public function headOption();
+
+    /**
+     * Returns the first element in the collection if available.
+     *
+     * @return null|mixed
+     */
+    public function head();
 
     /**
      * Returns the last element in the collection if available.
      *
      * @return Option
+     */
+    public function lastOption();
+
+    /**
+     * Returns the last element in the collection if available.
+     *
+     * @return null|mixed
      */
     public function last();
 

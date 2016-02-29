@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2012 Johannes M. Schmitt <schmittjoh@gmail.com>
+ * Copyright 2016 Johannes M. Schmitt, Artyom Sukharev <aly.casus@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace PhpCollection;
+namespace Collection;
 
 use PhpOption\Some;
 use PhpOption\None;
@@ -24,7 +24,7 @@ use PhpOption\None;
 /**
  * A simple map implementation which basically wraps an array with an object oriented interface.
  *
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
  */
 class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapInterface
 {
@@ -121,7 +121,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     /**
      * @return Some
      */
-    public function head()
+    public function headOption()
     {
         if (empty($this->elements)) {
             return None::create();
@@ -133,6 +133,21 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     }
 
     /**
+     * @return null|array
+     */
+    public function head()
+    {
+        if (empty($this->elements)) {
+            return null;
+        }
+
+        $elem = reset($this->elements);
+        $key = key($this->elements);
+
+        return [$key, $elem];
+    }
+
+    /**
      * @return Map
      */
     public function tail()
@@ -140,14 +155,6 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return new static(array_slice($this->elements, 1));
     }
 
-    /**
-     * @deprecated Use head() method
-     * @return None|Some
-     */
-    public function first()
-    {
-        return $this->head();
-    }
 
     /**
      * @return None|Some
@@ -155,12 +162,28 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     public function last()
     {
         if (empty($this->elements)) {
+            return null;
+        }
+
+        $elem = end($this->elements);
+        $key = key($this->elements);
+
+        return [$key, $elem];
+    }
+
+    /**
+     * @return None|Some
+     */
+    public function lastOption()
+    {
+        if (empty($this->elements)) {
             return None::create();
         }
 
         $elem = end($this->elements);
+        $key = key($this->elements);
 
-        return new Some([key($this->elements), $elem]);
+        return new Some([$key, $elem]);
     }
 
     public function contains($elem)
@@ -176,7 +199,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
     public function containsKey($key)
     {
-        return isset($this->elements[$key]);
+        return array_key_exists($key, $this->elements);
     }
 
     public function isEmpty()
@@ -250,8 +273,9 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     public function foldRight($startValue, callable $callable)
     {
         $value = $startValue;
-        foreach (array_reverse($this->elements) as $k => $e) {
-            $value = $callable($value, $k, $e);
+        $keys = array_keys($this->elements);
+        foreach (array_reverse($keys) as $k) {
+            $value = $callable($value, $k, $this->elements[$k]);
         }
 
         return $value;

@@ -7,4 +7,4 @@ if ( ! is_file($autoloadFile = __DIR__.'/../vendor/autoload.php')) {
 
 $classloader = require $autoloadFile;
 
-$classloader->add("PhpCollection","tests");
+$classloader->add("Collection","tests");
