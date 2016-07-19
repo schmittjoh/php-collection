@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright 2016 Johannes M. Schmitt, Artyom Sukharev <aly.casus@gmail.com>
  *
@@ -18,10 +17,9 @@
 
 namespace Collection;
 
-use PhpOption\Some;
-use PhpOption\None;
-use PhpOption\Option;
 use OutOfBoundsException;
+use PhpOption\None;
+use PhpOption\Some;
 
 /**
  * A sequence with numerically indexed elements.
@@ -31,7 +29,7 @@ use OutOfBoundsException;
  *
  * This sequence is mutable.
  *
- * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
+ * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
  */
 class AbstractSequence extends AbstractCollection implements \IteratorAggregate, SequenceInterface
 {
@@ -43,8 +41,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      */
     function __construct(array $elements = [])
     {
-        $this->elements = array_values($elements);
-        $this->length = count($elements);
+        $this->addAll($elements);
     }
 
     function addSequence(SequenceInterface $seq)
@@ -331,11 +328,20 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         $this->length++;
     }
 
-    function addAll($addedElements)
+    function addAll($elements)
     {
-        foreach ($addedElements as $newElement) {
-            $this->add($newElement);
+        // check for array|Traversable
+        if(!is_array($elements) and !($elements instanceof \Traversable)){
+            throw new \InvalidArgumentException('Sequence::addAll() expects array or instance of \Traversable as argument');
         }
+
+        foreach ($elements as $e) {
+            $this->elements[] = $e;
+        }
+
+        $this->length+= count($elements);
+
+        return $this;
     }
 
     function take($number)
