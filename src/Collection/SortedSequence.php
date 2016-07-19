@@ -27,21 +27,20 @@ class SortedSequence extends AbstractSequence
 {
     private $sortFunc;
 
-    public function __construct($sortFunc, array $elements = array())
+    public function __construct(callable $sortFunc, array $elements = [])
     {
-        usort($elements, $sortFunc);
-        parent::__construct($elements);
-
         $this->sortFunc = $sortFunc;
+
+        parent::__construct($elements);
     }
 
     public function add($newElement)
     {
         $added = false;
-        $newElements = array();
+        $newElements = [];
         foreach ($this->elements as $element) {
             // We insert the new element before the first element that is greater than itself.
-            if ( ! $added && (integer) call_user_func($this->sortFunc, $newElement, $element) < 0) {
+            if (!$added && (integer)call_user_func($this->sortFunc, $newElement, $element) < 0) {
                 $newElements[] = $newElement;
                 $added = true;
             }
@@ -49,23 +48,26 @@ class SortedSequence extends AbstractSequence
             $newElements[] = $element;
         }
 
-        if ( ! $added) {
+        if (!$added) {
             $newElements[] = $newElement;
         }
+
         $this->elements = $newElements;
+
+        return $this;
     }
 
     public function addAll($addedElements)
     {
         usort($addedElements, $this->sortFunc);
 
-        $newElements = array();
+        $newElements = [];
         foreach ($this->elements as $element) {
-            if ( ! empty($addedElements)) {
+            if (!empty($addedElements)) {
                 foreach ($addedElements as $i => $newElement) {
                     // If the currently looked at $newElement is not smaller than $element, then we can also conclude
                     // that all other new elements are also not smaller than $element as we have ordered them before.
-                    if ((integer) call_user_func($this->sortFunc, $newElement, $element) > -1) {
+                    if ((integer)call_user_func($this->sortFunc, $newElement, $element) > -1) {
                         break;
                     }
 
@@ -77,13 +79,15 @@ class SortedSequence extends AbstractSequence
             $newElements[] = $element;
         }
 
-        if ( ! empty($addedElements)) {
+        if (!empty($addedElements)) {
             foreach ($addedElements as $newElement) {
                 $newElements[] = $newElement;
             }
         }
 
         $this->elements = $newElements;
+
+        return $this;
     }
 
     protected function createNew(array $elements)

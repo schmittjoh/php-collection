@@ -41,6 +41,9 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      */
     function __construct(array $elements = [])
     {
+        $this->elements = [];
+        $this->length = 0;
+
         $this->addAll($elements);
     }
 
