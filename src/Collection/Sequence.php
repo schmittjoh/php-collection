@@ -33,7 +33,7 @@ class Sequence extends AbstractSequence implements SortableInterface
 {
     /**
      * @param $callable
-     * @return $this
+     * @return SequenceInterface
      */
     public function sortWith(callable $callable)
     {

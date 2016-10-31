@@ -189,7 +189,7 @@ interface MapInterface extends \Traversable, \Countable
      * Builds a new collection by applying a function to all elements of this map.
      *
      * @param callable $callable Callable takes function(mixed $key, mixed $value): MapInterface
-     * @return Map
+     * @return MapInterface
      */
     public function map(callable $callable);
 
@@ -199,7 +199,7 @@ interface MapInterface extends \Traversable, \Countable
      *
      * @param callable $callable Callable takes function(mixed $key, mixed $value): MapInterface
      *
-     * @return CollectionInterface
+     * @return MapInterface
      */
     public function flatMap(callable $callable);
 

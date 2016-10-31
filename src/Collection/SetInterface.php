@@ -107,7 +107,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      *
      * @param integer $number
      *
-     * @return CollectionInterface
+     * @return SetInterface
      */
     public function take($number);
 
@@ -117,7 +117,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      *
      * @param callable $callable
      *
-     * @return CollectionInterface
+     * @return SetInterface
      */
     public function takeWhile(callable $callable);
 
@@ -125,7 +125,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      * Builds a new collection by applying a function to all elements of this immutable set.
      *
      * @param callable $callable
-     * @return CollectionInterface
+     * @return SetInterface
      */
     public function map(callable $callable);
 
@@ -134,7 +134,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      * and using the elements of the resulting collections.
      *
      * @param callable $callable
-     * @return CollectionInterface
+     * @return SetInterface
      */
     public function flatMap(callable $callable);
 }

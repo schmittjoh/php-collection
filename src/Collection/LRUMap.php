@@ -35,6 +35,7 @@ class LRUMap extends Map implements SortableInterface
         if (!is_int($size) || $size <= 0) {
             throw new \InvalidArgumentException();
         }
+
         $this->maximumSize = $size;
         $this->elements = [];
     }

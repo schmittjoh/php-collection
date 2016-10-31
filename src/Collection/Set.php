@@ -34,7 +34,7 @@ class Set implements SetInterface
 
     /**
      * @param \Traversable|array $elements
-     * @return $this
+     * @return SetInterface
      */
     public function addAll($elements)
     {
@@ -84,7 +84,7 @@ class Set implements SetInterface
 
     /**
      * @param SetInterface $set
-     * @return $this
+     * @return SetInterface
      */
     public function addSet(SetInterface $set)
     {
@@ -93,6 +93,10 @@ class Set implements SetInterface
         return $this;
     }
 
+    /**
+     * @param int $number
+     * @return SetInterface
+     */
     public function take($number)
     {
         if ($number <= 0) {
@@ -107,7 +111,7 @@ class Set implements SetInterface
      *
      * @param callable $callable receives elements of this Set as first argument, and returns true/false.
      *
-     * @return Set
+     * @return SetInterface
      */
     public function takeWhile(callable $callable)
     {
@@ -124,6 +128,10 @@ class Set implements SetInterface
         return $this->createNew($newElements);
     }
 
+    /**
+     * @param int $number
+     * @return SetInterface
+     */
     public function drop($number)
     {
         if ($number <= 0) {
@@ -133,6 +141,10 @@ class Set implements SetInterface
         return $this->createNew(array_slice($this->elements, $number));
     }
 
+    /**
+     * @param int $number
+     * @return SetInterface
+     */
     public function dropRight($number)
     {
         if ($number <= 0) {
@@ -144,7 +156,7 @@ class Set implements SetInterface
 
     /**
      * @param callable $callable
-     * @return Set
+     * @return SetInterface
      */
     public function dropWhile(callable $callable)
     {
@@ -159,7 +171,7 @@ class Set implements SetInterface
 
     /**
      * @param callable $callable
-     * @return Set
+     * @return SetInterface
      */
     public function map(callable $callable)
     {
@@ -173,7 +185,7 @@ class Set implements SetInterface
 
     /**
      * @param callable $callable
-     * @return Set
+     * @return SetInterface
      */
     public function flatMap(callable $callable)
     {
@@ -185,6 +197,9 @@ class Set implements SetInterface
         return $newElements;
     }
 
+    /**
+     * @return SetInterface
+     */
     public function reverse()
     {
         return $this->createNew(array_reverse($this->elements));
@@ -195,11 +210,19 @@ class Set implements SetInterface
         return array_values($this->elements);
     }
 
+    /**
+     * @param callable $callable
+     * @return SetInterface
+     */
     public function filterNot(callable $callable)
     {
         return $this->filterInternal($callable, false);
     }
 
+    /**
+     * @param callable $callable
+     * @return SetInterface
+     */
     public function filter(callable $callable)
     {
         return $this->filterInternal($callable, true);
@@ -235,6 +258,9 @@ class Set implements SetInterface
         return $value;
     }
 
+    /**
+     * @return int
+     */
     public function count()
     {
         return $this->elementCount;
@@ -267,6 +293,10 @@ class Set implements SetInterface
         return false;
     }
 
+    /**
+     * @param scalar|object $elem
+     * @return SetInterface
+     */
     public function remove($elem)
     {
         if ($this->elementType === self::ELEM_TYPE_OBJECT) {
@@ -293,6 +323,10 @@ class Set implements SetInterface
         return empty($this->elements);
     }
 
+    /**
+     * @param scalar|object $elem
+     * @return SetInterface
+     */
     public function add($elem)
     {
         if ($this->elementType === null) {
@@ -349,11 +383,20 @@ class Set implements SetInterface
         return $this;
     }
 
+    /**
+     * @param array $elements
+     * @return SetInterface
+     */
     protected function createNew(array $elements)
     {
         return new static($elements);
     }
 
+    /**
+     * @param callable $callable
+     * @param $booleanKeep
+     * @return SetInterface
+     */
     private function filterInternal(callable $callable, $booleanKeep)
     {
         $newElements = [];
@@ -368,6 +411,10 @@ class Set implements SetInterface
         return $this->createNew($newElements);
     }
 
+    /**
+     * @param $elem
+     * @return bool
+     */
     private function containsScalar($elem)
     {
         if (!isset($this->lookup[$elem])) {

@@ -38,7 +38,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     /**
      * @param mixed $key
      * @param mixed $value
-     * @return $this
+     * @return MapInterfaceInterface
      */
     public function set($key, $value)
     {
@@ -62,7 +62,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
      *
      * @param array $kvMap
      *
-     * @return $this
+     * @return MapInterfaceInterface
      */
     public function setAll(array $kvMap)
     {
@@ -150,7 +150,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     }
 
     /**
-     * @return AbstractMap
+     * @return MapInterfaceInterface
      */
     public function tail()
     {
@@ -214,7 +214,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
      *
      * @param callable $callable receives the element and must return true (= keep), or false (= remove).
      *
-     * @return AbstractMap
+     * @return MapInterfaceInterface
      */
     public function filter(callable $callable)
     {
@@ -226,7 +226,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
      *
      * @param callable $callable receives the element and must return true (= remove), or false (= keep).
      *
-     * @return AbstractMap
+     * @return MapInterfaceInterface
      */
     public function filterNot(callable $callable)
     {
@@ -236,7 +236,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     /**
      * @param callable $callable
      * @param boolean  $booleanKeep
-     * @return Map
+     * @return MapInterface
      */
     private function filterInternal(callable $callable, $booleanKeep)
     {
@@ -255,7 +255,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     /**
      * @param mixed    $startValue
      * @param callable $callable
-     * @return Map
+     * @return MapInterface
      */
     public function foldLeft($startValue, callable $callable)
     {
@@ -270,7 +270,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     /**
      * @param mixed    $startValue
      * @param callable $callable
-     * @return Map
+     * @return MapInterface
      */
     public function foldRight($startValue, callable $callable)
     {
@@ -285,7 +285,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
     /**
      * @param callable $callable
-     * @return AbstractMap
+     * @return MapInterfaceInterface
      */
     public function map(callable $callable)
     {
@@ -299,7 +299,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     
     /**
      * @param callable $callable:Map
-     * @return AbstractMap
+     * @return MapInterfaceInterface
      */
     public function flatMap(callable $callable)
     {
@@ -313,7 +313,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
     /**
      * @param callable $callable
-     * @return Map
+     * @return MapInterface
      */
     public function dropWhile(callable $callable)
     {

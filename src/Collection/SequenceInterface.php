@@ -216,7 +216,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * @param integer $number
      *
-     * @return CollectionInterface
+     * @return SequenceInterface
      */
     public function take($number);
 
@@ -226,7 +226,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * @param callable $callable
      *
-     * @return CollectionInterface
+     * @return SequenceInterface
      */
     public function takeWhile(callable $callable);
 
@@ -235,7 +235,7 @@ interface SequenceInterface extends CollectionInterface
      * of the current collection.
      *
      * @param callable $callable
-     * @return CollectionInterface
+     * @return SequenceInterface
      */
     public function map(callable $callable);
 
@@ -244,7 +244,7 @@ interface SequenceInterface extends CollectionInterface
      * of the current collection.
      *
      * @param callable $callable  Callable takes (x : \Traversable) => \Traversable
-     * @return CollectionInterface
+     * @return SequenceInterface
      */
     public function flatMap(callable $callable);
 
@@ -252,7 +252,7 @@ interface SequenceInterface extends CollectionInterface
      * Returns a collection when any first level nesting is flattened into the single
      * returned collection
      *
-     * @return CollectionInterface
+     * @return SequenceInterface
      */
     public function flatten();
 }

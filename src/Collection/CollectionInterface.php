@@ -86,7 +86,7 @@ interface CollectionInterface extends \Traversable, \Countable
      * Builds a new collection by applying a function to all elements of this map.
      *
      * @param callable $callable receives the element, and the current value (the first time this equals $initialValue).
-     * @return Map
+     * @return CollectionInterface
      */
     public function map(callable $callable);
 

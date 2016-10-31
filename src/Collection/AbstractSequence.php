@@ -114,7 +114,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      *
      * @param callable $callable receives the element and must return true (= keep) or false (= remove).
      *
-     * @return AbstractSequence
+     * @return SequenceInterface
      */
     function filter(callable $callable)
     {
@@ -166,7 +166,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      *
      * @param callable $callable receives the element and must return true (= remove) or false (= keep).
      *
-     * @return AbstractSequence
+     * @return SequenceInterface
      */
     function filterNot(callable $callable)
     {
@@ -254,6 +254,9 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return new Some(end($this->elements));
     }
 
+    /**
+     * @return array
+     */
     function indices()
     {
         return array_keys($this->elements);
@@ -305,6 +308,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      *
      * @param integer $index
      * @param T       $value
+     * @return SequenceInterface
      */
     function update($index, $value)
     {
@@ -313,24 +317,42 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         }
 
         $this->elements[$index] = $value;
+        
+        return $this;
     }
 
+    /**
+     * @return bool
+     */
     function isEmpty()
     {
         return empty($this->elements);
     }
 
+    /**
+     * @return array
+     */
     function all()
     {
         return $this->elements;
     }
 
+    /**
+     * @param mixed $newElement
+     * @return SequenceInterface
+     */
     function add($newElement)
     {
         $this->elements[] = $newElement;
         $this->length++;
+
+        return $this;
     }
 
+    /**
+     * @param array|\Traversable $elements
+     * @return SequenceInterface
+     */
     function addAll($elements)
     {
         // check for array|Traversable
@@ -345,6 +367,10 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this;
     }
 
+    /**
+     * @param int $number
+     * @return SequenceInterface
+     */
     function take($number)
     {
         if ($number <= 0) {
@@ -359,7 +385,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      *
      * @param callable $callable receives elements of this sequence as first argument, and returns true/false.
      *
-     * @return Sequence
+     * @return SequenceInterface
      */
     function takeWhile(callable $callable)
     {
@@ -376,6 +402,10 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this->createNew($newElements);
     }
 
+    /**
+     * @param int $number
+     * @return SequenceInterface
+     */
     function drop($number)
     {
         if ($number <= 0) {
@@ -385,6 +415,10 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this->createNew(array_slice($this->elements, $number));
     }
 
+    /**
+     * @param int $number
+     * @return SequenceInterface
+     */
     function dropRight($number)
     {
         if ($number <= 0) {
@@ -394,6 +428,10 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this->createNew(array_slice($this->elements, 0, -1 * $number));
     }
 
+    /**
+     * @param callable $callable
+     * @return SequenceInterface
+     */
     function dropWhile(callable $callable)
     {
         for ($i = 0; $i < $this->length; $i++) {
@@ -405,6 +443,10 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this->createNew(array_slice($this->elements, $i));
     }
 
+    /**
+     * @param callable $callable
+     * @return bool
+     */
     function exists(callable $callable)
     {
         foreach ($this as $elem) {
@@ -416,11 +458,18 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return false;
     }
 
+    /**
+     * @return int
+     * @deprecated Use ::length()
+     */
     function count()
     {
         return $this->length();
     }
 
+    /**
+     * @return int
+     */
     function length()
     {
         return $this->length;
@@ -431,6 +480,10 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return new \ArrayIterator($this->elements);
     }
 
+    /**
+     * @param $elements
+     * @return SequenceInterface
+     */
     protected function createNew($elements)
     {
         return new static($elements);

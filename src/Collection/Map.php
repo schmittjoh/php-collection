@@ -22,7 +22,7 @@ class Map extends AbstractMap implements SortableInterface
 {
     /**
      * @param $callable
-     * @return $this
+     * @return MapInterface
      */
     public function sortWith(callable $callable)
     {
