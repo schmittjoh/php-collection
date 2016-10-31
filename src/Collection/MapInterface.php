@@ -25,7 +25,7 @@ use PhpOption\Option;
  *
  * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
  */
-interface MapInterface extends CollectionInterface
+interface MapInterface extends \Traversable, \Countable
 {
     /**
      * Returns the first element in the collection if available.
@@ -184,4 +184,41 @@ interface MapInterface extends CollectionInterface
      * @return MapInterface
      */
     public function takeWhile(callable $callable);
+
+    /**
+     * Builds a new collection by applying a function to all elements of this map.
+     *
+     * @param callable $callable Callable takes function(mixed $key, mixed $value): MapInterface
+     * @return Map
+     */
+    public function map(callable $callable);
+
+    /**
+     * Creates a new collection by applying the passed callable to all elements
+     * of the current collection.
+     *
+     * @param callable $callable Callable takes function(mixed $key, mixed $value): MapInterface
+     *
+     * @return CollectionInterface
+     */
+    public function flatMap(callable $callable);
+
+    /**
+     * Applies the callable to an initial value and each element, going left to right.
+     *
+     * @param mixed $initialValue
+     * @param callable $callable receives the current value (the first time this equals $initialValue) and the element
+     *
+     * @return mixed the last value returned by $callable, or $initialValue if collection is empty.
+     */
+    public function foldLeft($initialValue, callable $callable);
+
+    /**
+     * Applies the callable to each element, and an initial value, going right to left.
+     *
+     * @param mixed $initialValue
+     * @param callable $callable receives the element, and the current value (the first time this equals $initialValue).
+     * @return mixed the last value returned by $callable, or $initialValue if collection is empty.
+     */
+    public function foldRight($initialValue, callable $callable);
 }

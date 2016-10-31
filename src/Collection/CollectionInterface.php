@@ -89,4 +89,14 @@ interface CollectionInterface extends \Traversable, \Countable
      * @return Map
      */
     public function map(callable $callable);
+
+    /**
+     * Creates a new collection by applying the passed callable to all elements
+     * of the current collection.
+     *
+     * @param callable $callable Callable takes (x : \Traversable) => \Traversable
+     *
+     * @return CollectionInterface
+     */
+    public function flatMap(callable $callable);
 }
