@@ -13,7 +13,7 @@ use PhpOption\Some;
  * This implementation constraints Sets to either consist of objects that implement ObjectBasics, or objects that have
  * an external ObjectBasicsHandler implementation, or simple scalars. These types cannot be mixed within the same Set.
  *
- * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
+ * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
  */
 class Set implements SetInterface
 {

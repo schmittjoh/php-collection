@@ -25,7 +25,7 @@ use PhpOption\Option;
  *
  * Equality of elements in the sequence is established via a shallow comparison (===).
  *
- * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
+ * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
  */
 interface SequenceInterface extends CollectionInterface
 {

@@ -24,7 +24,7 @@ use PhpOption\None;
 /**
  * A simple map implementation which basically wraps an array with an object oriented interface.
  *
- * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
+ * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
  */
 class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapInterface
 {
@@ -66,7 +66,9 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
      */
     public function setAll(array $kvMap)
     {
-        $this->elements = array_merge($this->elements, $kvMap);
+        foreach ($kvMap as $k => $v) {
+            $this->set($k,$v);
+        }
 
         return $this;
     }
@@ -74,7 +76,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     public function addMap(MapInterface $map)
     {
         foreach ($map as $k => $v) {
-            $this->elements[$k] = $v;
+            $this->set($k,$v);
         }
 
         return $this;
@@ -148,7 +150,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     }
 
     /**
-     * @return Map
+     * @return AbstractMap
      */
     public function tail()
     {
@@ -157,7 +159,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
 
     /**
-     * @return None|Some
+     * @return array
      */
     public function last()
     {
@@ -283,7 +285,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
     /**
      * @param callable $callable
-     * @return Map
+     * @return AbstractMap
      */
     public function map(callable $callable)
     {
@@ -297,7 +299,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     
     /**
      * @param callable $callable:Map
-     * @return Map
+     * @return AbstractMap
      */
     public function flatMap(callable $callable)
     {

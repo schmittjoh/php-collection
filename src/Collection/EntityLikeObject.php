@@ -7,7 +7,7 @@ namespace Collection;
  *
  * Two objects are considered equal if they refer to the same instance.
  *
- * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
+ * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
  */
 trait EntityLikeObject
 {

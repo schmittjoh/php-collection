@@ -39,14 +39,16 @@ abstract class AbstractCollection
     {
         $self = $this;
 
-        return new LazyOption(function() use ($callable, $self) {
-            foreach ($self as $elem) {
-                if (call_user_func($callable, $elem) === true) {
-                    return new Some($elem);
+        return new LazyOption(
+            function() use ($callable, $self) {
+                foreach ($self as $elem) {
+                    if (call_user_func($callable, $elem) === true) {
+                        return new Some($elem);
+                    }
                 }
-            }
 
-            return None::create();
-        });
+                return None::create();
+            }
+        );
     }
 }

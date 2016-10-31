@@ -8,7 +8,7 @@ class DateTimeHandler implements ObjectBasicsHandler
 {
     public function hash($object)
     {
-        if ( ! $object instanceof \DateTime) {
+        if (!$object instanceof \DateTime) {
             throw new \LogicException('$object must be an instance of \DateTime.');
         }
 
@@ -17,10 +17,11 @@ class DateTimeHandler implements ObjectBasicsHandler
 
     public function equals($thisObject, $otherObject)
     {
-        if ( ! $thisObject instanceof \DateTime) {
+        if (!$thisObject instanceof \DateTime) {
             throw new \LogicException('$thisObject must be an instance of \DateTime.');
         }
-        if ( ! $otherObject instanceof \DateTime) {
+
+        if (!$otherObject instanceof \DateTime) {
             return false;
         }
 

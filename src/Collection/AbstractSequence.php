@@ -49,7 +49,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     function addSequence(SequenceInterface $seq)
     {
-        $this->addAll($seq->all());
+        $this->addAll($seq);
 
         return $this;
     }
@@ -96,7 +96,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     function tail()
     {
-        return new static(array_slice($this->elements, 1));
+        return $this->createNew(array_slice($this->elements, 1));
     }
 
     function reverse()
@@ -339,10 +339,8 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         }
 
         foreach ($elements as $e) {
-            $this->elements[] = $e;
+            $this->add($e);
         }
-
-        $this->length+= count($elements);
 
         return $this;
     }
@@ -433,7 +431,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return new \ArrayIterator($this->elements);
     }
 
-    protected function createNew(array $elements)
+    protected function createNew($elements)
     {
         return new static($elements);
     }

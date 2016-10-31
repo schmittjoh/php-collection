@@ -21,7 +21,7 @@ namespace Collection;
 /**
  * A sequence with a fixed sort-order.
  *
- * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
+ * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
  */
 class SortedSequence extends AbstractSequence
 {
@@ -90,7 +90,7 @@ class SortedSequence extends AbstractSequence
         return $this;
     }
 
-    protected function createNew(array $elements)
+    protected function createNew($elements)
     {
         return new static($this->sortFunc, $elements);
     }

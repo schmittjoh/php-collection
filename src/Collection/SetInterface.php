@@ -8,7 +8,7 @@ use PhpOption\Option;
  *
  * Each Set contains equal values only once.
  *
- * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
+ * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
  */
 interface SetInterface extends CollectionInterface, \IteratorAggregate
 {

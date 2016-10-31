@@ -21,7 +21,7 @@ namespace Collection;
 /**
  * Interface for sortable collections.
  *
- * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
+ * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
  */
 interface SortableInterface
 {

@@ -5,7 +5,7 @@ namespace Collection;
 /**
  * Interface for external handlers that provide ObjectBasics functionality.
  *
- * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
+ * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
  */
 interface ObjectBasicsHandler
 {

@@ -21,7 +21,7 @@ namespace Collection;
 /**
  * Basic interface which adds some behaviors, and a few methods common to all collections.
  *
- * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
+ * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
  */
 interface CollectionInterface extends \Traversable, \Countable
 {

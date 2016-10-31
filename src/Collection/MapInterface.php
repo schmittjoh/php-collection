@@ -23,7 +23,7 @@ use PhpOption\Option;
 /**
  * Basic map interface.
  *
- * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
+ * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
  */
 interface MapInterface extends CollectionInterface
 {

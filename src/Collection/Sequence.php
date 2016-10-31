@@ -27,7 +27,7 @@ namespace Collection;
  *     - Values: anything, duplicates allowed
  *     - Ordering: same as input unless when explicitly sorted
  *
- * @author Artyom Sukharev, J. M. Schmitt <aly.casus@gmail.com>
+ * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
  */
 class Sequence extends AbstractSequence implements SortableInterface
 {
