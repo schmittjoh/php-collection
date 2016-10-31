@@ -18,6 +18,7 @@
 
 namespace Collection;
 
+use PhpOption\Option;
 use PhpOption\Some;
 use PhpOption\None;
 
@@ -38,7 +39,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     /**
      * @param mixed $key
      * @param mixed $value
-     * @return MapInterfaceInterface
+     * @return MapInterface
      */
     public function set($key, $value)
     {
@@ -62,7 +63,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
      *
      * @param array $kvMap
      *
-     * @return MapInterfaceInterface
+     * @return MapInterface
      */
     public function setAll(array $kvMap)
     {
@@ -113,6 +114,9 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $element;
     }
 
+    /**
+     * @return MapInterface
+     */
     public function clear()
     {
         $this->elements = [];
@@ -150,7 +154,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     }
 
     /**
-     * @return MapInterfaceInterface
+     * @return MapInterface
      */
     public function tail()
     {
@@ -159,7 +163,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
 
     /**
-     * @return array
+     * @return null|array
      */
     public function last()
     {
@@ -174,7 +178,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     }
 
     /**
-     * @return None|Some
+     * @return Option
      */
     public function lastOption()
     {
@@ -188,6 +192,10 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return new Some([$key, $elem]);
     }
 
+    /**
+     * @param $elem
+     * @return bool
+     */
     public function contains($elem)
     {
         foreach ($this->elements as $existingElem) {
@@ -214,7 +222,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
      *
      * @param callable $callable receives the element and must return true (= keep), or false (= remove).
      *
-     * @return MapInterfaceInterface
+     * @return MapInterface
      */
     public function filter(callable $callable)
     {
@@ -226,7 +234,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
      *
      * @param callable $callable receives the element and must return true (= remove), or false (= keep).
      *
-     * @return MapInterfaceInterface
+     * @return MapInterface
      */
     public function filterNot(callable $callable)
     {
@@ -285,7 +293,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
     /**
      * @param callable $callable
-     * @return MapInterfaceInterface
+     * @return MapInterface
      */
     public function map(callable $callable)
     {
@@ -299,7 +307,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     
     /**
      * @param callable $callable:Map
-     * @return MapInterfaceInterface
+     * @return MapInterface
      */
     public function flatMap(callable $callable)
     {

@@ -17,7 +17,6 @@
 
 namespace Collection;
 
-use OutOfBoundsException;
 use PhpOption\None;
 use PhpOption\Some;
 
@@ -272,7 +271,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     function get($index)
     {
         if (!isset($this->elements[$index])) {
-            throw new OutOfBoundsException(sprintf('The index "%s" does not exist in this sequence.', $index));
+            throw new \OutOfBoundsException(sprintf('The index "%s" does not exist in this sequence.', $index));
         }
 
         return $this->elements[$index];
@@ -290,7 +289,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     function remove($index)
     {
         if (!isset($this->elements[$index])) {
-            throw new OutOfBoundsException(sprintf('The index "%d" is not in the interval [0, %d).', $index, $this->length));
+            throw new \OutOfBoundsException(sprintf('The index "%d" is not in the interval [0, %d).', $index, $this->length));
         }
 
         $element = $this->elements[$index];
