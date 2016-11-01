@@ -186,6 +186,17 @@ interface MapInterface extends \Traversable, \Countable
     public function takeWhile(callable $callable);
 
     /**
+     * Returns a filtered collection of the same type.
+     *
+     * Removes all elements for which the provided callable returns false.
+     *
+     * @param callable $callable receives a key and an element of the map and must return true (= keep) or false (= remove).
+     *
+     * @return MapInterface
+     */
+    public function filter(callable $callable);
+
+    /**
      * Builds a new collection by applying a function to all elements of this map.
      *
      * @param callable $callable Callable takes function(mixed $key, mixed $value): MapInterface
