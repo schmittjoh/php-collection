@@ -1,5 +1,9 @@
 PHP Collection
 ==============
+
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/0448ddfd-68f8-4c77-a37b-2f3883652a68/mini.png)](https://insight.sensiolabs.com/projects/0448ddfd-68f8-4c77-a37b-2f3883652a68)
+[![Build Status](https://travis-ci.org/Imunhatep/php-collection.svg?branch=master)](https://travis-ci.org/Imunhatep/php-collection)
+
 This library adds basic collections for PHP. It's based on J. M. Schmitt work. The reason behind this fork is that original repository haven't been updated for quite some time aтd it laсks some musthave functionality.
 
 Original code was refactored and now requires PHP 5.5, updated with several usefull methods like ::flatMap(), ::map(), ::foldLeft(), ::headOption(),  ::lastOption(), ::tail()  and e.t.c. Inspired by Scala collections. Added type-hinting.
