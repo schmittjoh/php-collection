@@ -186,6 +186,18 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this->createNew($newElements);
     }
 
+    /**
+     * Applies a binary operator to a start value and all elements of this set, going left to right.
+     * foldLeft[B](z: B, op: (B, A) ⇒ B): B
+     *
+     * B - the result type of the binary operator.
+     * z - the start value.
+     * op -the binary operator.
+     *
+     * @param mixed $initialValue - the start value
+     * @param callable $callable - the binary operator
+     * @return mixed - the result of inserting op between consecutive elements of this set, going left to right with the start value z on the left:
+     */
     function foldLeft($initialValue, callable $callable)
     {
         $value = $initialValue;
@@ -440,6 +452,29 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         }
 
         return $this->createNew(array_slice($this->elements, $i));
+    }
+
+    /**
+     * @param int $size
+     * @return SequenceInterface<SequenceInterface<A>>
+     */
+    function sliding($size)
+    {
+        if ($size <= 0) {
+            throw new \InvalidArgumentException(
+                sprintf('The number must be greater than 0, but got %d.', $size)
+            );
+        }
+
+        $slices = new Sequence();
+
+        $offset = 0;
+        while ($offset < $this->length()) {
+            $slices->add($this->createNew(array_slice($this->elements, $offset, $size)));
+            $offset += $size;
+        }
+
+        return $slices;
     }
 
     /**

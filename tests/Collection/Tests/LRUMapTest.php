@@ -41,14 +41,20 @@ class LRUMapTest extends MapTest
 
     }
 
+    public function testTail()
+    {
+        $this->assertEquals(['bar', 'baz'], $this->map->tail()->headOption()->get());
+    }
 
     protected function setUp()
     {
         $this->map = new LRUMap(4);
-        $this->map->setAll(array(
-            'foo' => 'bar',
-            'bar' => 'baz',
-            'baz' => 'boo',
-        ));
+        $this->map->setAll(
+            [
+                'foo' => 'bar',
+                'bar' => 'baz',
+                'baz' => 'boo'
+            ]
+        );
     }
 }

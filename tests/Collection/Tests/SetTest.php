@@ -3,13 +3,40 @@
 namespace Collection\Tests;
 
 use Collection\ObjectBasics;
-use Collection\ObjectBasicsHandlerRegistry;
 use Collection\Set;
 
 class SetTest extends \PHPUnit_Framework_TestCase
 {
     /** @var Set */
     private $set;
+
+    public function testHead()
+    {
+        $this->set->addAll(['foo', 'bar']);
+        $this->assertEquals('foo', $this->set->headOption()->get());
+        $this->assertEquals('foo', $this->set->head());
+
+        $this->set = new Set();
+        $this->assertTrue($this->set->headOption()->isEmpty());
+        $this->assertNull($this->set->head());
+    }
+
+    public function testLast()
+    {
+        $this->set->addAll(['baz', 'boo']);
+        $this->assertEquals('boo', $this->set->lastOption()->get());
+        $this->assertEquals('boo', $this->set->last());
+
+        $this->set = new Set();
+        $this->assertTrue($this->set->lastOption()->isEmpty());
+        $this->assertNull($this->set->last());
+    }
+
+    public function testTail()
+    {
+        $this->set->addAll(['foo', 'bar', 'baz', 'boo']);
+        $this->assertEquals('bar', $this->set->tail()->headOption()->get());
+    }
 
     public function testContainsScalar()
     {

@@ -249,10 +249,74 @@ interface SequenceInterface extends CollectionInterface
     public function flatMap(callable $callable);
 
     /**
+     * Returns a filtered sequence.
+     *
+     * @param callable $callable receives the element and must return true (= keep) or false (= remove).
+     *
+     * @return SequenceInterface
+     */
+    function filter(callable $callable);
+
+    /**
+     * Returns a filtered sequence.
+     *
+     * @param callable $callable receives the element and must return true (= remove) or false (= keep).
+     *
+     * @return SequenceInterface
+     */
+    function filterNot(callable $callable);
+
+    /**
+     * Applies a binary operator to a start value and all elements of this sequence, going left to right.
+     * foldLeft[B](z: B, op: (B, A) ⇒ B): B
+     *
+     * B - the result type of the binary operator.
+     * z - the start value.
+     * op -the binary operator.
+     *
+     * @param mixed $initialValue - the start value
+     * @param callable $callable - the binary operator
+     * @return mixed - the result of inserting op between consecutive elements of this set, going left to right with the start value z on the left:
+     */
+    function foldLeft($initialValue, callable $callable);
+
+    /**
+     * Applies a binary operator to all elements of this sequence and a start value, going right to left.
+     * foldRight[B](z: B)(op: (A, B) ⇒ B): B
+     *
+     * B - the result type of the binary operator.
+     * z - the start value.
+     * op -the binary operator.
+     *
+     * @param mixed $initialValue - the start value
+     * @param callable $callable - the binary operator
+     * @return mixed - the result of inserting op between consecutive elements of this set, going left to right with the start value z on the left:
+     */
+    function foldRight($initialValue, callable $callable);
+
+    /**
      * Returns a collection when any first level nesting is flattened into the single
      * returned collection
      *
      * @return SequenceInterface
      */
     public function flatten();
+
+    /**
+     * sliding(size: Int): Sequence[Sequence[A]]
+     * Groups elements in fixed size blocks by passing a "sliding window" over them (as opposed to partitioning them, as is done in grouped.)
+     *
+     * @param int $size - the number of elements per group
+     * @return SequenceInterface - An iterator producing sets of size size,
+     * except the last and the only element will be truncated if there are fewer elements than size.
+     */
+    function sliding($size);
+
+    /**
+     * tail: Sequence[A]
+     * Selects all elements except the first.
+     *
+     * @return SequenceInterface - a sequence consisting of all elements of this sequence except the first one.
+     */
+    function tail();
 }

@@ -104,6 +104,11 @@ class MapTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($this->map->last());
     }
 
+    public function testTail()
+    {
+        $this->assertEquals(['bar', 'baz'], $this->map->tail()->headOption()->get());
+    }
+
     public function testContains()
     {
         $this->assertTrue($this->map->contains('boo'));

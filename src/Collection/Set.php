@@ -50,10 +50,24 @@ class Set implements SetInterface
         return $this;
     }
 
+    function head()
+    {
+        if (empty($this->elements)) {
+            return null;
+        }
+
+        return reset($this->elements);
+    }
+
+    function tail()
+    {
+        return $this->createNew(array_slice($this->elements, 1));
+    }
+
     /**
      * @return None|Some
      */
-    public function first()
+    public function headOption()
     {
         if (empty($this->elements)) {
             return None::create();
@@ -62,10 +76,19 @@ class Set implements SetInterface
         return new Some(reset($this->elements));
     }
 
+    function last()
+    {
+        if (empty($this->elements)) {
+            return null;
+        }
+
+        return end($this->elements);
+    }
+
     /**
      * @return None|Some
      */
-    public function last()
+    public function lastOption()
     {
         if (empty($this->elements)) {
             return None::create();
@@ -259,9 +282,41 @@ class Set implements SetInterface
     }
 
     /**
+     * @param int $size
+     * @return SequenceInterface<SetInterface<A>>
+     */
+    function sliding($size)
+    {
+        if ($size <= 0) {
+            throw new \InvalidArgumentException(
+                sprintf('The number must be greater than 0, but got %d.', $size)
+            );
+        }
+
+        $slices = new Sequence();
+
+        $offset = 0;
+        while ($offset < $this->length()) {
+            $slices->add($this->createNew(array_slice($this->elements, $offset, $size)));
+            $offset += $size;
+        }
+
+        return $slices;
+    }
+
+    /**
+     * @return int
+     * @deprecated Use ::length()
+     */
+    function count()
+    {
+        return $this->length();
+    }
+
+    /**
      * @return int
      */
-    public function count()
+    public function length()
     {
         return $this->elementCount;
     }

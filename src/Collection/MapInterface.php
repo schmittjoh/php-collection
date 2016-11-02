@@ -63,6 +63,11 @@ interface MapInterface extends \Traversable, \Countable
     public function all();
 
     /**
+     * @return int - number of elements in collection
+     */
+    public function length();
+
+    /**
      * Searches the collection for an element.
      *
      * @param callable $callable receives the element as first argument, and returns true, or false
@@ -197,6 +202,17 @@ interface MapInterface extends \Traversable, \Countable
     public function filter(callable $callable);
 
     /**
+     * Returns a filtered collection of the same type.
+     *
+     * Removes all elements for which the provided callable returns false.
+     *
+     * @param callable $callable receives a key and an element of the map and must return true (= remove) or false (= keep).
+     *
+     * @return MapInterface
+     */
+    public function filterNot(callable $callable);
+
+    /**
      * Builds a new collection by applying a function to all elements of this map.
      *
      * @param callable $callable Callable takes function(mixed $key, mixed $value): MapInterface
@@ -232,4 +248,22 @@ interface MapInterface extends \Traversable, \Countable
      * @return mixed the last value returned by $callable, or $initialValue if collection is empty.
      */
     public function foldRight($initialValue, callable $callable);
+
+    /**
+     * sliding(size: Int): Sequence[Map[A]]
+     * Groups elements in fixed size blocks by passing a "sliding window" over them (as opposed to partitioning them, as is done in grouped.)
+     *
+     * @param int $size - the number of elements per group
+     * @return SequenceInterface - An iterator producing sets of size size,
+     * except the last and the only element will be truncated if there are fewer elements than size.
+     */
+    function sliding($size);
+
+    /**
+     * tail: Map[A, B]
+     * Selects all elements except the first.
+     *
+     * @return MapInterface - a map consisting of all elements of this map except the first one.
+     */
+    function tail();
 }

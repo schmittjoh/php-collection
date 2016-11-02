@@ -72,7 +72,7 @@ class LRUMap extends Map implements SortableInterface
         }
         else {
             parent::set($key, $value);
-            if ($this->count() > $this->maximumSize) {
+            if ($this->length() > $this->maximumSize) {
                 // remove least recently used element (front of array)
                 reset($this->elements);
                 unset($this->elements[key($this->elements)]);
@@ -80,6 +80,14 @@ class LRUMap extends Map implements SortableInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return MapInterface
+     */
+    public function tail()
+    {
+        return $this->createNew(array_slice($this->elements, 1));
     }
 
     /**

@@ -173,6 +173,11 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(0, $this->seq->last());
     }
 
+    public function testTail()
+    {
+        $this->assertEquals(new \stdClass(), $this->seq->tail()->headOption()->get());
+    }
+
     public function testIndices()
     {
         $this->assertSame([0, 1, 2, 3], $this->seq->indices());

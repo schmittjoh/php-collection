@@ -134,8 +134,9 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         }
 
         $elem = reset($this->elements);
+        $key = key($this->elements);
 
-        return new Some([key($this->elements), $elem]);
+        return new Some([$key, $elem]);
     }
 
     /**
@@ -160,7 +161,6 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     {
         return new static(array_slice($this->elements, 1));
     }
-
 
     /**
      * @return null|array
@@ -394,6 +394,27 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return None::create();
     }
 
+    /**
+     * @param int $size
+     * @return SequenceInterface<MapInterface<A>>
+     */
+    function sliding($size)
+    {
+        if ($size <= 0) {
+            throw new \InvalidArgumentException(sprintf('The number must be greater than 0, but got %d.', $size));
+        }
+
+        $slices = new Sequence();
+
+        $offset = 0;
+        while ($offset < $this->length()) {
+            $slices->add(new static(array_slice($this->elements, $offset, $size)));
+            $offset += $size;
+        }
+
+        return $slices;
+    }
+
     public function keys()
     {
         return array_keys($this->elements);
@@ -404,9 +425,18 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return array_values($this->elements);
     }
 
-    public function count()
+    public function length()
     {
         return count($this->elements);
+    }
+
+    /**
+     * @return int
+     * @deprecated Use ::length()
+     */
+    public function count()
+    {
+        return $this->length();
     }
 
     public function getIterator()
