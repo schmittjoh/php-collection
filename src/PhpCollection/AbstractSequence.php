@@ -104,6 +104,11 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this->createNew($newElements);
     }
 
+    public function reduce($callable)
+    {
+        return array_reduce($this->elements, $callable);
+    }
+
     /**
      * Returns a filtered sequence.
      *

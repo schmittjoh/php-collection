@@ -331,6 +331,15 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('c', 'd'), $newSeq->all());
     }
 
+    public function testReduce()
+    {
+        $seq = new Sequence([1,2,4,5]);
+        $reduced = $seq->reduce(function ($tot, $el) {
+            return $tot + $el;
+        });
+        $this->assertEquals(12, $reduced);
+    }
+
     protected function setUp()
     {
         $this->seq = new Sequence();
