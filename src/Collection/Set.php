@@ -142,7 +142,7 @@ class Set implements SetInterface, \JsonSerializable
     {
         $newElements = [];
 
-        for ($i = 0, $c = count($this->elements); $i < $c; $i++) {
+        for ($i = 0, $c = $this->length(); $i < $c; $i++) {
             if ($callable($this->elements[$i]) !== true) {
                 break;
             }
@@ -161,7 +161,9 @@ class Set implements SetInterface, \JsonSerializable
     public function drop($number)
     {
         if ($number <= 0) {
-            throw new \InvalidArgumentException(sprintf('The number must be greater than 0, but got %d.', $number));
+            throw new \InvalidArgumentException(
+                sprintf('The number must be greater than 0, but got %d.', $number)
+            );
         }
 
         return $this->createNew(array_slice($this->elements, $number));
@@ -175,7 +177,9 @@ class Set implements SetInterface, \JsonSerializable
     public function dropRight($number)
     {
         if ($number <= 0) {
-            throw new \InvalidArgumentException(sprintf('The number must be greater than 0, but got %d.', $number));
+            throw new \InvalidArgumentException(
+                sprintf('The number must be greater than 0, but got %d.', $number)
+            );
         }
 
         return $this->createNew(array_slice($this->elements, 0, -1 * $number));
@@ -335,52 +339,43 @@ class Set implements SetInterface, \JsonSerializable
 
     public function contains($elem)
     {
-        if ($this->elementType === self::ELEM_TYPE_OBJECT) {
-            if ($elem instanceof ObjectBasicsInterface) {
-                return $this->containsObject($elem);
-            }
-
-            return false;
+        if (($this->elementType === self::ELEM_TYPE_OBJECT) && ($elem instanceof ObjectBasicsInterface)) {
+            $contains = $this->containsObject($elem);
         }
-        else if ($this->elementType === self::ELEM_TYPE_OBJECT_WITH_HANDLER) {
-            if (is_object($elem)) {
-                return $this->containsObjectWithHandler($elem, ObjectBasicsHandlerRegistry::getHandler(get_class($elem)));
-            }
-
-            return false;
+        else if (($this->elementType === self::ELEM_TYPE_OBJECT_WITH_HANDLER) && is_object($elem)) {
+            $contains = $this->containsObjectWithHandler(
+                $elem,
+                ObjectBasicsHandlerRegistry::getHandler(get_class($elem))
+            );
         }
-        else if ($this->elementType === self::ELEM_TYPE_SCALAR) {
-            if (is_scalar($elem)) {
-                return $this->containsScalar($elem);
-            }
-
-            return false;
+        else if (($this->elementType === self::ELEM_TYPE_SCALAR) && is_scalar($elem)) {
+            $contains = $this->containsScalar($elem);
+        }
+        else {
+            $contains = false;
         }
 
-        return false;
+        return $contains;
     }
 
     /**
-     * @param scalar|object $elem
+     * @param mixed|object $elem
      *
      * @return SetInterface
      */
     public function remove($elem)
     {
-        if ($this->elementType === self::ELEM_TYPE_OBJECT) {
-            if ($elem instanceof ObjectBasicsInterface) {
-                $this->removeObject($elem);
-            }
+        if (($this->elementType === self::ELEM_TYPE_OBJECT) && ($elem instanceof ObjectBasicsInterface)) {
+            $this->removeObject($elem);
         }
-        else if ($this->elementType === self::ELEM_TYPE_OBJECT_WITH_HANDLER) {
-            if (is_object($elem)) {
-                $this->removeObjectWithHandler($elem, ObjectBasicsHandlerRegistry::getHandler(get_class($elem)));
-            }
+        else if (($this->elementType === self::ELEM_TYPE_OBJECT_WITH_HANDLER) && is_object($elem)) {
+            $this->removeObjectWithHandler(
+                $elem,
+                ObjectBasicsHandlerRegistry::getHandler(get_class($elem))
+            );
         }
-        else if ($this->elementType === self::ELEM_TYPE_SCALAR) {
-            if (is_scalar($elem)) {
-                $this->removeScalar($elem);
-            }
+        else if (($this->elementType === self::ELEM_TYPE_SCALAR) && is_scalar($elem)) {
+            $this->removeScalar($elem);
         }
 
         return $this;
@@ -392,61 +387,77 @@ class Set implements SetInterface, \JsonSerializable
     }
 
     /**
-     * @param scalar|object $elem
+     * @param mixed|object $elem
      *
      * @return SetInterface
      */
     public function add($elem)
     {
-        if ($this->elementType === null) {
-            if ($elem instanceof ObjectBasicsInterface) {
-                $this->addObject($elem);
-            }
-            else if (is_scalar($elem)) {
-                $this->addScalar($elem);
-            }
-            else {
-                if (is_object($elem)) {
-                    $this->addObjectWithHandler($elem, ObjectBasicsHandlerRegistry::getHandler(get_class($elem)));
+        switch ($this->elementType) {
+            case null:
+                if ($elem instanceof ObjectBasicsInterface) {
+                    $this->addObject($elem);
+                }
+                else if (is_scalar($elem)) {
+                    $this->addScalar($elem);
+                }
+                else if (is_object($elem)) {
+                    $this->addObjectWithHandler(
+                        $elem,
+                        ObjectBasicsHandlerRegistry::getHandler(get_class($elem))
+                    );
                 }
                 else {
                     throw new \LogicException(sprintf('The type of $elem ("%s") is not supported in sets.', gettype($elem)));
                 }
-            }
-        }
-        else if ($this->elementType === self::ELEM_TYPE_OBJECT) {
-            if ($elem instanceof ObjectBasicsInterface) {
-                $this->addObject($elem);
+                break;
+            case self::ELEM_TYPE_OBJECT:
+                if ($elem instanceof ObjectBasicsInterface) {
+                    $this->addObject($elem);
+                }
+                else if (is_object($elem)) {
+                    throw new \LogicException(
+                        sprintf(
+                            'This Set already contains object implement ObjectBasics, and cannot be mixed with objects that do not implement this interface like "%s".',
+                            get_class($elem)
+                        )
+                    );
+                }
+                else {
+                    throw new \LogicException(
+                        sprintf(
+                            'This Set already contains objects, and cannot be mixed with elements of type "%s".',
+                            gettype($elem)
+                        )
+                    );
+                }
+                break;
+            case self::ELEM_TYPE_OBJECT_WITH_HANDLER:
+                if (!is_object($elem)) {
+                    throw new \LogicException(
+                        sprintf(
+                            'This Set already contains object with an external handler, and cannot be mixed with elements of type "%s".',
+                            gettype($elem)
+                        )
+                    );
+                }
 
-                return $this;
-            }
-
-            if (is_object($elem)) {
-                throw new \LogicException(sprintf('This Set already contains object implement ObjectBasics, and cannot be mixed with objects that do not implement this interface like "%s".', get_class($elem)));
-            }
-
-            throw new \LogicException(sprintf('This Set already contains objects, and cannot be mixed with elements of type "%s".', gettype($elem)));
-        }
-        else if ($this->elementType === self::ELEM_TYPE_OBJECT_WITH_HANDLER) {
-            if (is_object($elem)) {
                 $this->addObjectWithHandler($elem, ObjectBasicsHandlerRegistry::getHandler(get_class($elem)));
+                break;
+            case self::ELEM_TYPE_SCALAR:
+                if (!is_scalar($elem)) {
+                    throw new \LogicException(
+                        sprintf(
+                            'This Set already contains scalars, and cannot be mixed with elements of type "%s".',
+                            gettype($elem)
+                        )
+                    );
+                }
 
-                return $this;
-            }
-
-            throw new \LogicException(sprintf('This Set already contains object with an external handler, and cannot be mixed with elements of type "%s".', gettype($elem)));
-        }
-        else if ($this->elementType === self::ELEM_TYPE_SCALAR) {
-            if (is_scalar($elem)) {
                 $this->addScalar($elem);
-
-                return $this;
-            }
-
-            throw new \LogicException(sprintf('This Set already contains scalars, and cannot be mixed with elements of type "%s".', gettype($elem)));
-        }
-        else {
-            throw new \LogicException('Unknown element type in Set - should never be reached.');
+                break;
+            default:
+                throw new \LogicException('Unknown element type in Set');
         }
 
         return $this;
