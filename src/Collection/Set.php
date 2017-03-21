@@ -322,7 +322,7 @@ class Set implements SetInterface, \JsonSerializable
 
     /**
      * @return int
-     * @deprecated Use ::length()
+     * @deprecated Use length()
      */
     public function count()
     {
@@ -610,7 +610,7 @@ class Set implements SetInterface, \JsonSerializable
         if (isset($this->lookup[$elem])) {
             foreach ($this->lookup[$elem] as $index) {
                 if ($this->elements[$index] === $elem) {
-                    return; // Already exists.
+                    return;
                 }
             }
         }
@@ -625,7 +625,7 @@ class Set implements SetInterface, \JsonSerializable
         if (isset($this->lookup[$hash])) {
             foreach ($this->lookup[$hash] as $index) {
                 if ($handler->equals($object, $this->elements[$index])) {
-                    return; // Already exists.
+                    return;
                 }
             }
         }
@@ -640,7 +640,7 @@ class Set implements SetInterface, \JsonSerializable
         if (isset($this->lookup[$hash])) {
             foreach ($this->lookup[$hash] as $index) {
                 if ($elem->equals($this->elements[$index])) {
-                    return; // Element already exists.
+                    return;
                 }
             }
         }
