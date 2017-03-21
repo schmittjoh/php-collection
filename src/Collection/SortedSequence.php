@@ -44,7 +44,7 @@ class SortedSequence extends AbstractSequence implements \JsonSerializable
 
         foreach ($this->elements as $element) {
             // We insert the new element before the first element that is greater than itself.
-            if (!$added and ((int)$sortFunc($newElement, $element) < 0)) {
+            if (!$added && ((int)$sortFunc($newElement, $element) < 0)) {
                 $newElements[] = $newElement;
                 $added = true;
             }
