@@ -15,21 +15,21 @@ Collections can be seen as more specialized arrays for which certain contracts a
 
 Supported Collections:
 
-- Sequences
+- [Sequence](#sequence-anchor)
 
   - Keys: numerical, consequentially increasing, no gaps
   - Values: anything, duplicates allowed
   - Classes: ``Sequence``, ``SortedSequence``
 
 
-- Maps
+- [Map](#map-anchor)
 
   - Keys: strings or objects, duplicate keys not allowed
   - Values: anything, duplicates allowed
   - Classes: ``Map``, ``LRUMap``
 
 
-- Sets
+- [Set](#set-anchor)
 
   - Keys: not meaningful
   - Values: objects, or scalars, each value is guaranteed to be unique (see Set usage below for details)
@@ -57,48 +57,10 @@ Usage
 -----
 Collection classes provide a rich API.
 
-Sets
------
-In a Set each value is guaranteed to be unique. The ``Set`` class supports objects, and scalars as value. Equality
-is determined via the following steps.
+Sequence <a name="sequence-anchor"></a>
+-------------------------------------------------
 
-**Equality of Objects**
-
-    1. If an object implements ``ObjectBasics``, equality is determined by the ``equals()`` method.
-    2. If an object has an external handler like the ``DateTime`` that was registered via ``ObjectBasicsHandlerRegistry::registerHandlerFor``,
-       equality is determined by that handler's ``equals()`` method.
-    3. If none of the above is applicable, equality is determined by identity ``$a === $b``.
-
-**Equality of Scalars**
-
-    Scalar are considered equal if ``$a === $b`` is true.
-
-
-.. code-block :: php
-
-    $set = new Set();
-    $set->add(new \DateTime('today'));
-    $set->add(new \DateTime('today'));
-
-    var_dump(count($set)); // int(1) -> the same date is not added twice
-
-    foreach ($set as $date) {
-        var_dump($date);
-    }
-
-    $set->all();
-    $set->addSet($otherSet);
-    $set->addAll($someElements);
-
-    // Traverse
-    $set->map(function($x) { return $x*2; });
-    $set->flatMap(function($x) { return [$x*2, $x*4]; });
-
-
-Sequences
----------
-
-.. code-block :: php
+```php
 
     // Read Operations
     $seq = new Sequence([0, 2, 3, 2]);
@@ -126,11 +88,12 @@ Sequences
     $seq = new Sequence([0, 5, 4, 2]);
     $seq->sortWith(function($a, $b) { return $a - $b; });
     $seq->all(); // [0, 2, 4, 5]
+```
 
-Maps
-----
+Maps <a name="map-anchor"></a>
+------------------------------
 
-.. code-block :: php
+```php
 
     // Read Operations
     $map = new Map(['foo' => 'bar', 'baz' => 'boo']);
@@ -144,8 +107,8 @@ Maps
     $map->lastOption(); // Some(['key', 'value'])
     $map->last();       // null | ['key', 'value']
     
-    $map->headOption()->get(); // ['foo', 'bar']
-    $map->lastOption()->get(); // ['baz', 'boo']
+    $map->headOption()->getOrElse([]); // ['foo', 'bar']
+    $map->lastOption()->getOrElse([]); // ['baz', 'boo']
     
     $map->tail();            // ['baz' => 'boo']
 
@@ -166,15 +129,42 @@ Maps
     $map->flatMap(function($key, $value) { return (new Map())->set($key, $value * 2); });
     
     $map->foldLeft(Object $s, function(SomeObject $s, $k, $v){ $s->add([$k, $v * 2]); return $s; })
+```
+
+Set <a name="set-anchor"></a>
+-----------------------------
+In a Set each value is guaranteed to be unique. The ``Set`` class supports objects, and scalars as value. Equality
+is determined via the following steps.
+
+**Equality of Objects**
+
+    1. If an object implements ``ObjectBasics``, equality is determined by the ``equals()`` method.
+    2. If an object has an external handler like the ``DateTime`` that was registered via ``ObjectBasicsHandlerRegistry::registerHandlerFor``,
+       equality is determined by that handler's ``equals()`` method.
+    3. If none of the above is applicable, equality is determined by identity ``$a === $b``.
+
+**Equality of Scalars**
+
+    Scalar are considered equal if ``$a === $b`` is true.
 
 
-License
--------
+```php
 
-The code is released under the business-friendly `Apache2 license`_.
+    $set = new Set();
+    $set->add(new \DateTime('today'));
+    $set->add(new \DateTime('today'));
 
-Documentation is subject to the `Attribution-NonCommercial-NoDerivs 3.0 Unported
-license`_.
+    var_dump(count($set)); // int(1) -> the same date is not added twice
 
-.. _Apache2 license: http://www.apache.org/licenses/LICENSE-2.0.html
-.. _Attribution-NonCommercial-NoDerivs 3.0 Unported license: http://creativecommons.org/licenses/by-nc-nd/3.0/
+    foreach ($set as $date) {
+        var_dump($date);
+    }
+
+    $set->all();
+    $set->addSet($otherSet);
+    $set->addAll($someElements);
+
+    // Traverse
+    $set->map(function($x) { return $x*2; });
+    $set->flatMap(function($x) { return [$x*2, $x*4]; });
+```
