@@ -68,7 +68,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
     /**
      * @return int - number of elements in collection
      */
-    function length();
+    public function length();
 
     /**
      * Returns a new Set with all elements in reverse order.
@@ -164,7 +164,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      *
      * @return SequenceInterface
      */
-    function filter(callable $callable);
+    public function filter(callable $callable);
 
     /**
      * Returns a filtered sequence.
@@ -173,7 +173,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      *
      * @return SetInterface
      */
-    function filterNot(callable $callable);
+    public function filterNot(callable $callable);
 
     /**
      * Applies a binary operator to a start value and all elements of this set, going left to right.
@@ -187,7 +187,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      * @param callable $callable - the binary operator
      * @return mixed - the result of inserting op between consecutive elements of this set, going left to right with the start value z on the left:
      */
-    function foldLeft($initialValue, callable $callable);
+    public function foldLeft($initialValue, callable $callable);
 
     /**
      * Applies a binary operator to all elements of this set and a start value, going right to left.
@@ -201,7 +201,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      * @param callable $callable - the binary operator
      * @return mixed - the result of inserting op between consecutive elements of this set, going left to right with the start value z on the left:
      */
-    function foldRight($initialValue, callable $callable);
+    public function foldRight($initialValue, callable $callable);
 
     /**
      * sliding(size: Int): Sequence[Set[A]]
@@ -211,5 +211,5 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      * @return SequenceInterface - An iterator producing sets of size size,
      * except the last and the only element will be truncated if there are fewer elements than size.
      */
-    function sliding($size);
+    public function sliding($size);
 }

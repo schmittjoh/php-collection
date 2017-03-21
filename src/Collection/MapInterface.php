@@ -103,7 +103,7 @@ interface MapInterface extends \Traversable, \Countable
      * @param callable $callable
      * @return bool
      */
-    function exists(callable $callable);
+    public function exists(callable $callable);
 
     /**
      * Map<A,B> contains(B): bool
@@ -275,7 +275,7 @@ interface MapInterface extends \Traversable, \Countable
      * @return SequenceInterface - An iterator producing sets of size size,
      * except the last and the only element will be truncated if there are fewer elements than size.
      */
-    function sliding($size);
+    public function sliding($size);
 
     /**
      * tail: Map[A, B]
@@ -283,5 +283,5 @@ interface MapInterface extends \Traversable, \Countable
      *
      * @return MapInterface - a map consisting of all elements of this map except the first one.
      */
-    function tail();
+    public function tail();
 }

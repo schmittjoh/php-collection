@@ -50,7 +50,7 @@ class Set implements SetInterface, \JsonSerializable
         return $this;
     }
 
-    function head()
+    public function head()
     {
         if (empty($this->elements)) {
             return null;
@@ -59,7 +59,7 @@ class Set implements SetInterface, \JsonSerializable
         return reset($this->elements);
     }
 
-    function tail()
+    public function tail()
     {
         return $this->createNew(array_slice($this->elements, 1));
     }
@@ -76,7 +76,7 @@ class Set implements SetInterface, \JsonSerializable
         return new Some(reset($this->elements));
     }
 
-    function last()
+    public function last()
     {
         if (empty($this->elements)) {
             return null;
@@ -297,7 +297,7 @@ class Set implements SetInterface, \JsonSerializable
      *
      * @return SequenceInterface<SetInterface<A>>
      */
-    function sliding($size)
+    public function sliding($size)
     {
         if ($size <= 0) {
             throw new \InvalidArgumentException(
@@ -320,7 +320,7 @@ class Set implements SetInterface, \JsonSerializable
      * @return int
      * @deprecated Use ::length()
      */
-    function count()
+    public function count()
     {
         return $this->length();
     }

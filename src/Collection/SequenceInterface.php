@@ -238,7 +238,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * @return SequenceInterface
      */
-    function filter(callable $callable);
+    public function filter(callable $callable);
 
     /**
      * Returns a filtered sequence.
@@ -247,7 +247,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * @return SequenceInterface
      */
-    function filterNot(callable $callable);
+    public function filterNot(callable $callable);
 
     /**
      * Applies a binary operator to a start value and all elements of this sequence, going left to right.
@@ -261,7 +261,7 @@ interface SequenceInterface extends CollectionInterface
      * @param callable $callable - the binary operator
      * @return mixed - the result of inserting op between consecutive elements of this set, going left to right with the start value z on the left:
      */
-    function foldLeft($initialValue, callable $callable);
+    public function foldLeft($initialValue, callable $callable);
 
     /**
      * Applies a binary operator to all elements of this sequence and a start value, going right to left.
@@ -275,7 +275,7 @@ interface SequenceInterface extends CollectionInterface
      * @param callable $callable - the binary operator
      * @return mixed - the result of inserting op between consecutive elements of this set, going left to right with the start value z on the left:
      */
-    function foldRight($initialValue, callable $callable);
+    public function foldRight($initialValue, callable $callable);
 
     /**
      * Returns a collection when any first level nesting is flattened into the single
@@ -293,7 +293,7 @@ interface SequenceInterface extends CollectionInterface
      * @return SequenceInterface - An iterator producing sets of size size,
      * except the last and the only element will be truncated if there are fewer elements than size.
      */
-    function sliding($size);
+    public function sliding($size);
 
     /**
      * exists(op: (A) ⇒ bool): bool
@@ -302,7 +302,7 @@ interface SequenceInterface extends CollectionInterface
      * @param callable $callable
      * @return bool
      */
-    function exists(callable $callable);
+    public function exists(callable $callable);
 
     /**
      * tail: Sequence[A]
@@ -310,5 +310,5 @@ interface SequenceInterface extends CollectionInterface
      *
      * @return SequenceInterface - a sequence consisting of all elements of this sequence except the first one.
      */
-    function tail();
+    public function tail();
 }

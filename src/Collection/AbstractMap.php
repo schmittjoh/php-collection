@@ -384,7 +384,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
      * @param int $size
      * @return SequenceInterface<MapInterface<A>>
      */
-    function sliding($size)
+    public function sliding($size)
     {
         if ($size <= 0) {
             throw new \InvalidArgumentException(sprintf('The number must be greater than 0, but got %d.', $size));
