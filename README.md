@@ -8,6 +8,16 @@ This library adds basic collections for PHP. It's based on J. M. Schmitt work. T
 
 Original code was refactored and now requires PHP 5.5, updated with several usefull methods like ::flatMap(), ::map(), ::foldLeft(), ::exists(), ::headOption(),  ::lastOption(), ::tail()  and e.t.c. Inspired by Scala collections. Added type-hinting.
 
+Installation
+------------
+PHP Collection can easily be installed via composer (in process)
+
+```bash
+composer require imunhatep/collection
+```
+
+or add it to your ``composer.json`` file.
+
 Note
 -------
 
@@ -42,16 +52,6 @@ General Characteristics:
 - Equality comparison between elements are always performed using the shallow comparison operator (===).
 - Sorting algorithms are unstable, that means the order for equal elements is undefined (the default, and only PHP behavior).
 
-
-Installation
-------------
-PHP Collection can easily be installed via composer (in process)
-
-.. code-block :: bash
-
-    composer require imunhatep/collection
-
-or add it to your ``composer.json`` file.
 
 Usage
 -----
