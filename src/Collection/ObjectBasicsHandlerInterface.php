@@ -1,5 +1,4 @@
 <?php
-
 namespace Collection;
 
 /**
@@ -7,7 +6,7 @@ namespace Collection;
  *
  * @author Artyom Sukharev , J. M. Schmitt
  */
-interface ObjectBasicsHandler
+interface ObjectBasicsHandlerInterface
 {
     /**
      * @param object $object This object is guaranteed to be of the type the handler was registered for.

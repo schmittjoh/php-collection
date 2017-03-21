@@ -1,10 +1,9 @@
 <?php
-
 namespace Collection\ObjectBasicsHandler;
 
-use Collection\ObjectBasicsHandler;
+use Collection\ObjectBasicsHandlerInterface;
 
-class IdentityHandler implements ObjectBasicsHandler
+class IdentityHandlerInterface implements ObjectBasicsHandlerInterface
 {
     public function hash($object)
     {

@@ -1,10 +1,9 @@
 <?php
-
 namespace Collection\ObjectBasicsHandler;
 
-use Collection\ObjectBasicsHandler;
+use Collection\ObjectBasicsHandlerInterface;
 
-class DateTimeHandler implements ObjectBasicsHandler
+class DateTimeHandlerInterface implements ObjectBasicsHandlerInterface
 {
     public function hash($object)
     {

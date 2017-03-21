@@ -2,7 +2,7 @@
 
 namespace Collection;
 
-use Collection\ObjectBasicsHandler\IdentityHandler;
+use Collection\ObjectBasicsHandler\IdentityHandlerInterface;
 
 /**
  * Registry for handlers that provide ObjectBasics functionality for classes.
@@ -41,7 +41,7 @@ abstract class ObjectBasicsHandlerRegistry
 
     public static function addHandlerFor($handlingClass, $handlerInstanceOrClassName)
     {
-        if (!$handlerInstanceOrClassName instanceof ObjectBasicsHandler && !is_string($handlerInstanceOrClassName)) {
+        if (!$handlerInstanceOrClassName instanceof ObjectBasicsHandlerInterface && !is_string($handlerInstanceOrClassName)) {
             throw new \LogicException('$handler must be an instance of ObjectBasicsHandler, or a string referring to the handlers class.');
         }
 
@@ -56,13 +56,13 @@ abstract class ObjectBasicsHandlerRegistry
 
         if (!isset(self::$handlers[$className])) {
             if (self::$defaultObjectHandler === null) {
-                self::$defaultObjectHandler = new IdentityHandler();
+                self::$defaultObjectHandler = new IdentityHandlerInterface();
             }
 
             return self::$defaultObjectHandler;
         }
 
-        if (self::$handlers[$className] instanceof ObjectBasicsHandler) {
+        if (self::$handlers[$className] instanceof ObjectBasicsHandlerInterface) {
             return self::$handlers[$className];
         }
 
