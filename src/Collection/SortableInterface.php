@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2016 Johannes M. Schmitt, Artyom Sukharev <aly.casus@gmail.com>
+ * Copyright (C) 2016 Johannes M. Schmitt, Artyom Sukharev
  *
  * This program is free software: you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation, version.
@@ -18,7 +18,7 @@ namespace Collection;
 /**
  * Interface for sortable collections.
  *
- * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
+ * @author Artyom Sukharev , J. M. Schmitt
  */
 interface SortableInterface
 {

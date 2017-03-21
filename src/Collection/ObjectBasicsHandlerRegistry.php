@@ -10,7 +10,7 @@ use Collection\ObjectBasicsHandler\IdentityHandler;
  * You want to register a handler if you cannot implement the ObjectBasics interface, for example
  * because a class is provided by a third-party package, or built into PHP.
  *
- * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
+ * @author Artyom Sukharev , J. M. Schmitt
  */
 abstract class ObjectBasicsHandlerRegistry
 {

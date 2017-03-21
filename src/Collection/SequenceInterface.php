@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2016 Johannes M. Schmitt, Artyom Sukharev <aly.casus@gmail.com>
+ * Copyright (C) 2016 Johannes M. Schmitt, Artyom Sukharev
  *
  * This program is free software: you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation, version.
@@ -21,7 +21,7 @@ use PhpOption\Option;
  *
  * Equality of elements in the sequence is established via a shallow comparison (===).
  *
- * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
+ * @author Artyom Sukharev , J. M. Schmitt
  */
 interface SequenceInterface extends CollectionInterface
 {
@@ -140,7 +140,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * @param mixed $elem
      *
-     * @return void
+     * @return SequenceInterface
      */
     public function add($elem);
 
@@ -158,7 +158,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * @param array|\Traversable $elements
      *
-     * @return void
+     * @return SequenceInterface
      */
     public function addAll($elements);
 
@@ -168,7 +168,7 @@ interface SequenceInterface extends CollectionInterface
      * @param integer $index
      * @param mixed $value
      *
-     * @return void
+     * @return SequenceInterface
      */
     public function update($index, $value);
 
@@ -307,6 +307,15 @@ interface SequenceInterface extends CollectionInterface
      * except the last and the only element will be truncated if there are fewer elements than size.
      */
     function sliding($size);
+
+    /**
+     * exists(op: (A) ⇒ bool): bool
+     * Checks by provided callable if element is in the collection
+     *
+     * @param callable $callable
+     * @return bool
+     */
+    function exists(callable $callable);
 
     /**
      * tail: Sequence[A]

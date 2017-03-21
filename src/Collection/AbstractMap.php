@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (C) 2016 Johannes M. Schmitt, Artyom Sukharev <aly.casus@gmail.com>
+ * Copyright (C) 2016 Johannes M. Schmitt, Artyom Sukharev
  *
  * This program is free software: you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation, version.
@@ -23,7 +23,7 @@ use PhpOption\None;
 /**
  * A simple map implementation which basically wraps an array with an object oriented interface.
  *
- * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
+ * @author Artyom Sukharev , J. M. Schmitt
  */
 class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapInterface
 {
@@ -45,6 +45,9 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function exists(callable $callable)
     {
         foreach ($this as $k => $v) {

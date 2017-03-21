@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2016 Johannes M. Schmitt, Artyom Sukharev <aly.casus@gmail.com>
+ * Copyright (C) 2016 Johannes M. Schmitt, Artyom Sukharev
  *
  * This program is free software: you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation, version.
@@ -21,25 +21,25 @@ use PhpOption\Option;
  *
  * Each Set contains equal values only once.
  *
- * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
+ * @author Artyom Sukharev , J. M. Schmitt
  */
 interface SetInterface extends CollectionInterface, \IteratorAggregate
 {
     /**
      * @param object|scalar $elem
-     * @return void
+     * @return SetInterface
      */
     public function add($elem);
 
     /**
      * @param \Traversable|array $elements
-     * @return void
+     * @return SetInterface
      */
     public function addAll($elements);
 
     /**
      * @param object|scalar $elem
-     * @return void
+     * @return SetInterface
      */
     public function remove($elem);
 

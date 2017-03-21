@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2016 Johannes M. Schmitt, Artyom Sukharev <aly.casus@gmail.com>
+ * Copyright (C) 2016 Johannes M. Schmitt, Artyom Sukharev
  *
  * This program is free software: you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation, version.
@@ -25,7 +25,7 @@ use PhpOption\Some;
  * This implementation constraints Sets to either consist of objects that implement ObjectBasics, or objects that have
  * an external ObjectBasicsHandler implementation, or simple scalars. These types cannot be mixed within the same Set.
  *
- * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
+ * @author Artyom Sukharev , J. M. Schmitt
  */
 class Set implements SetInterface
 {

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2016 Johannes M. Schmitt, Artyom Sukharev <aly.casus@gmail.com>
+ * Copyright (C) 2016 Johannes M. Schmitt, Artyom Sukharev
  *
  * This program is free software: you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation, version.
@@ -20,7 +20,7 @@ use PhpOption\Option;
 /**
  * Basic map interface.
  *
- * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
+ * @author Artyom Sukharev , J. M. Schmitt
  */
 interface MapInterface extends \Traversable, \Countable
 {
@@ -97,9 +97,35 @@ interface MapInterface extends \Traversable, \Countable
      * @param mixed $key
      * @param mixed $value
      *
-     * @return void
+     * @return MapInterface
      */
     public function set($key, $value);
+
+    /**
+     * Sets all key/value pairs in the map.
+     *
+     * @param array $kvMap
+     *
+     * @return MapInterface
+     */
+    public function setAll(array $kvMap);
+
+    /**
+     * exists(op: (A,B) ⇒ bool): bool
+     * Checks by provided callable if <key, element> is in the Map
+     *
+     * @param callable $callable
+     * @return bool
+     */
+    function exists(callable $callable);
+
+    /**
+     * Map<A,B> contains(B): bool
+     *
+     * @param $elem
+     * @return bool
+     */
+    public function contains($elem);
 
     /**
      * Removes an element from the map.
@@ -109,6 +135,15 @@ interface MapInterface extends \Traversable, \Countable
      * @return mixed
      */
     public function remove($key);
+
+    /**
+     * Removes all elements from the map
+     *
+     * @return MapInterface
+     *
+     * @deprecated Create new instance
+     */
+    public function clear();
 
     /**
      * Adds all another map to this map, and returns itself.

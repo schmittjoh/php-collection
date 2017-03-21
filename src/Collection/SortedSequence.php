@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2016 Johannes M. Schmitt, Artyom Sukharev <aly.casus@gmail.com>
+ * Copyright (C) 2016 Johannes M. Schmitt, Artyom Sukharev
  *
  * This program is free software: you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation, version.
@@ -18,7 +18,7 @@ namespace Collection;
 /**
  * A sequence with a fixed sort-order.
  *
- * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
+ * @author Artyom Sukharev , J. M. Schmitt
  */
 class SortedSequence extends AbstractSequence
 {
@@ -31,6 +31,9 @@ class SortedSequence extends AbstractSequence
         parent::__construct($elements);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function add($newElement)
     {
         $added = false;
@@ -54,6 +57,9 @@ class SortedSequence extends AbstractSequence
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function addAll($addedElements)
     {
         usort($addedElements, $this->sortFunc);
@@ -87,6 +93,9 @@ class SortedSequence extends AbstractSequence
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function createNew($elements)
     {
         return new static($this->sortFunc, $elements);

@@ -7,7 +7,7 @@ namespace Collection;
  *
  * For entities, you can use the "EntityLikeObject" trait.
  *
- * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
+ * @author Artyom Sukharev , J. M. Schmitt
  */
 interface ObjectBasics
 {

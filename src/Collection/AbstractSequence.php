@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2016 Johannes M. Schmitt, Artyom Sukharev <aly.casus@gmail.com>
+ * Copyright (C) 2016 Johannes M. Schmitt, Artyom Sukharev
  *
  * This program is free software: you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation, version.
@@ -26,7 +26,7 @@ use PhpOption\Some;
  *
  * This sequence is mutable.
  *
- * @author Artyom Sukharev <aly.casus@gmail.com>, J. M. Schmitt
+ * @author Artyom Sukharev , J. M. Schmitt
  */
 class AbstractSequence extends AbstractCollection implements \IteratorAggregate, SequenceInterface
 {
@@ -492,7 +492,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     /**
      * @return int
-     * @deprecated Use ::length()
+     * @deprecated Use Sequence::length()
      */
     function count()
     {
@@ -507,6 +507,9 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this->length;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     function getIterator()
     {
         return new \ArrayIterator($this->elements);
