@@ -386,12 +386,12 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     {
         $newElements = [];
 
-        for ($i = 0; $i < $this->length; $i++) {
-            if ($callable($this->elements[$i]) !== true) {
+        foreach ($this->elements as $v) {
+            if ($callable($v) !== true) {
                 break;
             }
 
-            $newElements[] = $this->elements[$i];
+            $newElements[] = $v;
         }
 
         return $this->createNew($newElements);
