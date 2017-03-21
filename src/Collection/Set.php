@@ -336,7 +336,7 @@ class Set implements SetInterface, \JsonSerializable
     public function contains($elem)
     {
         if ($this->elementType === self::ELEM_TYPE_OBJECT) {
-            if ($elem instanceof ObjectBasics) {
+            if ($elem instanceof ObjectBasicsInterface) {
                 return $this->containsObject($elem);
             }
 
@@ -368,7 +368,7 @@ class Set implements SetInterface, \JsonSerializable
     public function remove($elem)
     {
         if ($this->elementType === self::ELEM_TYPE_OBJECT) {
-            if ($elem instanceof ObjectBasics) {
+            if ($elem instanceof ObjectBasicsInterface) {
                 $this->removeObject($elem);
             }
         }
@@ -399,7 +399,7 @@ class Set implements SetInterface, \JsonSerializable
     public function add($elem)
     {
         if ($this->elementType === null) {
-            if ($elem instanceof ObjectBasics) {
+            if ($elem instanceof ObjectBasicsInterface) {
                 $this->addObject($elem);
             }
             else if (is_scalar($elem)) {
@@ -415,7 +415,7 @@ class Set implements SetInterface, \JsonSerializable
             }
         }
         else if ($this->elementType === self::ELEM_TYPE_OBJECT) {
-            if ($elem instanceof ObjectBasics) {
+            if ($elem instanceof ObjectBasicsInterface) {
                 $this->addObject($elem);
 
                 return $this;
@@ -523,7 +523,7 @@ class Set implements SetInterface, \JsonSerializable
         return false;
     }
 
-    private function containsObject(ObjectBasics $object)
+    private function containsObject(ObjectBasicsInterface $object)
     {
         $hash = $object->hash();
         if (!isset($this->lookup[$hash])) {
@@ -568,7 +568,7 @@ class Set implements SetInterface, \JsonSerializable
         }
     }
 
-    private function removeObject(ObjectBasics $object)
+    private function removeObject(ObjectBasicsInterface $object)
     {
         $hash = $object->hash();
         if (!isset($this->lookup[$hash])) {
@@ -623,7 +623,7 @@ class Set implements SetInterface, \JsonSerializable
         $this->elementType = self::ELEM_TYPE_OBJECT_WITH_HANDLER;
     }
 
-    private function addObject(ObjectBasics $elem)
+    private function addObject(ObjectBasicsInterface $elem)
     {
         $hash = $elem->hash();
         if (isset($this->lookup[$hash])) {

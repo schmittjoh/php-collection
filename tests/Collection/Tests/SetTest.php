@@ -2,7 +2,7 @@
 
 namespace Collection\Tests;
 
-use Collection\ObjectBasics;
+use Collection\ObjectBasicsInterface;
 use Collection\Set;
 
 class SetTest extends \PHPUnit_Framework_TestCase
@@ -43,7 +43,7 @@ class SetTest extends \PHPUnit_Framework_TestCase
         $this->set->add('a');
 
         $this->assertFalse($this->set->contains('b'));
-        $this->assertFalse($this->set->contains(new ObjectThatImplementsBasics('foo')));
+        $this->assertFalse($this->set->contains(new ObjectThatImplementsBasicsInterface('foo')));
         $this->assertFalse($this->set->contains(new \DateTime('today')));
     }
 
@@ -51,7 +51,7 @@ class SetTest extends \PHPUnit_Framework_TestCase
     {
         $this->set->add(new \DateTime('today'));
 
-        $this->assertFalse($this->set->contains(new ObjectThatImplementsBasics('foo')));
+        $this->assertFalse($this->set->contains(new ObjectThatImplementsBasicsInterface('foo')));
         $this->assertFalse($this->set->contains('a'));
 
         $this->assertTrue($this->set->contains(new \DateTime('today')));
@@ -59,13 +59,13 @@ class SetTest extends \PHPUnit_Framework_TestCase
 
     public function testContainsObject()
     {
-        $this->set->add(new ObjectThatImplementsBasics('foo'));
+        $this->set->add(new ObjectThatImplementsBasicsInterface('foo'));
 
-        $this->assertFalse($this->set->contains(new ObjectThatImplementsBasics('bar')));
+        $this->assertFalse($this->set->contains(new ObjectThatImplementsBasicsInterface('bar')));
         $this->assertFalse($this->set->contains('a'));
         $this->assertFalse($this->set->contains(new \DateTime()));
 
-        $this->assertTrue($this->set->contains(new ObjectThatImplementsBasics('foo')));
+        $this->assertTrue($this->set->contains(new ObjectThatImplementsBasicsInterface('foo')));
     }
 
     public function testReverse()
@@ -127,13 +127,13 @@ class SetTest extends \PHPUnit_Framework_TestCase
 
     public function testRemoveObject()
     {
-        $this->set->add(new ObjectThatImplementsBasics('foo'));
+        $this->set->add(new ObjectThatImplementsBasicsInterface('foo'));
         $this->assertCount(1, $this->set);
 
-        $this->set->remove(new ObjectThatImplementsBasics('bar'));
+        $this->set->remove(new ObjectThatImplementsBasicsInterface('bar'));
         $this->assertCount(1, $this->set);
 
-        $this->set->remove(new ObjectThatImplementsBasics('foo'));
+        $this->set->remove(new ObjectThatImplementsBasicsInterface('foo'));
         $this->assertCount(0, $this->set);
         $this->assertTrue($this->set->isEmpty());
     }
@@ -149,14 +149,14 @@ class SetTest extends \PHPUnit_Framework_TestCase
 
     public function testAddObject()
     {
-        $this->set->add(new ObjectThatImplementsBasics('foo'));
-        $this->set->add(new ObjectThatImplementsBasics('bar'));
-        $this->set->add(new ObjectThatImplementsBasics('foo'));
+        $this->set->add(new ObjectThatImplementsBasicsInterface('foo'));
+        $this->set->add(new ObjectThatImplementsBasicsInterface('bar'));
+        $this->set->add(new ObjectThatImplementsBasicsInterface('foo'));
 
         $this->assertEquals(
             array(
-                new ObjectThatImplementsBasics('foo'),
-                new ObjectThatImplementsBasics('bar')
+                new ObjectThatImplementsBasicsInterface('foo'),
+                new ObjectThatImplementsBasicsInterface('bar')
             ),
             $this->set->all()
         );
@@ -183,7 +183,7 @@ class SetTest extends \PHPUnit_Framework_TestCase
     }
 }
 
-class ObjectThatImplementsBasics implements ObjectBasics
+class ObjectThatImplementsBasicsInterface implements ObjectBasicsInterface
 {
     private $value;
 
@@ -197,12 +197,12 @@ class ObjectThatImplementsBasics implements ObjectBasics
         return 'foo'; // This is not recommended in the real-world.
     }
 
-    public function equals(ObjectBasics $other)
+    public function equals(ObjectBasicsInterface $other)
     {
         if ($this === $other) {
             return true;
         }
-        if ( ! $other instanceof ObjectThatImplementsBasics) {
+        if ( ! $other instanceof ObjectThatImplementsBasicsInterface) {
             return false;
         }
 

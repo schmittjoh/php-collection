@@ -15,7 +15,7 @@ use Collection\ObjectBasicsHandler\IdentityHandlerInterface;
 abstract class ObjectBasicsHandlerRegistry
 {
     private static $handlers = [
-        'DateTime' => 'Collection\\ObjectBasicsHandler\\DateTimeHandler',
+        'DateTime' => 'Collection\\ObjectBasicsHandler\\DateTimeHandlerInterface',
     ];
     private static $defaultObjectHandler;
 

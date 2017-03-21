@@ -8,7 +8,7 @@ namespace Collection;
  *
  * @author Artyom Sukharev , J. M. Schmitt
  */
-interface ObjectBasics
+interface ObjectBasicsInterface
 {
     /**
      * Produces a hash for the given object.
@@ -33,7 +33,9 @@ interface ObjectBasics
      * This can compare by referential equality (===), or in case of value objects like (\DateTime) compare
      * the individual properties of the objects; it's up to the implementation.
      *
+     * @param ObjectBasicsInterface $other
+     *
      * @return boolean
      */
-    public function equals(ObjectBasics $other);
+    public function equals(ObjectBasicsInterface $other);
 }

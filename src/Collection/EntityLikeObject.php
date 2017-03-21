@@ -15,7 +15,7 @@ trait EntityLikeObject
         return spl_object_hash($this);
     }
 
-    public function equals(ObjectBasics $other)
+    public function equals(ObjectBasicsInterface $other)
     {
         return $this === $other;
     }
