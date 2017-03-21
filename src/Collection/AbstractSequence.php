@@ -365,7 +365,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     function addAll($elements)
     {
         // check for array|Traversable
-        if(!is_array($elements) and !($elements instanceof \Traversable)){
+        if(!is_array($elements) && !($elements instanceof \Traversable)){
             throw new \InvalidArgumentException('Sequence::addAll() expects array or instance of \Traversable as argument');
         }
 

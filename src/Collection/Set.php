@@ -51,7 +51,7 @@ class Set implements SetInterface, \JsonSerializable
      */
     public function addAll($elements)
     {
-        if (is_array($elements) or ($elements instanceof \Traversable)) {
+        if (is_array($elements) || ($elements instanceof \Traversable)) {
             foreach ($elements as $elem) {
                 $this->add($elem);
             }
