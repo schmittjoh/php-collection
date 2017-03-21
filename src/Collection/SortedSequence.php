@@ -20,7 +20,7 @@ namespace Collection;
  *
  * @author Artyom Sukharev , J. M. Schmitt
  */
-class SortedSequence extends AbstractSequence
+class SortedSequence extends AbstractSequence implements \JsonSerializable
 {
     private $sortFunc;
 
@@ -36,11 +36,15 @@ class SortedSequence extends AbstractSequence
      */
     public function add($newElement)
     {
+        /** @var callable $sortFunc */
+        $sortFunc = $this->sortFunc;
+
         $added = false;
         $newElements = [];
+
         foreach ($this->elements as $element) {
             // We insert the new element before the first element that is greater than itself.
-            if (!$added && (integer)call_user_func($this->sortFunc, $newElement, $element) < 0) {
+            if (!$added and ((int)$sortFunc($newElement, $element) < 0)) {
                 $newElements[] = $newElement;
                 $added = true;
             }
@@ -62,7 +66,10 @@ class SortedSequence extends AbstractSequence
      */
     public function addAll($addedElements)
     {
-        usort($addedElements, $this->sortFunc);
+        /** @var callable $sortFunc */
+        $sortFunc = $this->sortFunc;
+
+        usort($addedElements, $sortFunc);
 
         $newElements = [];
         foreach ($this->elements as $element) {
@@ -70,7 +77,7 @@ class SortedSequence extends AbstractSequence
                 foreach ($addedElements as $i => $newElement) {
                     // If the currently looked at $newElement is not smaller than $element, then we can also conclude
                     // that all other new elements are also not smaller than $element as we have ordered them before.
-                    if ((integer)call_user_func($this->sortFunc, $newElement, $element) > -1) {
+                    if ((int)$sortFunc($newElement, $element) > -1) {
                         break;
                     }
 
@@ -99,5 +106,10 @@ class SortedSequence extends AbstractSequence
     protected function createNew($elements)
     {
         return new static($this->sortFunc, $elements);
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->all();
     }
 }
