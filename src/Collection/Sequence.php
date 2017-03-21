@@ -25,10 +25,11 @@ namespace Collection;
  *
  * @author Artyom Sukharev , J. M. Schmitt
  */
-class Sequence extends AbstractSequence implements SortableInterface
+class Sequence extends AbstractSequence implements SortableInterface, \JsonSerializable
 {
     /**
      * @param $callable
+     *
      * @return SequenceInterface
      */
     public function sortWith(callable $callable)
@@ -36,5 +37,10 @@ class Sequence extends AbstractSequence implements SortableInterface
         usort($this->elements, $callable);
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->all();
     }
 }

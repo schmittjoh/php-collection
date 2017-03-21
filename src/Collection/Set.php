@@ -27,7 +27,7 @@ use PhpOption\Some;
  *
  * @author Artyom Sukharev , J. M. Schmitt
  */
-class Set implements SetInterface
+class Set implements SetInterface, \JsonSerializable
 {
     const ELEM_TYPE_SCALAR = 1;
     const ELEM_TYPE_OBJECT = 2;
@@ -46,11 +46,12 @@ class Set implements SetInterface
 
     /**
      * @param \Traversable|array $elements
+     *
      * @return SetInterface
      */
     public function addAll($elements)
     {
-        if(is_array($elements) or ($elements instanceof \Traversable)){
+        if (is_array($elements) or ($elements instanceof \Traversable)) {
             foreach ($elements as $elem) {
                 $this->add($elem);
             }
@@ -119,6 +120,7 @@ class Set implements SetInterface
 
     /**
      * @param SetInterface $set
+     *
      * @return SetInterface
      */
     public function addSet(SetInterface $set)
@@ -130,6 +132,7 @@ class Set implements SetInterface
 
     /**
      * @param int $number
+     *
      * @return SetInterface
      */
     public function take($number)
@@ -165,6 +168,7 @@ class Set implements SetInterface
 
     /**
      * @param int $number
+     *
      * @return SetInterface
      */
     public function drop($number)
@@ -178,6 +182,7 @@ class Set implements SetInterface
 
     /**
      * @param int $number
+     *
      * @return SetInterface
      */
     public function dropRight($number)
@@ -191,6 +196,7 @@ class Set implements SetInterface
 
     /**
      * @param callable $callable
+     *
      * @return SetInterface
      */
     public function dropWhile(callable $callable)
@@ -206,6 +212,7 @@ class Set implements SetInterface
 
     /**
      * @param callable $callable
+     *
      * @return SetInterface
      */
     public function map(callable $callable)
@@ -220,6 +227,7 @@ class Set implements SetInterface
 
     /**
      * @param callable $callable
+     *
      * @return SetInterface
      */
     public function flatMap(callable $callable)
@@ -247,6 +255,7 @@ class Set implements SetInterface
 
     /**
      * @param callable $callable
+     *
      * @return SetInterface
      */
     public function filterNot(callable $callable)
@@ -256,6 +265,7 @@ class Set implements SetInterface
 
     /**
      * @param callable $callable
+     *
      * @return SetInterface
      */
     public function filter(callable $callable)
@@ -266,6 +276,7 @@ class Set implements SetInterface
     /**
      * @param mixed    $initialValue
      * @param callable $callable
+     *
      * @return mixed
      */
     public function foldLeft($initialValue, callable $callable)
@@ -281,6 +292,7 @@ class Set implements SetInterface
     /**
      * @param mixed    $initialValue
      * @param callable $callable
+     *
      * @return mixed
      */
     public function foldRight($initialValue, callable $callable)
@@ -295,6 +307,7 @@ class Set implements SetInterface
 
     /**
      * @param int $size
+     *
      * @return SequenceInterface<SetInterface<A>>
      */
     function sliding($size)
@@ -362,6 +375,7 @@ class Set implements SetInterface
 
     /**
      * @param scalar|object $elem
+     *
      * @return SetInterface
      */
     public function remove($elem)
@@ -392,6 +406,7 @@ class Set implements SetInterface
 
     /**
      * @param scalar|object $elem
+     *
      * @return SetInterface
      */
     public function add($elem)
@@ -450,8 +465,14 @@ class Set implements SetInterface
         return $this;
     }
 
+    public function jsonSerialize()
+    {
+        return $this->all();
+    }
+
     /**
      * @param array $elements
+     *
      * @return SetInterface
      */
     protected function createNew(array $elements)
@@ -461,7 +482,8 @@ class Set implements SetInterface
 
     /**
      * @param callable $callable
-     * @param $booleanKeep
+     * @param          $booleanKeep
+     *
      * @return SetInterface
      */
     private function filterInternal(callable $callable, $booleanKeep)
@@ -480,6 +502,7 @@ class Set implements SetInterface
 
     /**
      * @param $elem
+     *
      * @return bool
      */
     private function containsScalar($elem)
