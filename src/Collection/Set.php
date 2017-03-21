@@ -220,7 +220,7 @@ class Set implements SetInterface, \JsonSerializable
     public function flatMap(callable $callable)
     {
         $newElements = new Set();
-        foreach ($this->elements as $i => $element) {
+        foreach ($this->elements as $element) {
             $newElements->addAll($callable($element));
         }
 
