@@ -350,7 +350,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     public function count()
     {
-        return count($this->elements);
+        return count((array) $this->elements);
     }
 
     public function getIterator()
