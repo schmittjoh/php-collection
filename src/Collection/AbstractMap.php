@@ -1,6 +1,7 @@
 <?php
 namespace Collection;
 
+use PhpOption\LazyOption;
 use PhpOption\Option;
 use PhpOption\Some;
 use PhpOption\None;
@@ -8,9 +9,9 @@ use PhpOption\None;
 /**
  * A simple map implementation which basically wraps an array with an object oriented interface.
  *
- * @author Artyom Sukharev , J. M. Schmitt
+ * @author Artyom Sukharev, J. M. Schmitt
  */
-class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapInterface
+abstract class AbstractMap implements \IteratorAggregate
 {
     protected $elements;
 
@@ -22,7 +23,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     /**
      * @param mixed $key
      * @param mixed $value
-     * @return MapInterface
+     * @return $this|MapInterface
      */
     public function set($key, $value)
     {
@@ -31,7 +32,9 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     }
 
     /**
-     * {@inheritdoc}
+     * @param callable $callable
+     *
+     * @return bool
      */
     public function exists(callable $callable)
     {
@@ -49,7 +52,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
      *
      * @param array $kvMap
      *
-     * @return MapInterface
+     * @return $this|MapInterface
      */
     public function setAll(array $kvMap)
     {
@@ -60,6 +63,11 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $this;
     }
 
+    /**
+     * @param MapInterface $map
+     *
+     * @return $this|MapInterface
+     */
     public function addMap(MapInterface $map)
     {
         foreach ($map as $k => $v) {
@@ -101,7 +109,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     }
 
     /**
-     * @return MapInterface
+     * @return $this|MapInterface
      */
     public function clear()
     {
@@ -141,7 +149,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     }
 
     /**
-     * @return MapInterface
+     * @return $this|MapInterface
      */
     public function tail()
     {
@@ -208,7 +216,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
      *
      * @param callable $callable receives the element and must return true (= keep), or false (= remove).
      *
-     * @return MapInterface
+     * @return $this|MapInterface
      */
     public function filter(callable $callable)
     {
@@ -220,7 +228,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
      *
      * @param callable $callable receives the element and must return true (= remove), or false (= keep).
      *
-     * @return MapInterface
+     * @return $this|MapInterface
      */
     public function filterNot(callable $callable)
     {
@@ -230,7 +238,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     /**
      * @param callable $callable
      * @param boolean  $booleanKeep
-     * @return MapInterface
+     * @return $this|MapInterface
      */
     private function filterInternal(callable $callable, $booleanKeep)
     {
@@ -249,7 +257,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     /**
      * @param mixed    $startValue
      * @param callable $callable
-     * @return MapInterface
+     * @return $this|MapInterface
      */
     public function foldLeft($startValue, callable $callable)
     {
@@ -264,7 +272,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     /**
      * @param mixed    $startValue
      * @param callable $callable
-     * @return MapInterface
+     * @return $this|MapInterface
      */
     public function foldRight($startValue, callable $callable)
     {
@@ -278,8 +286,10 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     }
 
     /**
-     * @param callable $callable
-     * @return MapInterface
+     * Builds a new collection by applying a function to all elements of this map.
+     *
+     * @param callable $callable receives the element, and the current value (the first time this equals $initialValue).
+     * @return $this|MapInterface
      */
     public function map(callable $callable)
     {
@@ -293,7 +303,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     
     /**
      * @param callable $callable:Map
-     * @return MapInterface
+     * @return $this|MapInterface
      */
     public function flatMap(callable $callable)
     {
@@ -307,7 +317,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
     /**
      * @param callable $callable
-     * @return MapInterface
+     * @return $this|MapInterface
      */
     public function dropWhile(callable $callable)
     {
@@ -371,13 +381,19 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
     public function find(callable $callable)
     {
-        foreach ($this->elements as $k => $v) {
-            if (call_user_func($callable, $k, $v) === true) {
-                return new Some([$k, $v]);
-            }
-        }
+        $self = $this;
 
-        return None::create();
+        return new LazyOption(
+            function () use ($callable, $self) {
+                foreach ($self as $k => $v) {
+                    if (call_user_func($callable, $k, $v) === true) {
+                        return new Some([$k, $v]);
+                    }
+                }
+
+                return None::create();
+            }
+        );
     }
 
     /**

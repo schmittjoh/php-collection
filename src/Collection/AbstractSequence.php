@@ -1,6 +1,7 @@
 <?php
 namespace Collection;
 
+use PhpOption\LazyOption;
 use PhpOption\None;
 use PhpOption\Some;
 
@@ -14,7 +15,7 @@ use PhpOption\Some;
  *
  * @author Artyom Sukharev , J. M. Schmitt
  */
-class AbstractSequence extends AbstractCollection implements \IteratorAggregate, SequenceInterface
+abstract class AbstractSequence implements \IteratorAggregate
 {
     protected $elements;
     protected $length;
@@ -30,6 +31,11 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         $this->addAll($elements);
     }
 
+    /**
+     * @param SequenceInterface $seq
+     *
+     * @return $this|SequenceInterface
+     */
     public function addSequence(SequenceInterface $seq)
     {
         $this->addAll($seq);
@@ -37,6 +43,11 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this;
     }
 
+    /**
+     * @param mixed $searchedElement
+     *
+     * @return int
+     */
     public function indexOf($searchedElement)
     {
         foreach ($this->elements as $i => $element) {
@@ -48,6 +59,11 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return -1;
     }
 
+    /**
+     * @param mixed $searchedElement
+     *
+     * @return int
+     */
     public function lastIndexOf($searchedElement)
     {
         for ($i = $this->length - 1; $i >= 0; $i--) {
@@ -59,6 +75,9 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return -1;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function head()
     {
         if (empty($this->elements)) {
@@ -68,6 +87,9 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return reset($this->elements);
     }
 
+    /**
+     * @return \PhpOption\Option
+     */
     public function headOption()
     {
         if (empty($this->elements)) {
@@ -77,16 +99,27 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return new Some(reset($this->elements));
     }
 
+    /**
+     * @return $this|SequenceInterface
+     */
     public function tail()
     {
         return $this->createNew(array_slice($this->elements, 1));
     }
 
+    /**
+     * @return $this|SequenceInterface
+     */
     public function reverse()
     {
         return $this->createNew(array_reverse($this->elements));
     }
 
+    /**
+     * @param int $index
+     *
+     * @return bool
+     */
     public function isDefinedAt($index)
     {
         return isset($this->elements[$index]);
@@ -97,13 +130,57 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      *
      * @param callable $callable receives the element and must return true (= keep) or false (= remove).
      *
-     * @return SequenceInterface
+     * @return $this|SequenceInterface
      */
     public function filter(callable $callable)
     {
         return $this->filterInternal($callable, true);
     }
 
+    /**
+     * @param $searchedElem
+     *
+     * @return bool
+     */
+    public function contains($searchedElem)
+    {
+        foreach ($this as $elem) {
+            if ($elem === $searchedElem) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param callable $callable
+     *
+     * @return LazyOption
+     */
+    public function find(callable $callable)
+    {
+        $self = $this;
+
+        return new LazyOption(
+            function () use ($callable, $self) {
+                foreach ($self as $elem) {
+                    if (call_user_func($callable, $elem) === true) {
+                        return new Some($elem);
+                    }
+                }
+
+                return None::create();
+            }
+        );
+    }
+
+    /**
+     * Builds a new collection by applying a function to all elements of this map.
+     *
+     * @param callable $callable receives the element, and the current value (the first time this equals $initialValue).
+     * @return $this|SequenceInterface
+     */
     public function map(callable $callable)
     {
         $newElements = [];
@@ -120,7 +197,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      *
      * @param callable $callable Callable takes (x : \Traversable) => \Traversable
      *
-     * @return CollectionInterface
+     * @return $this|SequenceInterface
      */
     public function flatMap(callable $callable)
     {
@@ -131,7 +208,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      * Returns a collection when any first level nesting is flattened into the single
      * returned collection
      *
-     * @return CollectionInterface
+     * @return $this|SequenceInterface
      */
     public function flatten()
     {
@@ -149,7 +226,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      *
      * @param callable $callable receives the element and must return true (= remove) or false (= keep).
      *
-     * @return SequenceInterface
+     * @return $this|SequenceInterface
      */
     public function filterNot(callable $callable)
     {
@@ -303,7 +380,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      *
      * @param integer $index
      * @param T       $value
-     * @return SequenceInterface
+     * @return $this|SequenceInterface
      */
     public function update($index, $value)
     {
@@ -334,7 +411,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     /**
      * @param mixed $newElement
-     * @return SequenceInterface
+     * @return $this|SequenceInterface
      */
     public function add($newElement)
     {
@@ -346,7 +423,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     /**
      * @param array|\Traversable $elements
-     * @return SequenceInterface
+     * @return $this|SequenceInterface
      */
     public function addAll($elements)
     {
@@ -364,7 +441,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     /**
      * @param int $number
-     * @return SequenceInterface
+     * @return $this|SequenceInterface
      */
     public function take($number)
     {
@@ -380,7 +457,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      *
      * @param callable $callable receives elements of this sequence as first argument, and returns true/false.
      *
-     * @return SequenceInterface
+     * @return $this|SequenceInterface
      */
     public function takeWhile(callable $callable)
     {
@@ -399,7 +476,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     /**
      * @param int $number
-     * @return SequenceInterface
+     * @return $this|SequenceInterface
      */
     public function drop($number)
     {
@@ -412,7 +489,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     /**
      * @param int $number
-     * @return SequenceInterface
+     * @return $this|SequenceInterface
      */
     public function dropRight($number)
     {
@@ -425,7 +502,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     /**
      * @param callable $callable
-     * @return SequenceInterface
+     * @return $this|SequenceInterface
      */
     public function dropWhile(callable $callable)
     {
@@ -440,7 +517,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     /**
      * @param int $size
-     * @return SequenceInterface<SequenceInterface<A>>
+     * @return $this|SequenceInterface<SequenceInterface<A>>
      */
     public function sliding($size)
     {
@@ -503,7 +580,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     /**
      * @param $elements
-     * @return SequenceInterface
+     * @return $this|SequenceInterface
      */
     protected function createNew($elements)
     {

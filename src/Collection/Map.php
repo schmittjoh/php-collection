@@ -1,12 +1,12 @@
 <?php
 namespace Collection;
 
-class Map extends AbstractMap implements SortableInterface, \JsonSerializable
+class Map extends AbstractMap implements MapInterface, SortableInterface, \JsonSerializable
 {
     /**
      * @param $callable
      *
-     * @return MapInterface
+     * @return $this|MapInterface
      */
     public function sortWith(callable $callable)
     {

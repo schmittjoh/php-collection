@@ -1,7 +1,7 @@
 <?php
 namespace Collection;
 
-class LRUMap extends Map implements SortableInterface
+class LRUMap extends Map
 {
 
     /** @var int */
@@ -66,7 +66,7 @@ class LRUMap extends Map implements SortableInterface
     }
 
     /**
-     * @return MapInterface
+     * @return LRUMap|MapInterface
      */
     public function tail()
     {

@@ -239,6 +239,9 @@ class Set implements SetInterface, \JsonSerializable
         return $this->createNew(array_reverse($this->elements));
     }
 
+    /**
+     * @return array
+     */
     public function all()
     {
         return array_values($this->elements);
@@ -337,6 +340,11 @@ class Set implements SetInterface, \JsonSerializable
         return $this->elementCount;
     }
 
+    /**
+     * @param $elem
+     *
+     * @return bool
+     */
     public function contains($elem)
     {
         if (($this->elementType === self::ELEM_TYPE_OBJECT) && ($elem instanceof ObjectBasicsInterface)) {
@@ -381,6 +389,9 @@ class Set implements SetInterface, \JsonSerializable
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function isEmpty()
     {
         return empty($this->elements);
@@ -463,6 +474,9 @@ class Set implements SetInterface, \JsonSerializable
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function jsonSerialize()
     {
         return $this->all();

@@ -10,7 +10,7 @@ use PhpOption\Option;
  *
  * @author Artyom Sukharev , J. M. Schmitt
  */
-interface SequenceInterface extends CollectionInterface
+interface SequenceInterface extends \Traversable, \Countable
 {
     /**
      * Returns the first element in the collection if available.

@@ -12,7 +12,7 @@ namespace Collection;
  *
  * @author Artyom Sukharev , J. M. Schmitt
  */
-class Sequence extends AbstractSequence implements SortableInterface, \JsonSerializable
+class Sequence extends AbstractSequence implements SequenceInterface, SortableInterface, \JsonSerializable
 {
     /**
      * @param $callable

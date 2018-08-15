@@ -3,6 +3,7 @@
 namespace Collection\Tests;
 
 use Collection\Map;
+use PhpOption\LazyOption;
 
 class MapTest extends \PHPUnit_Framework_TestCase
 {
@@ -250,6 +251,7 @@ class MapTest extends \PHPUnit_Framework_TestCase
 
     public function testFind()
     {
+        /** @var LazyOption $foundElem */
         $foundElem = $this->map->find(
             function ($k, $v) {
                 return 'foo' === $k && 'bar' === $v;

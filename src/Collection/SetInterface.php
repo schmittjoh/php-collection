@@ -10,7 +10,7 @@ use PhpOption\Option;
  *
  * @author Artyom Sukharev , J. M. Schmitt
  */
-interface SetInterface extends CollectionInterface, \IteratorAggregate
+interface SetInterface extends \Countable, \IteratorAggregate
 {
     /**
      * @param object|scalar $elem
