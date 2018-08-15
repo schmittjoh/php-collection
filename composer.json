@@ -4,7 +4,7 @@
     "keywords": ["collection", "list", "sequence", "map", "set"],
     "license": "GPL-3.0",
     "authors": [
-        {"name": "Artyom Sukharev, Johannes M. Schmitt", "email": "aly.casus@gmail.com"}
+        {"name": "Artyom Sukharev, Johannes M. Schmitt"}
     ],
     "require": {
         "php": ">=5.6.0",
