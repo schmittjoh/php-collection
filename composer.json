@@ -2,7 +2,7 @@
     "name": "imunhatep/collection",
     "description": "General-Purpose Collection Library for PHP",
     "keywords": ["collection", "list", "sequence", "map", "set"],
-    "license": "GPL-3.0",
+    "license": "GPL-3.0-or-later",
     "authors": [
         {"name": "Artyom Sukharev, Johannes M. Schmitt"}
     ],
