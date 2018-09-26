@@ -13,7 +13,9 @@ before_script:
   - wget http://getcomposer.org/composer.phar
   - php composer.phar install --dev
 
-script: vendor/bin/phpunit --coverage-clover clover
+script:
+  - vendor/bin/phpunit --coverage-clover clover
+  - composer validate
 
 after_success:
   - curl -sL https://bit.ly/artifact-uploader | php
