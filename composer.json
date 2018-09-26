@@ -2,7 +2,7 @@
     "name": "phpcollection/phpcollection",
     "description": "General-Purpose Collection Library for PHP",
     "keywords": ["collection", "list", "sequence", "map", "set"],
-    "license": "Apache2",
+    "license": "Apache-2.0",
     "authors": [
         {"name": "Johannes M. Schmitt", "email": "schmittjoh@gmail.com"}
     ],
