@@ -163,19 +163,19 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array(0, $this->a, $this->b, 0, 1), $this->seq->all());
 
         $this->seq->sortWith(function($a, $b) {
-            if (is_integer($a)) {
-                if ( ! is_integer($b)) {
-                    return -1;
-                }
-
+            if (is_integer($a) && is_integer($b)) {
                 return $a > $b ? 1 : -1;
+            }
+
+            if (is_integer($a)) {
+                return -1;
             }
 
             if (is_integer($b)) {
                 return 1;
             }
 
-            return 1;
+            return $a > $b ? 1 : -1;
         });
 
         $this->assertSame(array(0, 0, 1, $this->a, $this->b), $this->seq->all());
@@ -203,19 +203,19 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array(0, $this->a, $this->b, 0, 2, 1, 3), $this->seq->all());
 
         $this->seq->sortWith(function($a, $b) {
-            if (is_integer($a)) {
-                if ( ! is_integer($b)) {
-                    return -1;
-                }
-
+            if (is_integer($a) && is_integer($b)) {
                 return $a > $b ? 1 : -1;
+            }
+
+            if (is_integer($a)) {
+                return -1;
             }
 
             if (is_integer($b)) {
                 return 1;
             }
 
-            return -1;
+            return $a > $b ? 1 : -1;
         });
 
         $this->assertSame(array(0, 0, 1, 2, 3, $this->a, $this->b), $this->seq->all());
@@ -336,8 +336,8 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
         $this->seq = new Sequence();
         $this->seq->addAll(array(
             0,
-            $this->a = new \stdClass(),
-            $this->b = new \stdClass(),
+            $this->a = 'a',
+            $this->b = 'b',
             0
         ));
     }
