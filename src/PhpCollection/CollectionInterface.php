@@ -23,7 +23,7 @@ namespace PhpCollection;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-interface CollectionInterface extends \Traversable, \Countable
+interface CollectionInterface extends FiniteCollection
 {
     /**
      * Returns whether this collection contains the passed element.
