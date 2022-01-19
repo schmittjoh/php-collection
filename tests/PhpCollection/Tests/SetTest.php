@@ -5,8 +5,9 @@ namespace PhpCollection\Tests;
 use PhpCollection\ObjectBasics;
 use PhpCollection\ObjectBasicsHandlerRegistry;
 use PhpCollection\Set;
+use PHPUnit\Framework\TestCase;
 
-class SetTest extends \PHPUnit_Framework_TestCase
+class SetTest extends TestCase
 {
     /** @var Set */
     private $set;
@@ -150,7 +151,7 @@ class SetTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->set = new Set();
     }

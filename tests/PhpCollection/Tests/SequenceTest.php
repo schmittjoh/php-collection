@@ -4,9 +4,10 @@ namespace PhpCollection\Tests;
 
 use PhpCollection\Sequence;
 use OutOfBoundsException;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class SequenceTest extends \PHPUnit_Framework_TestCase
+class SequenceTest extends TestCase
 {
     /** @var Sequence */
     private $seq;
@@ -175,6 +176,12 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
                 return 1;
             }
 
+            if ($a === $this->a && $b === $this->b) {
+                return -1;
+            } else if ($a === $this->b && $b === $this->a) {
+                return 1;
+            }
+
             return 1;
         });
 
@@ -188,12 +195,10 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(5, $this->seq->get(0));
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage There is no element at index "99999".
-     */
     public function testUpdateWithNonExistentIndex()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('There is no element at index "99999".');
         $this->seq->update(99999, 0);
     }
 
@@ -228,12 +233,10 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array(0, $this->a, $this->b, 0), $this->seq->take(9999)->all());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage $number must be greater than 0, but got -5.
-     */
     public function testTakeWithNegativeNumber()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('$number must be greater than 0, but got -5.');
         $this->seq->take(-5);
     }
 
@@ -259,12 +262,10 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array(), $this->seq->drop(9999)->all());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage The number must be greater than 0, but got -5.
-     */
     public function testDropWithNegativeIndex()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The number must be greater than 0, but got -5.');
         $this->seq->drop(-5);
     }
 
@@ -275,12 +276,10 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array(), $this->seq->dropRight(9999)->all());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage The number must be greater than 0, but got -5.
-     */
     public function testDropRightWithNegativeIndex()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The number must be greater than 0, but got -5.');
         $this->seq->dropRight(-5);
     }
 
@@ -297,12 +296,10 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(0, $this->seq->remove(1));
     }
 
-    /**
-     * @expectedException OutOfBoundsException
-     * @expectedExceptionMessage The index "9999" is not in the interval [0, 4).
-     */
     public function testRemoveWithInvalidIndex()
     {
+        $this->expectException(\OutOfBoundsException::class);
+        $this->expectExceptionMessage('The index "9999" is not in the interval [0, 4).');
         $this->seq->remove(9999);
     }
 
@@ -331,7 +328,18 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('c', 'd'), $newSeq->all());
     }
 
-    protected function setUp()
+    public function testIterator() {
+        $seq = new Sequence([1, 2, 3]);
+        $this->assertIsIterable($seq);
+        $i = 1;
+        foreach ($seq as $elem) {
+            $this->assertSame($i, $elem);
+            $i++;
+        }
+        $this->assertSame(4, $i);
+    }
+
+    protected function setUp(): void
     {
         $this->seq = new Sequence();
         $this->seq->addAll(array(

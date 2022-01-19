@@ -3,8 +3,9 @@
 namespace PhpCollection\Tests;
 
 use PhpCollection\SortedSequence;
+use PHPUnit\Framework\TestCase;
 
-class SortedSequenceTest extends \PHPUnit_Framework_TestCase
+class SortedSequenceTest extends TestCase
 {
     private $seq;
     private $a;
@@ -35,7 +36,7 @@ class SortedSequenceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array(0, 0), $seq->all());
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->seq = new SortedSequence(function($a, $b) {
             if (is_integer($a)) {
