@@ -294,7 +294,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
     public function getIterator()
     {
-        return new \ArrayIterator($this->elements);
+        return new \ArrayIterator($this->elements ?: []);
     }
 
     protected function createNew(array $elements)

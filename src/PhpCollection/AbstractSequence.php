@@ -355,7 +355,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     public function getIterator()
     {
-        return new \ArrayIterator($this->elements);
+        return new \ArrayIterator($this->elements ?: []);
     }
 
     protected function createNew(array $elements)

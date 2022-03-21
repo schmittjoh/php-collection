@@ -52,7 +52,7 @@ class Set implements SetInterface
 
     public function getIterator()
     {
-        return new \ArrayIterator(array_values($this->elements));
+        return new \ArrayIterator(array_values($this->elements ?: []));
     }
 
     public function addSet(SetInterface $set)
