@@ -57,7 +57,7 @@ class SortedSequenceTest extends TestCase
     public function testTake(): void
     {
         $seq = $this->seq->take(2);
-        $this->assertInstanceOf('PhpCollection\SortedSequence', $seq);
+        $this->assertInstanceOf(\PhpCollection\SortedSequence::class, $seq);
         $this->assertSame([0, 0], $seq->all());
     }
 }

@@ -23,9 +23,9 @@ class Set implements SetInterface
 
     private $elementType;
 
-    private $elements = [];
-    private $elementCount = 0;
-    private $lookup = [];
+    private array $elements = [];
+    private int $elementCount = 0;
+    private array $lookup = [];
 
     public function __construct(array $elements = [])
     {
@@ -75,8 +75,6 @@ class Set implements SetInterface
      * Extracts element from the head while the passed callable returns true.
      *
      * @param callable $callable receives elements of this Set as first argument, and returns true/false
-     *
-     * @return static
      */
     public function takeWhile($callable): static
     {
@@ -194,7 +192,7 @@ class Set implements SetInterface
             return false;
         } elseif (self::ELEM_TYPE_OBJECT_WITH_HANDLER === $this->elementType) {
             if (is_object($searchedElement)) {
-                return $this->containsObjectWithHandler($searchedElement, ObjectBasicsHandlerRegistry::getHandler(get_class($searchedElement)));
+                return $this->containsObjectWithHandler($searchedElement, ObjectBasicsHandlerRegistry::getHandler($searchedElement::class));
             }
 
             return false;
@@ -217,7 +215,7 @@ class Set implements SetInterface
             }
         } elseif (self::ELEM_TYPE_OBJECT_WITH_HANDLER === $this->elementType) {
             if (is_object($elem)) {
-                $this->removeObjectWithHandler($elem, ObjectBasicsHandlerRegistry::getHandler(get_class($elem)));
+                $this->removeObjectWithHandler($elem, ObjectBasicsHandlerRegistry::getHandler($elem::class));
             }
         } elseif (self::ELEM_TYPE_SCALAR === $this->elementType) {
             if (is_scalar($elem)) {
@@ -240,7 +238,7 @@ class Set implements SetInterface
                 $this->addScalar($elem);
             } else {
                 if (is_object($elem)) {
-                    $this->addObjectWithHandler($elem, ObjectBasicsHandlerRegistry::getHandler(get_class($elem)));
+                    $this->addObjectWithHandler($elem, ObjectBasicsHandlerRegistry::getHandler($elem::class));
                 } else {
                     throw new \LogicException(sprintf('The type of $elem ("%s") is not supported in sets.', gettype($elem)));
                 }
@@ -253,13 +251,13 @@ class Set implements SetInterface
             }
 
             if (is_object($elem)) {
-                throw new \LogicException(sprintf('This Set already contains object implement ObjectBasics, and cannot be mixed with objects that do not implement this interface like "%s".', get_class($elem)));
+                throw new \LogicException(sprintf('This Set already contains object implement ObjectBasics, and cannot be mixed with objects that do not implement this interface like "%s".', $elem::class));
             }
 
             throw new \LogicException(sprintf('This Set already contains objects, and cannot be mixed with elements of type "%s".', gettype($elem)));
         } elseif (self::ELEM_TYPE_OBJECT_WITH_HANDLER === $this->elementType) {
             if (is_object($elem)) {
-                $this->addObjectWithHandler($elem, ObjectBasicsHandlerRegistry::getHandler(get_class($elem)));
+                $this->addObjectWithHandler($elem, ObjectBasicsHandlerRegistry::getHandler($elem::class));
 
                 return;
             }

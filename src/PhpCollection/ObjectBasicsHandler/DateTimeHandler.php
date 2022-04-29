@@ -6,7 +6,7 @@ use PhpCollection\ObjectBasicsHandler;
 
 class DateTimeHandler implements ObjectBasicsHandler
 {
-    public function hash($object)
+    public function hash($object): string|int
     {
         if (!$object instanceof \DateTime) {
             throw new \LogicException('$object must be an instance of \DateTime.');
@@ -15,7 +15,7 @@ class DateTimeHandler implements ObjectBasicsHandler
         return $object->getTimestamp();
     }
 
-    public function equals($thisObject, $otherObject)
+    public function equals($thisObject, $otherObject): bool
     {
         if (!$thisObject instanceof \DateTime) {
             throw new \LogicException('$thisObject must be an instance of \DateTime.');

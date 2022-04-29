@@ -147,7 +147,7 @@ class MapTest extends TestCase
 
     public function testDropWhile(): void
     {
-        $newMap = $this->map->dropWhile(function ($k, $v) { return 'foo' === $k || 'baz' === $v; });
+        $newMap = $this->map->dropWhile(fn($k, $v) => 'foo' === $k || 'baz' === $v);
         $this->assertEquals(['baz' => 'boo'], iterator_to_array($newMap));
         $this->assertCount(3, $this->map);
     }

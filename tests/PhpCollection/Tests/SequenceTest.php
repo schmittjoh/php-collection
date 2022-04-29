@@ -107,7 +107,7 @@ class SequenceTest extends TestCase
     {
         $this->assertTrue($this->seq->isDefinedAt(0));
         $this->assertTrue($this->seq->isDefinedAt(1));
-        $this->assertFalse($this->seq->isDefinedAt(9999999));
+        $this->assertFalse($this->seq->isDefinedAt(9_999_999));
     }
 
     public function testIndexWhere(): void
@@ -294,8 +294,8 @@ class SequenceTest extends TestCase
 
     public function testDropWhile(): void
     {
-        $this->assertSame([0, $this->a, $this->b, 0], $this->seq->dropWhile(function () { return false; })->all());
-        $this->assertSame([], $this->seq->dropWhile(function () { return true; })->all());
+        $this->assertSame([0, $this->a, $this->b, 0], $this->seq->dropWhile(fn() => false)->all());
+        $this->assertSame([], $this->seq->dropWhile(fn() => true)->all());
     }
 
     public function testRemove(): void
@@ -319,15 +319,13 @@ class SequenceTest extends TestCase
         $seq->add('b');
 
         $self = $this;
-        $newSeq = $seq->map(function ($elem) use ($self) {
-            return match ($elem) {
-                'a' => 'c',
-                'b' => 'd',
-                default => $self->fail('Unexpected element: '.var_export($elem, true)),
-            };
+        $newSeq = $seq->map(fn($elem) => match ($elem) {
+            'a' => 'c',
+            'b' => 'd',
+            default => $self->fail('Unexpected element: '.var_export($elem, true)),
         });
 
-        $this->assertInstanceOf('PhpCollection\Sequence', $newSeq);
+        $this->assertInstanceOf(\PhpCollection\Sequence::class, $newSeq);
         $this->assertNotSame($newSeq, $seq);
         $this->assertEquals(['c', 'd'], $newSeq->all());
     }

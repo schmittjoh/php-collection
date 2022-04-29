@@ -14,12 +14,12 @@ use PhpCollection\ObjectBasicsHandler\IdentityHandler;
  */
 abstract class ObjectBasicsHandlerRegistry
 {
-    private static $handlers = [
-        'DateTime' => 'PhpCollection\\ObjectBasicsHandler\\DateTimeHandler',
+    private static array $handlers = [
+        \DateTime::class => \PhpCollection\ObjectBasicsHandler\DateTimeHandler::class,
     ];
     private static $defaultObjectHandler;
 
-    private static $aliases = [];
+    private static array $aliases = [];
 
     final private function __construct()
     {

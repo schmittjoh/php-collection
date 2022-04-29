@@ -87,8 +87,6 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      * Returns a filtered sequence.
      *
      * @param \Closure $callable receives the element and must return true (= keep) or false (= remove)
-     *
-     * @return AbstractSequence
      */
     public function filter(\Closure $callable): AbstractSequence
     {
@@ -109,8 +107,6 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      * Returns a filtered sequence.
      *
      * @param callable $callable receives the element and must return true (= remove) or false (= keep)
-     *
-     * @return AbstractSequence
      */
     public function filterNot($callable): AbstractSequence
     {
@@ -140,7 +136,6 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     /**
      * Finds the first index where the given callable returns true.
      *
-     * @param \Closure $callable
      *
      * @return int the index, or -1 if the predicate is not true for any element
      */
@@ -193,8 +188,6 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      * Returns an element based on its index (0-based).
      *
      * @param int $index
-     *
-     * @return mixed
      */
     public function get($index): mixed
     {
@@ -211,7 +204,6 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      * @param int $index
      *
      * @throws \OutOfBoundsException if there is no element at the given index
-     * @return mixed
      */
     public function remove($index): mixed
     {
@@ -228,9 +220,6 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     /**
      * Updates the element at the given index (0-based).
-     *
-     * @param int $index
-     * @param mixed $value
      */
     public function update(int $index, mixed $value): void
     {
@@ -276,8 +265,6 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      * Extracts element from the head while the passed callable returns true.
      *
      * @param callable $callable receives elements of this sequence as first argument, and returns true/false
-     *
-     * @return static
      */
     public function takeWhile($callable): static
     {
