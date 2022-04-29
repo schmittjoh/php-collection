@@ -19,9 +19,9 @@
 namespace PhpCollection;
 
 use PhpOption\LazyOption;
+use PhpOption\None;
 use PhpOption\Option;
 use PhpOption\Some;
-use PhpOption\None;
 
 abstract class AbstractCollection implements \IteratorAggregate
 {
@@ -40,9 +40,9 @@ abstract class AbstractCollection implements \IteratorAggregate
     {
         $self = $this;
 
-        return new LazyOption(function() use ($callable, $self) {
+        return new LazyOption(function () use ($callable, $self) {
             foreach ($self as $elem) {
-                if (call_user_func($callable, $elem) === true) {
+                if (true === call_user_func($callable, $elem)) {
                     return new Some($elem);
                 }
             }

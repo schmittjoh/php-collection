@@ -42,7 +42,7 @@ interface MapInterface extends CollectionInterface
      * @return Some|None on array<K,V>
      */
     public function last(): Some|None;
-    
+
     /**
      * Returns all elements in this collection.
      *
@@ -144,7 +144,7 @@ interface MapInterface extends CollectionInterface
     /**
      * Returns a new sequence by omitting elements from the beginning for as long as the callable returns true.
      *
-     * @param \Closure $callable Receives the element to drop as first argument, and returns true (drop), or false (stop).
+     * @param \Closure $callable receives the element to drop as first argument, and returns true (drop), or false (stop)
      *
      * @return MapInterface
      */

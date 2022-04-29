@@ -9,12 +9,22 @@ class MapTest extends TestCase
 {
     private Map $map;
 
+    protected function setUp(): void
+    {
+        $this->map = new Map();
+        $this->map->setAll([
+            'foo' => 'bar',
+            'bar' => 'baz',
+            'baz' => 'boo',
+        ]);
+    }
+
     public function testExists(): void
     {
-        $this->assertFalse($this->map->exists(fn ($k) => $k === 0));
+        $this->assertFalse($this->map->exists(fn ($k) => 0 === $k));
 
         $this->map->set('foo', 'bar');
-        $this->assertTrue($this->map->exists(fn ($k, $v) => $k === 'foo' && $v === 'bar'));
+        $this->assertTrue($this->map->exists(fn ($k, $v) => 'foo' === $k && 'bar' === $v));
     }
 
     public function testSet(): void
@@ -33,7 +43,7 @@ class MapTest extends TestCase
         $this->map->setAll(['foo' => 'asdf', 'bar' => ['foo']]);
         $this->assertEquals(['foo' => 'asdf', 'bar' => ['foo'], 'baz' => 'boo'], iterator_to_array($this->map));
     }
-    
+
     public function testAll(): void
     {
         $this->map->setAll(['foo' => 'asdf', 'bar' => ['foo']]);
@@ -72,14 +82,14 @@ class MapTest extends TestCase
 
     public function testFirst(): void
     {
-        $this->assertEquals(array('foo', 'bar'), $this->map->first()->get());
+        $this->assertEquals(['foo', 'bar'], $this->map->first()->get());
         $this->map->clear();
         $this->assertTrue($this->map->first()->isEmpty());
     }
 
     public function testLast(): void
     {
-        $this->assertEquals(array('baz', 'boo'), $this->map->last()->get());
+        $this->assertEquals(['baz', 'boo'], $this->map->last()->get());
         $this->map->clear();
         $this->assertTrue($this->map->last()->isEmpty());
     }
@@ -106,18 +116,18 @@ class MapTest extends TestCase
     public function testFilter(): void
     {
         $map = new Map(['a' => 'b', 'c' => 'd', 'e' => 'f']);
-        $newMap = $map->filter(fn($v) => $v === 'd');
+        $newMap = $map->filter(fn ($v) => 'd' === $v);
 
         $this->assertNotSame($newMap, $map);
         $this->assertCount(3, $map);
         $this->assertCount(1, $newMap);
-        $this->assertEquals(array('c' => 'd'), iterator_to_array($newMap));
+        $this->assertEquals(['c' => 'd'], iterator_to_array($newMap));
     }
 
     public function testFilterNot(): void
     {
         $map = new Map(['a' => 'b', 'c' => 'd', 'e' => 'f']);
-        $newMap = $map->filterNot(fn ($v): bool => $v === 'd');
+        $newMap = $map->filterNot(fn ($v): bool => 'd' === $v);
 
         $this->assertNotSame($newMap, $map);
         $this->assertCount(3, $map);
@@ -137,7 +147,7 @@ class MapTest extends TestCase
 
     public function testDropWhile(): void
     {
-        $newMap = $this->map->dropWhile(function($k, $v) { return 'foo' === $k || 'baz' === $v; });
+        $newMap = $this->map->dropWhile(function ($k, $v) { return 'foo' === $k || 'baz' === $v; });
         $this->assertEquals(['baz' => 'boo'], iterator_to_array($newMap));
         $this->assertCount(3, $this->map);
     }
@@ -187,17 +197,17 @@ class MapTest extends TestCase
 
     public function testTakeWhile(): void
     {
-        $newMap = $this->map->takeWhile(fn($k, $v) => 'foo' === $k || 'baz' === $v);
+        $newMap = $this->map->takeWhile(fn ($k, $v) => 'foo' === $k || 'baz' === $v);
         $this->assertEquals(['foo' => 'bar', 'bar' => 'baz'], iterator_to_array($newMap));
         $this->assertCount(3, $this->map);
     }
 
     public function testFind(): void
     {
-        $foundElem = $this->map->find(fn($k, $v) => 'foo' === $k && 'bar' === $v);
+        $foundElem = $this->map->find(fn ($k, $v) => 'foo' === $k && 'bar' === $v);
         $this->assertEquals(['foo', 'bar'], $foundElem->get());
 
-        $this->assertTrue($this->map->find(fn() => false)->isEmpty());
+        $this->assertTrue($this->map->find(fn () => false)->isEmpty());
     }
 
     public function testKeys(): void
@@ -208,15 +218,5 @@ class MapTest extends TestCase
     public function testValues(): void
     {
         $this->assertEquals(['bar', 'baz', 'boo'], $this->map->values());
-    }
-
-    protected function setUp(): void
-    {
-        $this->map = new Map();
-        $this->map->setAll([
-            'foo' => 'bar',
-            'bar' => 'baz',
-            'baz' => 'boo',
-        ]);
     }
 }

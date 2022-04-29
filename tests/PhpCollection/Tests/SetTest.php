@@ -3,7 +3,6 @@
 namespace PhpCollection\Tests;
 
 use PhpCollection\ObjectBasics;
-use PhpCollection\ObjectBasicsHandlerRegistry;
 use PhpCollection\Set;
 use PHPUnit\Framework\TestCase;
 
@@ -11,6 +10,11 @@ class SetTest extends TestCase
 {
     /** @var Set */
     private Set $set;
+
+    protected function setUp(): void
+    {
+        $this->set = new Set();
+    }
 
     public function testContainsScalar(): void
     {
@@ -59,10 +63,10 @@ class SetTest extends TestCase
         $this->set->add('b');
         $this->assertEquals(['a', 'b'], $this->set->all());
 
-        $newSet = $this->set->map(function($char) {
-            if ($char === 'a') {
+        $newSet = $this->set->map(function ($char) {
+            if ('a' === $char) {
                 return 'c';
-            } elseif ($char === 'b') {
+            } elseif ('b' === $char) {
                 return 'd';
             }
 
@@ -118,7 +122,7 @@ class SetTest extends TestCase
         $this->set->add('b');
         $this->set->add('a');
 
-        $this->assertEquals(array('a', 'b'), $this->set->all());
+        $this->assertEquals(['a', 'b'], $this->set->all());
     }
 
     public function testAddObject(): void
@@ -128,10 +132,10 @@ class SetTest extends TestCase
         $this->set->add(new ObjectThatImplementsBasics('foo'));
 
         $this->assertEquals(
-            array(
+            [
                 new ObjectThatImplementsBasics('foo'),
-                new ObjectThatImplementsBasics('bar')
-            ),
+                new ObjectThatImplementsBasics('bar'),
+            ],
             $this->set->all()
         );
     }
@@ -143,17 +147,12 @@ class SetTest extends TestCase
         $this->set->add((new \DateTime('today'))->setTimezone(new \DateTimeZone('US/Pacific')));
 
         $this->assertEquals(
-            array(
+            [
                 (new \DateTime('today'))->setTimezone(new \DateTimeZone('UTC')),
                 (new \DateTime('today'))->setTimezone(new \DateTimeZone('US/Pacific')),
-            ),
+            ],
             $this->set->all()
         );
-    }
-
-    protected function setUp(): void
-    {
-        $this->set = new Set();
     }
 }
 
@@ -176,7 +175,7 @@ class ObjectThatImplementsBasics implements ObjectBasics
         if ($this === $other) {
             return true;
         }
-        if ( ! $other instanceof ObjectThatImplementsBasics) {
+        if (!$other instanceof ObjectThatImplementsBasics) {
             return false;
         }
 

@@ -11,6 +11,31 @@ class SortedSequenceTest extends TestCase
     private \stdClass $a;
     private \stdClass $b;
 
+    protected function setUp(): void
+    {
+        $this->seq = new SortedSequence(function ($a, $b) {
+            if (is_integer($a)) {
+                if (!is_integer($b)) {
+                    return -1;
+                }
+
+                return $a - $b;
+            }
+
+            if (is_integer($b)) {
+                return 1;
+            }
+
+            return -1;
+        });
+        $this->seq->addAll([
+            0,
+            $this->a = new \stdClass(),
+            $this->b = new \stdClass(),
+            0,
+        ]);
+    }
+
     public function testAdd(): void
     {
         $this->seq->add(1);
@@ -34,30 +59,5 @@ class SortedSequenceTest extends TestCase
         $seq = $this->seq->take(2);
         $this->assertInstanceOf('PhpCollection\SortedSequence', $seq);
         $this->assertSame([0, 0], $seq->all());
-    }
-
-    protected function setUp(): void
-    {
-        $this->seq = new SortedSequence(function($a, $b) {
-            if (is_integer($a)) {
-                if ( ! is_integer($b)) {
-                    return -1;
-                }
-
-                return $a - $b;
-            }
-
-            if (is_integer($b)) {
-                return 1;
-            }
-
-            return -1;
-        });
-        $this->seq->addAll(array(
-            0,
-            $this->a = new \stdClass,
-            $this->b = new \stdClass,
-            0,
-        ));
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace PhpCollection;
+
 use PhpOption\Option;
 
 /**
@@ -72,7 +73,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      *
      * If the passed number is greater than the available number of elements, all will be removed.
      *
-     * @param integer $number
+     * @param int $number
      *
      * @return SetInterface
      */
@@ -83,7 +84,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      *
      * If the passed number is greater than the available number of elements, all will be removed.
      *
-     * @param integer $number
+     * @param int $number
      *
      * @return SetInterface
      */
@@ -92,7 +93,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
     /**
      * Returns a new Set by omitting elements from the beginning for as long as the callable returns true.
      *
-     * @param callable $callable Receives the element to drop as first argument, and returns true (drop), or false (stop).
+     * @param callable $callable receives the element to drop as first argument, and returns true (drop), or false (stop)
      *
      * @return SetInterface
      */
@@ -105,7 +106,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      * If the passed number is greater than the available number of elements, then all elements
      * will be returned as a new collection.
      *
-     * @param integer $number
+     * @param int $number
      *
      * @return CollectionInterface
      */

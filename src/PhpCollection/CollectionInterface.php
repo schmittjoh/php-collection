@@ -30,7 +30,7 @@ interface CollectionInterface extends \Traversable, \Countable
      *
      * @param mixed $searchedElement
      *
-     * @return boolean
+     * @return bool
      */
     public function contains(mixed $searchedElement): bool;
 
@@ -46,7 +46,7 @@ interface CollectionInterface extends \Traversable, \Countable
      *
      * Removes all elements for which the provided callable returns false.
      *
-     * @param \Closure $callable receives an element of the collection and must return true (= keep) or false (= remove).
+     * @param \Closure $callable receives an element of the collection and must return true (= keep) or false (= remove)
      *
      * @return CollectionInterface
      */
@@ -57,7 +57,7 @@ interface CollectionInterface extends \Traversable, \Countable
      *
      * Removes all elements for which the provided callable returns true.
      *
-     * @param callable $callable receives an element of the collection and must return true (= remove) or false (= keep).
+     * @param callable $callable receives an element of the collection and must return true (= remove) or false (= keep)
      *
      * @return CollectionInterface
      */
@@ -69,7 +69,7 @@ interface CollectionInterface extends \Traversable, \Countable
      * @param mixed $initialValue
      * @param \Closure $callable receives the current value (the first time this equals $initialValue) and the element
      *
-     * @return mixed the last value returned by $callable, or $initialValue if collection is empty.
+     * @return mixed the last value returned by $callable, or $initialValue if collection is empty
      */
     public function foldLeft(mixed $initialValue, \Closure $callable): mixed;
 
@@ -77,8 +77,8 @@ interface CollectionInterface extends \Traversable, \Countable
      * Applies the callable to each element, and an initial value, going right to left.
      *
      * @param mixed $initialValue
-     * @param \Closure $callable receives the element, and the current value (the first time this equals $initialValue).
-     * @return mixed the last value returned by $callable, or $initialValue if collection is empty.
+     * @param \Closure $callable receives the element, and the current value (the first time this equals $initialValue)
+     * @return mixed the last value returned by $callable, or $initialValue if collection is empty
      */
     public function foldRight(mixed $initialValue, \Closure $callable): mixed;
 }

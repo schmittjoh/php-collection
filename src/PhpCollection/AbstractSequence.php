@@ -18,10 +18,9 @@
 
 namespace PhpCollection;
 
-use PhpOption\Some;
-use PhpOption\None;
-use PhpOption\Option;
 use OutOfBoundsException;
+use PhpOption\None;
+use PhpOption\Some;
 
 /**
  * A sequence with numerically indexed elements.
@@ -40,7 +39,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     /**
      * @param array $elements
      */
-    public function __construct(array $elements = array())
+    public function __construct(array $elements = [])
     {
         $this->elements = array_values($elements);
     }
@@ -65,7 +64,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     public function lastIndexOf(mixed $searchedElement): int
     {
-        for ($i=count($this->elements)-1; $i>=0; $i--) {
+        for ($i = count($this->elements) - 1; $i >= 0; $i--) {
             if ($this->elements[$i] === $searchedElement) {
                 return $i;
             }
@@ -87,7 +86,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     /**
      * Returns a filtered sequence.
      *
-     * @param \Closure $callable receives the element and must return true (= keep) or false (= remove).
+     * @param \Closure $callable receives the element and must return true (= keep) or false (= remove)
      *
      * @return AbstractSequence
      */
@@ -98,7 +97,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     public function map($callable): AbstractSequence
     {
-        $newElements = array();
+        $newElements = [];
         foreach ($this->elements as $i => $element) {
             $newElements[$i] = $callable($element);
         }
@@ -109,27 +108,13 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     /**
      * Returns a filtered sequence.
      *
-     * @param callable $callable receives the element and must return true (= remove) or false (= keep).
+     * @param callable $callable receives the element and must return true (= remove) or false (= keep)
      *
      * @return AbstractSequence
      */
     public function filterNot($callable): AbstractSequence
     {
         return $this->filterInternal($callable, false);
-    }
-
-    private function filterInternal($callable, $booleanKeep): static
-    {
-        $newElements = array();
-        foreach ($this->elements as $element) {
-            if ($booleanKeep !== call_user_func($callable, $element)) {
-                continue;
-            }
-
-            $newElements[] = $element;
-        }
-
-        return $this->createNew($newElements);
     }
 
     public function foldLeft(mixed $initialValue, \Closure $callable): mixed
@@ -157,12 +142,12 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      *
      * @param \Closure $callable
      *
-     * @return integer the index, or -1 if the predicate is not true for any element.
+     * @return int the index, or -1 if the predicate is not true for any element
      */
     public function indexWhere(\Closure $callable): int
     {
         foreach ($this->elements as $i => $element) {
-            if (call_user_func($callable, $element) === true) {
+            if (true === call_user_func($callable, $element)) {
                 return $i;
             }
         }
@@ -172,8 +157,8 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     public function lastIndexWhere($callable): int
     {
-        for ($i=count($this->elements)-1; $i>=0; $i--) {
-            if (call_user_func($callable, $this->elements[$i]) === true) {
+        for ($i = count($this->elements) - 1; $i >= 0; $i--) {
+            if (true === call_user_func($callable, $this->elements[$i])) {
                 return $i;
             }
         }
@@ -207,13 +192,13 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     /**
      * Returns an element based on its index (0-based).
      *
-     * @param integer $index
+     * @param int $index
      *
      * @return mixed
      */
     public function get($index): mixed
     {
-        if ( ! isset($this->elements[$index])) {
+        if (!isset($this->elements[$index])) {
             throw new OutOfBoundsException(sprintf('The index "%s" does not exist in this sequence.', $index));
         }
 
@@ -225,13 +210,12 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      *
      * @param int $index
      *
+     * @throws \OutOfBoundsException if there is no element at the given index
      * @return mixed
-     *
-     * @throws \OutOfBoundsException If there is no element at the given index.
      */
     public function remove($index): mixed
     {
-        if ( ! isset($this->elements[$index])) {
+        if (!isset($this->elements[$index])) {
             throw new OutOfBoundsException(sprintf('The index "%d" is not in the interval [0, %d).', $index, count($this->elements)));
         }
 
@@ -245,12 +229,12 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     /**
      * Updates the element at the given index (0-based).
      *
-     * @param integer $index
+     * @param int $index
      * @param mixed $value
      */
     public function update(int $index, mixed $value): void
     {
-        if ( ! isset($this->elements[$index])) {
+        if (!isset($this->elements[$index])) {
             throw new \InvalidArgumentException(sprintf('There is no element at index "%d".', $index));
         }
 
@@ -291,16 +275,16 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     /**
      * Extracts element from the head while the passed callable returns true.
      *
-     * @param callable $callable receives elements of this sequence as first argument, and returns true/false.
+     * @param callable $callable receives elements of this sequence as first argument, and returns true/false
      *
      * @return static
      */
     public function takeWhile($callable): static
     {
-        $newElements = array();
+        $newElements = [];
 
-        for ($i=0,$c=count($this->elements); $i<$c; $i++) {
-            if (call_user_func($callable, $this->elements[$i]) !== true) {
+        for ($i = 0,$c = count($this->elements); $i < $c; $i++) {
+            if (true !== call_user_func($callable, $this->elements[$i])) {
                 break;
             }
 
@@ -330,7 +314,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     public function dropWhile($callable): SequenceInterface
     {
-        for ($i=0,$c=count($this->elements); $i<$c; $i++) {
+        for ($i = 0,$c = count($this->elements); $i < $c; $i++) {
             if (true !== call_user_func($callable, $this->elements[$i])) {
                 break;
             }
@@ -342,7 +326,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     public function exists(\Closure $callable): bool
     {
         foreach ($this as $elem) {
-            if ($callable($elem) === true) {
+            if (true === $callable($elem)) {
                 return true;
             }
         }
@@ -363,5 +347,19 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     protected function createNew(array $elements): static
     {
         return new static($elements);
+    }
+
+    private function filterInternal($callable, $booleanKeep): static
+    {
+        $newElements = [];
+        foreach ($this->elements as $element) {
+            if ($booleanKeep !== call_user_func($callable, $element)) {
+                continue;
+            }
+
+            $newElements[] = $element;
+        }
+
+        return $this->createNew($newElements);
     }
 }

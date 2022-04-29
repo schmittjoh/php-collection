@@ -17,15 +17,15 @@ use PhpOption\Some;
  */
 class Set implements SetInterface
 {
-    const ELEM_TYPE_SCALAR = 1;
-    const ELEM_TYPE_OBJECT = 2;
-    const ELEM_TYPE_OBJECT_WITH_HANDLER = 3;
+    public const ELEM_TYPE_SCALAR = 1;
+    public const ELEM_TYPE_OBJECT = 2;
+    public const ELEM_TYPE_OBJECT_WITH_HANDLER = 3;
 
     private $elementType;
 
     private $elements = [];
     private $elementCount = 0;
-    private $lookup = array();
+    private $lookup = [];
 
     public function __construct(array $elements = [])
     {
@@ -74,16 +74,16 @@ class Set implements SetInterface
     /**
      * Extracts element from the head while the passed callable returns true.
      *
-     * @param callable $callable receives elements of this Set as first argument, and returns true/false.
+     * @param callable $callable receives elements of this Set as first argument, and returns true/false
      *
      * @return static
      */
     public function takeWhile($callable): static
     {
-        $newElements = array();
+        $newElements = [];
 
-        for ($i=0,$c=count($this->elements); $i<$c; $i++) {
-            if (call_user_func($callable, $this->elements[$i]) !== true) {
+        for ($i = 0,$c = count($this->elements); $i < $c; $i++) {
+            if (true !== call_user_func($callable, $this->elements[$i])) {
                 break;
             }
 
@@ -113,7 +113,7 @@ class Set implements SetInterface
 
     public function dropWhile($callable): static
     {
-        for ($i=0,$c=count($this->elements); $i<$c; $i++) {
+        for ($i = 0,$c = count($this->elements); $i < $c; $i++) {
             if (true !== call_user_func($callable, $this->elements[$i])) {
                 break;
             }
@@ -124,7 +124,7 @@ class Set implements SetInterface
 
     public function map($callable): static
     {
-        $newElements = array();
+        $newElements = [];
         foreach ($this->elements as $i => $element) {
             $newElements[$i] = $callable($element);
         }
@@ -186,19 +186,19 @@ class Set implements SetInterface
 
     public function contains(mixed $searchedElement): bool
     {
-        if ($this->elementType === self::ELEM_TYPE_OBJECT) {
+        if (self::ELEM_TYPE_OBJECT === $this->elementType) {
             if ($searchedElement instanceof ObjectBasics) {
                 return $this->containsObject($searchedElement);
             }
 
             return false;
-        } elseif ($this->elementType === self::ELEM_TYPE_OBJECT_WITH_HANDLER) {
+        } elseif (self::ELEM_TYPE_OBJECT_WITH_HANDLER === $this->elementType) {
             if (is_object($searchedElement)) {
                 return $this->containsObjectWithHandler($searchedElement, ObjectBasicsHandlerRegistry::getHandler(get_class($searchedElement)));
             }
 
             return false;
-        } elseif ($this->elementType === self::ELEM_TYPE_SCALAR) {
+        } elseif (self::ELEM_TYPE_SCALAR === $this->elementType) {
             if (is_scalar($searchedElement)) {
                 return $this->containsScalar($searchedElement);
             }
@@ -211,15 +211,15 @@ class Set implements SetInterface
 
     public function remove(mixed $elem): void
     {
-        if ($this->elementType === self::ELEM_TYPE_OBJECT) {
+        if (self::ELEM_TYPE_OBJECT === $this->elementType) {
             if ($elem instanceof ObjectBasics) {
                 $this->removeObject($elem);
             }
-        } elseif ($this->elementType === self::ELEM_TYPE_OBJECT_WITH_HANDLER) {
+        } elseif (self::ELEM_TYPE_OBJECT_WITH_HANDLER === $this->elementType) {
             if (is_object($elem)) {
                 $this->removeObjectWithHandler($elem, ObjectBasicsHandlerRegistry::getHandler(get_class($elem)));
             }
-        } elseif ($this->elementType === self::ELEM_TYPE_SCALAR) {
+        } elseif (self::ELEM_TYPE_SCALAR === $this->elementType) {
             if (is_scalar($elem)) {
                 $this->removeScalar($elem);
             }
@@ -233,7 +233,7 @@ class Set implements SetInterface
 
     public function add(mixed $elem): void
     {
-        if ($this->elementType === null) {
+        if (null === $this->elementType) {
             if ($elem instanceof ObjectBasics) {
                 $this->addObject($elem);
             } elseif (is_scalar($elem)) {
@@ -245,7 +245,7 @@ class Set implements SetInterface
                     throw new \LogicException(sprintf('The type of $elem ("%s") is not supported in sets.', gettype($elem)));
                 }
             }
-        } elseif ($this->elementType === self::ELEM_TYPE_OBJECT) {
+        } elseif (self::ELEM_TYPE_OBJECT === $this->elementType) {
             if ($elem instanceof ObjectBasics) {
                 $this->addObject($elem);
 
@@ -257,7 +257,7 @@ class Set implements SetInterface
             }
 
             throw new \LogicException(sprintf('This Set already contains objects, and cannot be mixed with elements of type "%s".', gettype($elem)));
-        } elseif ($this->elementType === self::ELEM_TYPE_OBJECT_WITH_HANDLER) {
+        } elseif (self::ELEM_TYPE_OBJECT_WITH_HANDLER === $this->elementType) {
             if (is_object($elem)) {
                 $this->addObjectWithHandler($elem, ObjectBasicsHandlerRegistry::getHandler(get_class($elem)));
 
@@ -265,7 +265,7 @@ class Set implements SetInterface
             }
 
             throw new \LogicException(sprintf('This Set already contains object with an external handler, and cannot be mixed with elements of type "%s".', gettype($elem)));
-        } elseif ($this->elementType === self::ELEM_TYPE_SCALAR) {
+        } elseif (self::ELEM_TYPE_SCALAR === $this->elementType) {
             if (is_scalar($elem)) {
                 $this->addScalar($elem);
 
@@ -285,7 +285,7 @@ class Set implements SetInterface
 
     private function filterInternal($callable, $booleanKeep): static
     {
-        $newElements = array();
+        $newElements = [];
         foreach ($this->elements as $element) {
             if ($booleanKeep !== call_user_func($callable, $element)) {
                 continue;
@@ -299,7 +299,7 @@ class Set implements SetInterface
 
     private function containsScalar($elem): bool
     {
-        if ( ! isset($this->lookup[$elem])) {
+        if (!isset($this->lookup[$elem])) {
             return false;
         }
 
@@ -315,7 +315,7 @@ class Set implements SetInterface
     private function containsObjectWithHandler($object, ObjectBasicsHandler $handler): bool
     {
         $hash = $handler->hash($object);
-        if ( ! isset($this->lookup[$hash])) {
+        if (!isset($this->lookup[$hash])) {
             return false;
         }
 
@@ -331,7 +331,7 @@ class Set implements SetInterface
     private function containsObject(ObjectBasics $object): bool
     {
         $hash = $object->hash();
-        if ( ! isset($this->lookup[$hash])) {
+        if (!isset($this->lookup[$hash])) {
             return false;
         }
 
@@ -346,13 +346,14 @@ class Set implements SetInterface
 
     private function removeScalar($elem)
     {
-        if ( ! isset($this->lookup[$elem])) {
+        if (!isset($this->lookup[$elem])) {
             return;
         }
 
         foreach ($this->lookup[$elem] as $k => $index) {
             if ($elem === $this->elements[$index]) {
                 $this->removeElement($elem, $k, $index);
+
                 break;
             }
         }
@@ -361,13 +362,14 @@ class Set implements SetInterface
     private function removeObjectWithHandler($object, ObjectBasicsHandler $handler)
     {
         $hash = $handler->hash($object);
-        if ( ! isset($this->lookup[$hash])) {
+        if (!isset($this->lookup[$hash])) {
             return;
         }
 
         foreach ($this->lookup[$hash] as $k => $index) {
             if ($handler->equals($object, $this->elements[$index])) {
                 $this->removeElement($hash, $k, $index);
+
                 break;
             }
         }
@@ -376,13 +378,14 @@ class Set implements SetInterface
     private function removeObject(ObjectBasics $object)
     {
         $hash = $object->hash();
-        if ( ! isset($this->lookup[$hash])) {
+        if (!isset($this->lookup[$hash])) {
             return;
         }
 
         foreach ($this->lookup[$hash] as $k => $index) {
             if ($object->equals($this->elements[$index])) {
                 $this->removeElement($hash, $k, $index);
+
                 break;
             }
         }

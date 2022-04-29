@@ -3,7 +3,6 @@
 namespace PhpCollection\Tests;
 
 use PhpCollection\Sequence;
-use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -12,6 +11,17 @@ class SequenceTest extends TestCase
     private Sequence $seq;
     private \stdClass $a;
     private \stdClass $b;
+
+    protected function setUp(): void
+    {
+        $this->seq = new Sequence();
+        $this->seq->addAll([
+            0,
+            $this->a = new \stdClass(),
+            $this->b = new \stdClass(),
+            0,
+        ]);
+    }
 
     public function testGet(): void
     {
@@ -45,7 +55,7 @@ class SequenceTest extends TestCase
     public function testFilter(): void
     {
         $seq = new Sequence([1, 2, 3]);
-        $newSeq = $seq->filter(fn ($n) => $n === 2);
+        $newSeq = $seq->filter(fn ($n) => 2 === $n);
 
         $this->assertNotSame($newSeq, $seq);
         $this->assertCount(3, $seq);
@@ -56,7 +66,7 @@ class SequenceTest extends TestCase
     public function testFilterNot(): void
     {
         $seq = new Sequence([1, 2, 3]);
-        $newSeq = $seq->filterNot(fn ($n) => $n === 2);
+        $newSeq = $seq->filterNot(fn ($n) => 2 === $n);
 
         $this->assertNotSame($newSeq, $seq);
         $this->assertCount(3, $seq);
@@ -67,7 +77,7 @@ class SequenceTest extends TestCase
 
     public function testFoldLeftRight(): void
     {
-        $seq = new Sequence(array('a', 'b', 'c'));
+        $seq = new Sequence(['a', 'b', 'c']);
         $rsLeft = $seq->foldLeft('', fn ($a, $b) => $a.$b);
         $rsRight = $seq->foldRight('', fn ($a, $b) => $a.$b);
 
@@ -83,14 +93,14 @@ class SequenceTest extends TestCase
 
         $this->seq->addSequence($seq);
 
-        $this->assertSame(array(
+        $this->assertSame([
             0,
             $this->a,
             $this->b,
             0,
             1,
             0,
-        ), $this->seq->all());
+        ], $this->seq->all());
     }
 
     public function testIsDefinedAt(): void
@@ -133,13 +143,13 @@ class SequenceTest extends TestCase
 
     public function testExists(): void
     {
-        $this->assertTrue($this->seq->exists(fn ($v) => $v === 0));
+        $this->assertTrue($this->seq->exists(fn ($v) => 0 === $v));
 
         $a = $this->a;
         $this->assertTrue($this->seq->exists(fn ($v) => $v === $a));
 
-        $this->assertFalse($this->seq->exists(fn ($v) => $v === 9999));
-        $this->assertFalse($this->seq->exists(fn ($v) => $v === new \stdClass));
+        $this->assertFalse($this->seq->exists(fn ($v) => 9999 === $v));
+        $this->assertFalse($this->seq->exists(fn ($v) => $v === new \stdClass()));
     }
 
     public function testFind(): void
@@ -160,11 +170,11 @@ class SequenceTest extends TestCase
     public function testAdd(): void
     {
         $this->seq->add(1);
-        $this->assertSame(array(0, $this->a, $this->b, 0, 1), $this->seq->all());
+        $this->assertSame([0, $this->a, $this->b, 0, 1], $this->seq->all());
 
-        $this->seq->sortWith(function($a, $b) {
+        $this->seq->sortWith(function ($a, $b) {
             if (is_integer($a)) {
-                if ( ! is_integer($b)) {
+                if (!is_integer($b)) {
                     return -1;
                 }
 
@@ -177,14 +187,14 @@ class SequenceTest extends TestCase
 
             if ($a === $this->a && $b === $this->b) {
                 return -1;
-            } else if ($a === $this->b && $b === $this->a) {
+            } elseif ($a === $this->b && $b === $this->a) {
                 return 1;
             }
 
             return 1;
         });
 
-        $this->assertSame(array(0, 0, 1, $this->a, $this->b), $this->seq->all());
+        $this->assertSame([0, 0, 1, $this->a, $this->b], $this->seq->all());
     }
 
     public function testUpdate(): void
@@ -206,9 +216,9 @@ class SequenceTest extends TestCase
         $this->seq->addAll([2, 1, 3]);
         $this->assertSame([0, $this->a, $this->b, 0, 2, 1, 3], $this->seq->all());
 
-        $this->seq->sortWith(function($a, $b) {
+        $this->seq->sortWith(function ($a, $b) {
             if (is_integer($a)) {
-                if ( ! is_integer($b)) {
+                if (!is_integer($b)) {
                     return -1;
                 }
 
@@ -251,7 +261,7 @@ class SequenceTest extends TestCase
 
     public function testTraverse(): void
     {
-        $this->assertSame(array(0, $this->a, $this->b, 0), iterator_to_array($this->seq));
+        $this->assertSame([0, $this->a, $this->b, 0], iterator_to_array($this->seq));
     }
 
     public function testDrop(): void
@@ -284,8 +294,8 @@ class SequenceTest extends TestCase
 
     public function testDropWhile(): void
     {
-        $this->assertSame([0, $this->a, $this->b, 0], $this->seq->dropWhile(function() { return false; })->all());
-        $this->assertSame([], $this->seq->dropWhile(function() { return true; })->all());
+        $this->assertSame([0, $this->a, $this->b, 0], $this->seq->dropWhile(function () { return false; })->all());
+        $this->assertSame([], $this->seq->dropWhile(function () { return true; })->all());
     }
 
     public function testRemove(): void
@@ -309,17 +319,17 @@ class SequenceTest extends TestCase
         $seq->add('b');
 
         $self = $this;
-        $newSeq = $seq->map(function($elem) use ($self) {
+        $newSeq = $seq->map(function ($elem) use ($self) {
             return match ($elem) {
                 'a' => 'c',
                 'b' => 'd',
-                default => $self->fail('Unexpected element: ' . var_export($elem, true)),
+                default => $self->fail('Unexpected element: '.var_export($elem, true)),
             };
         });
 
         $this->assertInstanceOf('PhpCollection\Sequence', $newSeq);
         $this->assertNotSame($newSeq, $seq);
-        $this->assertEquals(array('c', 'd'), $newSeq->all());
+        $this->assertEquals(['c', 'd'], $newSeq->all());
     }
 
     public function testIterator(): void
@@ -332,16 +342,5 @@ class SequenceTest extends TestCase
             $i++;
         }
         $this->assertSame(4, $i);
-    }
-
-    protected function setUp(): void
-    {
-        $this->seq = new Sequence();
-        $this->seq->addAll([
-            0,
-            $this->a = new \stdClass(),
-            $this->b = new \stdClass(),
-            0
-        ]);
     }
 }

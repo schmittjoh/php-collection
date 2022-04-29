@@ -72,7 +72,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * @param mixed $elem
      *
-     * @return integer the index (0-based), or -1 if not found
+     * @return int the index (0-based), or -1 if not found
      */
     public function indexOf($elem);
 
@@ -80,7 +80,7 @@ interface SequenceInterface extends CollectionInterface
      * Returns the last index of the passed element.
      *
      * @param mixed $elem
-     * @return integer the index (0-based), or -1 if not found
+     * @return int the index (0-based), or -1 if not found
      */
     public function lastIndexOf(mixed $elem): int;
 
@@ -88,7 +88,7 @@ interface SequenceInterface extends CollectionInterface
      * Returns whether the given index is defined in the sequence.
      *
      * @param int $index (0-based)
-     * @return boolean
+     * @return bool
      */
     public function isDefinedAt(int $index): bool;
 
@@ -97,7 +97,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * @param \Closure $callable receives the element as first argument, and returns true, or false
      *
-     * @return integer the index (0-based), or -1 if the callable returns false for all elements
+     * @return int the index (0-based), or -1 if the callable returns false for all elements
      */
     public function indexWhere(\Closure $callable): int;
 
@@ -106,21 +106,21 @@ interface SequenceInterface extends CollectionInterface
      *
      * @param \Closure $callable receives the element as first argument, and returns true, or false
      *
-     * @return integer the index (0-based), or -1 if the callable returns false for all elements
+     * @return int the index (0-based), or -1 if the callable returns false for all elements
      */
     public function lastIndexWhere(\Closure $callable): int;
 
     /**
      * Returns all indices of this collection.
      *
-     * @return integer[]
+     * @return int[]
      */
     public function indices(): array;
 
     /**
      * Returns the element at the given index.
      *
-     * @param integer $index (0-based)
+     * @param int $index (0-based)
      *
      * @return mixed
      */
@@ -138,7 +138,7 @@ interface SequenceInterface extends CollectionInterface
     /**
      * Removes the element at the given index, and returns it.
      *
-     * @param integer $index
+     * @param int $index
      *
      * @return mixed
      */
@@ -168,7 +168,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * If the passed number is greater than the available number of elements, all will be removed.
      *
-     * @param integer $number
+     * @param int $number
      *
      * @return SequenceInterface
      */
@@ -179,7 +179,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * If the passed number is greater than the available number of elements, all will be removed.
      *
-     * @param integer $number
+     * @param int $number
      *
      * @return SequenceInterface
      */
@@ -188,7 +188,7 @@ interface SequenceInterface extends CollectionInterface
     /**
      * Returns a new sequence by omitting elements from the beginning for as long as the callable returns true.
      *
-     * @param callable $callable Receives the element to drop as first argument, and returns true (drop), or false (stop).
+     * @param callable $callable receives the element to drop as first argument, and returns true (drop), or false (stop)
      *
      * @return SequenceInterface
      */
@@ -201,7 +201,7 @@ interface SequenceInterface extends CollectionInterface
      * If the passed number is greater than the available number of elements, then all elements
      * will be returned as a new collection.
      *
-     * @param integer $number
+     * @param int $number
      *
      * @return CollectionInterface
      */

@@ -26,7 +26,8 @@
         "friendsofphp/php-cs-fixer": "^3.8"
     },
     "scripts": {
-        "test": "vendor/bin/phpunit",
-        "analyse": "vendor/bin/phpstan analyse -c phpstan.neon -vvv --ansi"
+        "analyse": "vendor/bin/phpstan analyse -c phpstan.neon -vvv --ansi",
+        "format": "vendor/bin/php-cs-fixer fix --show-progress=dots --verbose --diff",
+        "test": "vendor/bin/phpunit"
     }
 }
