@@ -27,7 +27,7 @@ class SortedSequence extends AbstractSequence
 {
     private $sortFunc;
 
-    public function __construct($sortFunc, array $elements = array())
+    public function __construct(\Closure $sortFunc, array $elements = array())
     {
         usort($elements, $sortFunc);
         parent::__construct($elements);
@@ -35,7 +35,7 @@ class SortedSequence extends AbstractSequence
         $this->sortFunc = $sortFunc;
     }
 
-    public function add($newElement)
+    public function add(mixed $newElement): void
     {
         $added = false;
         $newElements = array();
@@ -86,7 +86,7 @@ class SortedSequence extends AbstractSequence
         $this->elements = $newElements;
     }
 
-    protected function createNew(array $elements)
+    protected function createNew(array $elements): static
     {
         return new static($this->sortFunc, $elements);
     }

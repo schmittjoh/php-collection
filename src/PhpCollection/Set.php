@@ -23,16 +23,16 @@ class Set implements SetInterface
 
     private $elementType;
 
-    private $elements = array();
+    private $elements = [];
     private $elementCount = 0;
     private $lookup = array();
 
-    public function __construct(array $elements = array())
+    public function __construct(array $elements = [])
     {
         $this->addAll($elements);
     }
 
-    public function first()
+    public function first(): Some|None
     {
         if (empty($this->elements)) {
             return None::create();
@@ -41,7 +41,7 @@ class Set implements SetInterface
         return new Some(reset($this->elements));
     }
 
-    public function last()
+    public function last(): Some|None
     {
         if (empty($this->elements)) {
             return None::create();
@@ -50,17 +50,19 @@ class Set implements SetInterface
         return new Some(end($this->elements));
     }
 
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator(array_values($this->elements ?: []));
     }
 
-    public function addSet(SetInterface $set)
+    public function addSet(SetInterface $set): SetInterface
     {
         $this->addAll($set->all());
+
+        return $this;
     }
 
-    public function take($number)
+    public function take($number): SetInterface
     {
         if ($number <= 0) {
             throw new \InvalidArgumentException(sprintf('$number must be greater than 0, but got %d.', $number));
@@ -74,9 +76,9 @@ class Set implements SetInterface
      *
      * @param callable $callable receives elements of this Set as first argument, and returns true/false.
      *
-     * @return Set
+     * @return static
      */
-    public function takeWhile($callable)
+    public function takeWhile($callable): static
     {
         $newElements = array();
 
@@ -91,7 +93,7 @@ class Set implements SetInterface
         return $this->createNew($newElements);
     }
 
-    public function drop($number)
+    public function drop($number): SetInterface|static
     {
         if ($number <= 0) {
             throw new \InvalidArgumentException(sprintf('The number must be greater than 0, but got %d.', $number));
@@ -100,7 +102,7 @@ class Set implements SetInterface
         return $this->createNew(array_slice($this->elements, $number));
     }
 
-    public function dropRight($number)
+    public function dropRight($number): SetInterface|static
     {
         if ($number <= 0) {
             throw new \InvalidArgumentException(sprintf('The number must be greater than 0, but got %d.', $number));
@@ -109,7 +111,7 @@ class Set implements SetInterface
         return $this->createNew(array_slice($this->elements, 0, -1 * $number));
     }
 
-    public function dropWhile($callable)
+    public function dropWhile($callable): static
     {
         for ($i=0,$c=count($this->elements); $i<$c; $i++) {
             if (true !== call_user_func($callable, $this->elements[$i])) {
@@ -120,7 +122,7 @@ class Set implements SetInterface
         return $this->createNew(array_slice($this->elements, $i));
     }
 
-    public function map($callable)
+    public function map($callable): static
     {
         $newElements = array();
         foreach ($this->elements as $i => $element) {
@@ -130,27 +132,27 @@ class Set implements SetInterface
         return $this->createNew($newElements);
     }
 
-    public function reverse()
+    public function reverse(): static
     {
         return $this->createNew(array_reverse($this->elements));
     }
 
-    public function all()
+    public function all(): array
     {
         return array_values($this->elements);
     }
 
-    public function filterNot($callable)
+    public function filterNot($callable): static
     {
         return $this->filterInternal($callable, false);
     }
 
-    public function filter($callable)
+    public function filter($callable): static
     {
         return $this->filterInternal($callable, true);
     }
 
-    public function foldLeft($initialValue, $callable)
+    public function foldLeft(mixed $initialValue, \Closure $callable): mixed
     {
         $value = $initialValue;
         foreach ($this->elements as $elem) {
@@ -160,7 +162,7 @@ class Set implements SetInterface
         return $value;
     }
 
-    public function foldRight($initialValue, $callable)
+    public function foldRight(mixed $initialValue, \Closure $callable): mixed
     {
         $value = $initialValue;
         foreach (array_reverse($this->elements) as $elem) {
@@ -170,35 +172,35 @@ class Set implements SetInterface
         return $value;
     }
 
-    public function addAll(array $elements)
+    public function addAll(array $elements): void
     {
         foreach ($elements as $elem) {
             $this->add($elem);
         }
     }
 
-    public function count()
+    public function count(): int
     {
         return count($this->elements);
     }
 
-    public function contains($elem)
+    public function contains(mixed $searchedElement): bool
     {
         if ($this->elementType === self::ELEM_TYPE_OBJECT) {
-            if ($elem instanceof ObjectBasics) {
-                return $this->containsObject($elem);
+            if ($searchedElement instanceof ObjectBasics) {
+                return $this->containsObject($searchedElement);
             }
 
             return false;
         } elseif ($this->elementType === self::ELEM_TYPE_OBJECT_WITH_HANDLER) {
-            if (is_object($elem)) {
-                return $this->containsObjectWithHandler($elem, ObjectBasicsHandlerRegistry::getHandler(get_class($elem)));
+            if (is_object($searchedElement)) {
+                return $this->containsObjectWithHandler($searchedElement, ObjectBasicsHandlerRegistry::getHandler(get_class($searchedElement)));
             }
 
             return false;
         } elseif ($this->elementType === self::ELEM_TYPE_SCALAR) {
-            if (is_scalar($elem)) {
-                return $this->containsScalar($elem);
+            if (is_scalar($searchedElement)) {
+                return $this->containsScalar($searchedElement);
             }
 
             return false;
@@ -207,7 +209,7 @@ class Set implements SetInterface
         return false;
     }
 
-    public function remove($elem)
+    public function remove(mixed $elem): void
     {
         if ($this->elementType === self::ELEM_TYPE_OBJECT) {
             if ($elem instanceof ObjectBasics) {
@@ -224,12 +226,12 @@ class Set implements SetInterface
         }
     }
 
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return empty($this->elements);
     }
 
-    public function add($elem)
+    public function add(mixed $elem): void
     {
         if ($this->elementType === null) {
             if ($elem instanceof ObjectBasics) {
@@ -276,12 +278,12 @@ class Set implements SetInterface
         }
     }
 
-    protected function createNew(array $elements)
+    protected function createNew(array $elements): static
     {
         return new static($elements);
     }
 
-    private function filterInternal($callable, $booleanKeep)
+    private function filterInternal($callable, $booleanKeep): static
     {
         $newElements = array();
         foreach ($this->elements as $element) {
@@ -295,7 +297,7 @@ class Set implements SetInterface
         return $this->createNew($newElements);
     }
 
-    private function containsScalar($elem)
+    private function containsScalar($elem): bool
     {
         if ( ! isset($this->lookup[$elem])) {
             return false;
@@ -310,7 +312,7 @@ class Set implements SetInterface
         return false;
     }
 
-    private function containsObjectWithHandler($object, ObjectBasicsHandler $handler)
+    private function containsObjectWithHandler($object, ObjectBasicsHandler $handler): bool
     {
         $hash = $handler->hash($object);
         if ( ! isset($this->lookup[$hash])) {
@@ -326,7 +328,7 @@ class Set implements SetInterface
         return false;
     }
 
-    private function containsObject(ObjectBasics $object)
+    private function containsObject(ObjectBasics $object): bool
     {
         $hash = $object->hash();
         if ( ! isset($this->lookup[$hash])) {

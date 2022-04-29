@@ -13,22 +13,22 @@ use PhpOption\Option;
 interface SetInterface extends CollectionInterface, \IteratorAggregate
 {
     /**
-     * @param object|scalar $elem
+     * @param mixed $elem
      * @return void
      */
-    public function add($elem);
+    public function add(mixed $elem): void;
 
     /**
-     * @param object|scalar $elements
+     * @param array $elements
      * @return void
      */
-    public function addAll(array $elements);
+    public function addAll(array $elements): void;
 
     /**
-     * @param object|scalar $elem
+     * @param mixed|object|scalar $elem
      * @return void
      */
-    public function remove($elem);
+    public function remove(mixed $elem): void;
 
     /**
      * Returns the first element in the collection if available.

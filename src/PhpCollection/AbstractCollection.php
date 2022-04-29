@@ -19,15 +19,16 @@
 namespace PhpCollection;
 
 use PhpOption\LazyOption;
+use PhpOption\Option;
 use PhpOption\Some;
 use PhpOption\None;
 
-abstract class AbstractCollection
+abstract class AbstractCollection implements \IteratorAggregate
 {
-    public function contains($searchedElem)
+    public function contains(mixed $searchedElement): bool
     {
         foreach ($this as $elem) {
-            if ($elem === $searchedElem) {
+            if ($elem === $searchedElement) {
                 return true;
             }
         }
@@ -35,7 +36,7 @@ abstract class AbstractCollection
         return false;
     }
 
-    public function find($callable)
+    public function find(\Closure $callable): Option
     {
         $self = $this;
 

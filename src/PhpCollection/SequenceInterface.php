@@ -18,7 +18,8 @@
 
 namespace PhpCollection;
 
-use PhpOption\Option;
+use PhpOption\None;
+use PhpOption\Some;
 
 /**
  * Interface for mutable sequences.
@@ -32,30 +33,30 @@ interface SequenceInterface extends CollectionInterface
     /**
      * Returns the first element in the collection if available.
      *
-     * @return Option
+     * @return Some|None
      */
-    public function first();
+    public function first(): Some|None;
 
     /**
      * Returns the last element in the collection if available.
      *
-     * @return Option
+     * @return Some|None
      */
-    public function last();
+    public function last(): Some|None;
 
     /**
      * Returns all elements in this sequence.
      *
      * @return array
      */
-    public function all();
+    public function all(): array;
 
     /**
      * Returns a new Sequence with all elements in reverse order.
      *
      * @return SequenceInterface
      */
-    public function reverse();
+    public function reverse(): SequenceInterface;
 
     /**
      * Adds the elements of another sequence to this sequence.
@@ -64,7 +65,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * @return SequenceInterface
      */
-    public function addSequence(SequenceInterface $seq);
+    public function addSequence(SequenceInterface $seq): SequenceInterface;
 
     /**
      * Returns the index of the passed element.
@@ -81,40 +82,40 @@ interface SequenceInterface extends CollectionInterface
      * @param mixed $elem
      * @return integer the index (0-based), or -1 if not found
      */
-    public function lastIndexOf($elem);
+    public function lastIndexOf(mixed $elem): int;
 
     /**
      * Returns whether the given index is defined in the sequence.
      *
-     * @param integer $index (0-based)
+     * @param int $index (0-based)
      * @return boolean
      */
-    public function isDefinedAt($index);
+    public function isDefinedAt(int $index): bool;
 
     /**
      * Returns the first index where the given callable returns true.
      *
-     * @param callable $callable receives the element as first argument, and returns true, or false
+     * @param \Closure $callable receives the element as first argument, and returns true, or false
      *
      * @return integer the index (0-based), or -1 if the callable returns false for all elements
      */
-    public function indexWhere($callable);
+    public function indexWhere(\Closure $callable): int;
 
     /**
      * Returns the last index where the given callable returns true.
      *
-     * @param callable $callable receives the element as first argument, and returns true, or false
+     * @param \Closure $callable receives the element as first argument, and returns true, or false
      *
      * @return integer the index (0-based), or -1 if the callable returns false for all elements
      */
-    public function lastIndexWhere($callable);
+    public function lastIndexWhere(\Closure $callable): int;
 
     /**
      * Returns all indices of this collection.
      *
      * @return integer[]
      */
-    public function indices();
+    public function indices(): array;
 
     /**
      * Returns the element at the given index.
@@ -123,16 +124,16 @@ interface SequenceInterface extends CollectionInterface
      *
      * @return mixed
      */
-    public function get($index);
+    public function get($index): mixed;
 
     /**
      * Adds an element to the sequence.
      *
-     * @param mixed $elem
+     * @param mixed $newElement
      *
      * @return void
      */
-    public function add($elem);
+    public function add(mixed $newElement): void;
 
     /**
      * Removes the element at the given index, and returns it.
@@ -141,26 +142,26 @@ interface SequenceInterface extends CollectionInterface
      *
      * @return mixed
      */
-    public function remove($index);
+    public function remove($index): mixed;
 
     /**
      * Adds all elements to the sequence.
      *
-     * @param array $elements
+     * @param array $addedElements
      *
      * @return void
      */
-    public function addAll(array $elements);
+    public function addAll(array $addedElements);
 
     /**
      * Updates the value at the given index.
      *
-     * @param integer $index
+     * @param int $index
      * @param mixed $value
      *
      * @return void
      */
-    public function update($index, $value);
+    public function update(int $index, mixed $value): void;
 
     /**
      * Returns a new sequence by omitting the given number of elements from the beginning.
@@ -171,7 +172,7 @@ interface SequenceInterface extends CollectionInterface
      *
      * @return SequenceInterface
      */
-    public function drop($number);
+    public function drop($number): SequenceInterface;
 
     /**
      * Returns a new sequence by omitting the given number of elements from the end.
@@ -223,5 +224,5 @@ interface SequenceInterface extends CollectionInterface
      * @param callable $callable
      * @return CollectionInterface
      */
-    public function map($callable);
+    public function map($callable): CollectionInterface;
 }

@@ -7,18 +7,17 @@ use PHPUnit\Framework\TestCase;
 
 class MapTest extends TestCase
 {
-    /** @var Map */
-    private $map;
+    private Map $map;
 
-    public function testExists()
+    public function testExists(): void
     {
-        $this->assertFalse($this->map->exists(function($k) { return $k === 0; }));
+        $this->assertFalse($this->map->exists(fn ($k) => $k === 0));
 
         $this->map->set('foo', 'bar');
-        $this->assertTrue($this->map->exists(function($k, $v) { return $k === 'foo' && $v === 'bar'; }));
+        $this->assertTrue($this->map->exists(fn ($k, $v) => $k === 'foo' && $v === 'bar'));
     }
 
-    public function testSet()
+    public function testSet(): void
     {
         $this->assertTrue($this->map->get('asdf')->isEmpty());
         $this->map->set('asdf', 'foo');
@@ -29,85 +28,85 @@ class MapTest extends TestCase
         $this->assertEquals('asdf', $this->map->get('foo')->get());
     }
 
-    public function testSetSetAll()
+    public function testSetSetAll(): void
     {
-        $this->map->setAll(array('foo' => 'asdf', 'bar' => array('foo')));
-        $this->assertEquals(array('foo' => 'asdf', 'bar' => array('foo'), 'baz' => 'boo'), iterator_to_array($this->map));
+        $this->map->setAll(['foo' => 'asdf', 'bar' => ['foo']]);
+        $this->assertEquals(['foo' => 'asdf', 'bar' => ['foo'], 'baz' => 'boo'], iterator_to_array($this->map));
     }
     
-    public function testAll()
+    public function testAll(): void
     {
-        $this->map->setAll(array('foo' => 'asdf', 'bar' => array('foo')));
-        $this->assertEquals(array('foo' => 'asdf', 'bar' => array('foo'), 'baz' => 'boo'), $this->map->all());
+        $this->map->setAll(['foo' => 'asdf', 'bar' => ['foo']]);
+        $this->assertEquals(['foo' => 'asdf', 'bar' => ['foo'], 'baz' => 'boo'], $this->map->all());
     }
 
-    public function testAddMap()
+    public function testAddMap(): void
     {
         $map = new Map();
-        $map->set('foo', array('bar'));
+        $map->set('foo', ['bar']);
         $this->map->addMap($map);
 
-        $this->assertEquals(array('foo' => array('bar'), 'bar' => 'baz', 'baz' => 'boo'), iterator_to_array($this->map));
+        $this->assertEquals(['foo' => ['bar'], 'bar' => 'baz', 'baz' => 'boo'], iterator_to_array($this->map));
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $this->assertTrue($this->map->get('foo')->isDefined());
         $this->assertEquals('bar', $this->map->remove('foo'));
         $this->assertFalse($this->map->get('foo')->isDefined());
     }
 
-    public function testClear()
+    public function testClear(): void
     {
         $this->assertCount(3, $this->map);
         $this->map->clear();
         $this->assertCount(0, $this->map);
     }
 
-    public function testRemoveWithUnknownIndex()
+    public function testRemoveWithUnknownIndex(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The map has no key named "asdfasdf".');
         $this->map->remove('asdfasdf');
     }
 
-    public function testFirst()
+    public function testFirst(): void
     {
         $this->assertEquals(array('foo', 'bar'), $this->map->first()->get());
         $this->map->clear();
         $this->assertTrue($this->map->first()->isEmpty());
     }
 
-    public function testLast()
+    public function testLast(): void
     {
         $this->assertEquals(array('baz', 'boo'), $this->map->last()->get());
         $this->map->clear();
         $this->assertTrue($this->map->last()->isEmpty());
     }
 
-    public function testContains()
+    public function testContains(): void
     {
         $this->assertTrue($this->map->contains('boo'));
         $this->assertFalse($this->map->contains('asdf'));
     }
 
-    public function testContainsKey()
+    public function testContainsKey(): void
     {
         $this->assertTrue($this->map->containsKey('foo'));
         $this->assertFalse($this->map->containsKey('boo'));
     }
 
-    public function testIsEmpty()
+    public function testIsEmpty(): void
     {
         $this->assertFalse($this->map->isEmpty());
         $this->map->clear();
         $this->assertTrue($this->map->isEmpty());
     }
 
-    public function testFilter()
+    public function testFilter(): void
     {
-        $map = new Map(array('a' => 'b', 'c' => 'd', 'e' => 'f'));
-        $newMap = $map->filter(function($v) { return $v === 'd'; });
+        $map = new Map(['a' => 'b', 'c' => 'd', 'e' => 'f']);
+        $newMap = $map->filter(fn($v) => $v === 'd');
 
         $this->assertNotSame($newMap, $map);
         $this->assertCount(3, $map);
@@ -115,70 +114,70 @@ class MapTest extends TestCase
         $this->assertEquals(array('c' => 'd'), iterator_to_array($newMap));
     }
 
-    public function testFilterNot()
+    public function testFilterNot(): void
     {
-        $map = new Map(array('a' => 'b', 'c' => 'd', 'e' => 'f'));
-        $newMap = $map->filterNot(function($v) { return $v === 'd'; });
+        $map = new Map(['a' => 'b', 'c' => 'd', 'e' => 'f']);
+        $newMap = $map->filterNot(fn ($v): bool => $v === 'd');
 
         $this->assertNotSame($newMap, $map);
         $this->assertCount(3, $map);
         $this->assertCount(2, $newMap);
-        $this->assertEquals(array('a' => 'b', 'e' => 'f'), iterator_to_array($newMap));
+        $this->assertEquals(['a' => 'b', 'e' => 'f'], iterator_to_array($newMap));
     }
 
-    public function testFoldLeftRight()
+    public function testFoldLeftRight(): void
     {
-        $map = new Map(array('a' => 'b', 'c' => 'd', 'e' => 'f'));
-        $rsLeft = $map->foldLeft('', function($a, $b) { return $a.$b; });
-        $rsRight = $map->foldRight('', function($a, $b) { return $a.$b; });
+        $map = new Map(['a' => 'b', 'c' => 'd', 'e' => 'f']);
+        $rsLeft = $map->foldLeft('', fn ($a, $b) => $a.$b);
+        $rsRight = $map->foldRight('', fn ($a, $b) => $a.$b);
 
         $this->assertEquals('bdf', $rsLeft);
         $this->assertEquals('bdf', $rsRight);
     }
 
-    public function testDropWhile()
+    public function testDropWhile(): void
     {
         $newMap = $this->map->dropWhile(function($k, $v) { return 'foo' === $k || 'baz' === $v; });
-        $this->assertEquals(array('baz' => 'boo'), iterator_to_array($newMap));
+        $this->assertEquals(['baz' => 'boo'], iterator_to_array($newMap));
         $this->assertCount(3, $this->map);
     }
 
-    public function testDrop()
+    public function testDrop(): void
     {
         $newMap = $this->map->drop(2);
-        $this->assertEquals(array('baz' => 'boo'), iterator_to_array($newMap));
+        $this->assertEquals(['baz' => 'boo'], iterator_to_array($newMap));
         $this->assertCount(3, $this->map);
     }
 
-    public function testDropWithNegativeNumber()
+    public function testDropWithNegativeNumber(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The number must be greater than 0, but got -4.');
         $this->map->drop(-4);
     }
 
-    public function testDropRight()
+    public function testDropRight(): void
     {
         $newMap = $this->map->dropRight(2);
-        $this->assertEquals(array('foo' => 'bar'), iterator_to_array($newMap));
+        $this->assertEquals(['foo' => 'bar'], iterator_to_array($newMap));
         $this->assertCount(3, $this->map);
     }
 
-    public function testDropRightWithNegativeNumber()
+    public function testDropRightWithNegativeNumber(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The number must be greater than 0, but got -5.');
         $this->map->dropRight(-5);
     }
 
-    public function testTake()
+    public function testTake(): void
     {
         $newMap = $this->map->take(1);
-        $this->assertEquals(array('foo' => 'bar'), iterator_to_array($newMap));
+        $this->assertEquals(['foo' => 'bar'], iterator_to_array($newMap));
         $this->assertCount(3, $this->map);
     }
 
-    public function testTakeWithNegativeNumber()
+    public function testTakeWithNegativeNumber(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The number must be greater than 0, but got -5.');
@@ -186,38 +185,38 @@ class MapTest extends TestCase
         $this->map->take(-5);
     }
 
-    public function testTakeWhile()
+    public function testTakeWhile(): void
     {
-        $newMap = $this->map->takeWhile(function($k, $v) { return 'foo' === $k || 'baz' === $v; });
-        $this->assertEquals(array('foo' => 'bar', 'bar' => 'baz'), iterator_to_array($newMap));
+        $newMap = $this->map->takeWhile(fn($k, $v) => 'foo' === $k || 'baz' === $v);
+        $this->assertEquals(['foo' => 'bar', 'bar' => 'baz'], iterator_to_array($newMap));
         $this->assertCount(3, $this->map);
     }
 
-    public function testFind()
+    public function testFind(): void
     {
-        $foundElem = $this->map->find(function($k, $v) { return 'foo' === $k && 'bar' === $v; });
-        $this->assertEquals(array('foo', 'bar'), $foundElem->get());
+        $foundElem = $this->map->find(fn($k, $v) => 'foo' === $k && 'bar' === $v);
+        $this->assertEquals(['foo', 'bar'], $foundElem->get());
 
-        $this->assertTrue($this->map->find(function() { return false; })->isEmpty());
+        $this->assertTrue($this->map->find(fn() => false)->isEmpty());
     }
 
-    public function testKeys()
+    public function testKeys(): void
     {
-        $this->assertEquals(array('foo', 'bar', 'baz'), $this->map->keys());
+        $this->assertEquals(['foo', 'bar', 'baz'], $this->map->keys());
     }
 
-    public function testValues()
+    public function testValues(): void
     {
-        $this->assertEquals(array('bar', 'baz', 'boo'), $this->map->values());
+        $this->assertEquals(['bar', 'baz', 'boo'], $this->map->values());
     }
 
     protected function setUp(): void
     {
         $this->map = new Map();
-        $this->map->setAll(array(
+        $this->map->setAll([
             'foo' => 'bar',
             'bar' => 'baz',
             'baz' => 'boo',
-        ));
+        ]);
     }
 }
