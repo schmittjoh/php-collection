@@ -136,7 +136,6 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     /**
      * Finds the first index where the given callable returns true.
      *
-     *
      * @return int the index, or -1 if the predicate is not true for any element
      */
     public function indexWhere(\Closure $callable): int

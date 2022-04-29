@@ -158,7 +158,9 @@ class SetTest extends TestCase
 
 class ObjectThatImplementsBasics implements ObjectBasics
 {
-    public function __construct(private mixed $value) {}
+    public function __construct(private mixed $value)
+    {
+    }
 
     public function hash(): string
     {

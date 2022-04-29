@@ -62,7 +62,6 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
     /**
      * Adds the elements of another Set to this Set.
      *
-     *
      * @return SetInterface
      */
     public function addSet(SetInterface $seq);

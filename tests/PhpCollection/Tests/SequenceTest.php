@@ -294,8 +294,8 @@ class SequenceTest extends TestCase
 
     public function testDropWhile(): void
     {
-        $this->assertSame([0, $this->a, $this->b, 0], $this->seq->dropWhile(fn() => false)->all());
-        $this->assertSame([], $this->seq->dropWhile(fn() => true)->all());
+        $this->assertSame([0, $this->a, $this->b, 0], $this->seq->dropWhile(fn () => false)->all());
+        $this->assertSame([], $this->seq->dropWhile(fn () => true)->all());
     }
 
     public function testRemove(): void
@@ -319,7 +319,7 @@ class SequenceTest extends TestCase
         $seq->add('b');
 
         $self = $this;
-        $newSeq = $seq->map(fn($elem) => match ($elem) {
+        $newSeq = $seq->map(fn ($elem) => match ($elem) {
             'a' => 'c',
             'b' => 'd',
             default => $self->fail('Unexpected element: '.var_export($elem, true)),
