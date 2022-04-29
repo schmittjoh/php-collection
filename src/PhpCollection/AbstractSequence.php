@@ -34,7 +34,7 @@ use PhpOption\Some;
  */
 class AbstractSequence extends AbstractCollection implements \IteratorAggregate, SequenceInterface
 {
-    protected $elements;
+    protected array $elements;
 
     /**
      * @param array $elements
@@ -51,7 +51,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this;
     }
 
-    public function indexOf($searchedElement)
+    public function indexOf(mixed $searchedElement): int
     {
         foreach ($this->elements as $i => $element) {
             if ($searchedElement === $element) {
@@ -95,7 +95,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this->filterInternal($callable, true);
     }
 
-    public function map($callable): AbstractSequence
+    public function map(\Closure $callable): AbstractSequence
     {
         $newElements = [];
         foreach ($this->elements as $i => $element) {

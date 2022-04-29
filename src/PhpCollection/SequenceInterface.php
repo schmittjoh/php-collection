@@ -70,19 +70,19 @@ interface SequenceInterface extends CollectionInterface
     /**
      * Returns the index of the passed element.
      *
-     * @param mixed $elem
+     * @param mixed $searchedElement
      *
      * @return int the index (0-based), or -1 if not found
      */
-    public function indexOf($elem);
+    public function indexOf(mixed $searchedElement): int;
 
     /**
      * Returns the last index of the passed element.
      *
-     * @param mixed $elem
+     * @param mixed $searchedElement
      * @return int the index (0-based), or -1 if not found
      */
-    public function lastIndexOf(mixed $elem): int;
+    public function lastIndexOf(mixed $searchedElement): int;
 
     /**
      * Returns whether the given index is defined in the sequence.
@@ -221,8 +221,8 @@ interface SequenceInterface extends CollectionInterface
      * Creates a new collection by applying the passed callable to all elements
      * of the current collection.
      *
-     * @param callable $callable
+     * @param \Closure $callable
      * @return CollectionInterface
      */
-    public function map($callable): CollectionInterface;
+    public function map(\Closure $callable): CollectionInterface;
 }
