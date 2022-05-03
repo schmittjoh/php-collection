@@ -28,57 +28,57 @@ interface CollectionInterface extends \Traversable, \Countable
     /**
      * Returns whether this collection contains the passed element.
      *
-     * @param mixed $elem
+     * @param mixed $searchedElement
      *
-     * @return boolean
+     * @return bool
      */
-    public function contains($elem);
+    public function contains(mixed $searchedElement): bool;
 
     /**
      * Returns whether the collection is empty.
      *
-     * @return boolean
+     * @return bool
      */
-    public function isEmpty();
+    public function isEmpty(): bool;
 
     /**
      * Returns a filtered collection of the same type.
      *
      * Removes all elements for which the provided callable returns false.
      *
-     * @param callable $callable receives an element of the collection and must return true (= keep) or false (= remove).
+     * @param \Closure $callable receives an element of the collection and must return true (= keep) or false (= remove)
      *
      * @return CollectionInterface
      */
-    public function filter($callable);
+    public function filter(\Closure $callable): CollectionInterface;
 
     /**
      * Returns a filtered collection of the same type.
      *
      * Removes all elements for which the provided callable returns true.
      *
-     * @param callable $callable receives an element of the collection and must return true (= remove) or false (= keep).
+     * @param callable $callable receives an element of the collection and must return true (= remove) or false (= keep)
      *
      * @return CollectionInterface
      */
-    public function filterNot($callable);
+    public function filterNot($callable): CollectionInterface;
 
     /**
      * Applies the callable to an initial value and each element, going left to right.
      *
      * @param mixed $initialValue
-     * @param callable $callable receives the current value (the first time this equals $initialValue) and the element
+     * @param \Closure $callable receives the current value (the first time this equals $initialValue) and the element
      *
-     * @return mixed the last value returned by $callable, or $initialValue if collection is empty.
+     * @return mixed the last value returned by $callable, or $initialValue if collection is empty
      */
-    public function foldLeft($initialValue, $callable);
+    public function foldLeft(mixed $initialValue, \Closure $callable): mixed;
 
     /**
      * Applies the callable to each element, and an initial value, going right to left.
      *
      * @param mixed $initialValue
-     * @param callable $callable receives the element, and the current value (the first time this equals $initialValue).
-     * @return mixed the last value returned by $callable, or $initialValue if collection is empty.
+     * @param \Closure $callable receives the element, and the current value (the first time this equals $initialValue)
+     * @return mixed the last value returned by $callable, or $initialValue if collection is empty
      */
-    public function foldRight($initialValue, $callable);
+    public function foldRight(mixed $initialValue, \Closure $callable): mixed;
 }

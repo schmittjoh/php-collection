@@ -19,15 +19,16 @@
 namespace PhpCollection;
 
 use PhpOption\LazyOption;
-use PhpOption\Some;
 use PhpOption\None;
+use PhpOption\Option;
+use PhpOption\Some;
 
-abstract class AbstractCollection
+abstract class AbstractCollection implements \IteratorAggregate
 {
-    public function contains($searchedElem)
+    public function contains(mixed $searchedElement): bool
     {
         foreach ($this as $elem) {
-            if ($elem === $searchedElem) {
+            if ($elem === $searchedElement) {
                 return true;
             }
         }
@@ -35,13 +36,13 @@ abstract class AbstractCollection
         return false;
     }
 
-    public function find($callable)
+    public function find(\Closure $callable): Option
     {
         $self = $this;
 
-        return new LazyOption(function() use ($callable, $self) {
+        return new LazyOption(function () use ($callable, $self) {
             foreach ($self as $elem) {
-                if (call_user_func($callable, $elem) === true) {
+                if (true === call_user_func($callable, $elem)) {
                     return new Some($elem);
                 }
             }

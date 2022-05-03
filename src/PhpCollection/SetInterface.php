@@ -1,6 +1,7 @@
 <?php
 
 namespace PhpCollection;
+
 use PhpOption\Option;
 
 /**
@@ -13,22 +14,22 @@ use PhpOption\Option;
 interface SetInterface extends CollectionInterface, \IteratorAggregate
 {
     /**
-     * @param object|scalar $elem
+     * @param mixed $elem
      * @return void
      */
-    public function add($elem);
+    public function add(mixed $elem): void;
 
     /**
-     * @param object|scalar $elements
+     * @param array $elements
      * @return void
      */
-    public function addAll(array $elements);
+    public function addAll(array $elements): void;
 
     /**
-     * @param object|scalar $elem
+     * @param mixed|object|scalar $elem
      * @return void
      */
-    public function remove($elem);
+    public function remove(mixed $elem): void;
 
     /**
      * Returns the first element in the collection if available.
@@ -61,8 +62,6 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
     /**
      * Adds the elements of another Set to this Set.
      *
-     * @param SetInterface $seq
-     *
      * @return SetInterface
      */
     public function addSet(SetInterface $seq);
@@ -72,7 +71,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      *
      * If the passed number is greater than the available number of elements, all will be removed.
      *
-     * @param integer $number
+     * @param int $number
      *
      * @return SetInterface
      */
@@ -83,7 +82,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      *
      * If the passed number is greater than the available number of elements, all will be removed.
      *
-     * @param integer $number
+     * @param int $number
      *
      * @return SetInterface
      */
@@ -92,7 +91,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
     /**
      * Returns a new Set by omitting elements from the beginning for as long as the callable returns true.
      *
-     * @param callable $callable Receives the element to drop as first argument, and returns true (drop), or false (stop).
+     * @param callable $callable receives the element to drop as first argument, and returns true (drop), or false (stop)
      *
      * @return SetInterface
      */
@@ -105,7 +104,7 @@ interface SetInterface extends CollectionInterface, \IteratorAggregate
      * If the passed number is greater than the available number of elements, then all elements
      * will be returned as a new collection.
      *
-     * @param integer $number
+     * @param int $number
      *
      * @return CollectionInterface
      */

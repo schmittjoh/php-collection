@@ -23,10 +23,8 @@ interface ObjectBasics
      *
      * When implementing this method try to use a simple and fast algorithm that produces reasonably
      * different results for non-equal objects, and shift the heavy comparison logic to equals().
-     *
-     * @return string|integer
      */
-    public function hash();
+    public function hash(): string|int;
 
     /**
      * Whether two objects are equal.
@@ -34,7 +32,7 @@ interface ObjectBasics
      * This can compare by referential equality (===), or in case of value objects like (\DateTime) compare
      * the individual properties of the objects; it's up to the implementation.
      *
-     * @return boolean
+     * @return bool
      */
     public function equals(ObjectBasics $other);
 }

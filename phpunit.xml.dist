@@ -6,6 +6,7 @@
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
+         convertDeprecationsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
          bootstrap="tests/bootstrap.php"
@@ -15,6 +16,12 @@
             <directory>./tests/PhpCollection/</directory>
         </testsuite>
     </testsuites>
+
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </coverage>
 
     <groups>
         <exclude>

@@ -3,24 +3,33 @@
 namespace PhpCollection\Tests;
 
 use PhpCollection\Sequence;
-use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
 class SequenceTest extends TestCase
 {
-    /** @var Sequence */
-    private $seq;
-    private $a;
-    private $b;
+    private Sequence $seq;
+    private \stdClass $a;
+    private \stdClass $b;
 
-    public function testGet()
+    protected function setUp(): void
+    {
+        $this->seq = new Sequence();
+        $this->seq->addAll([
+            0,
+            $this->a = new \stdClass(),
+            $this->b = new \stdClass(),
+            0,
+        ]);
+    }
+
+    public function testGet(): void
     {
         $this->assertSame(0, $this->seq->get(0));
         $this->assertSame($this->a, $this->seq->get(1));
     }
 
-    public function testIndexOf()
+    public function testIndexOf(): void
     {
         $this->assertSame(0, $this->seq->indexOf(0));
         $this->assertSame(1, $this->seq->indexOf($this->a));
@@ -28,14 +37,14 @@ class SequenceTest extends TestCase
         $this->assertSame(-1, $this->seq->indexOf(1));
     }
 
-    public function testReverse()
+    public function testReverse(): void
     {
-        $seq = new Sequence(array(1, 2, 3));
-        $this->assertEquals(array(1, 2, 3), $seq->all());
-        $this->assertEquals(array(3, 2, 1), $seq->reverse()->all());
+        $seq = new Sequence([1, 2, 3]);
+        $this->assertEquals([1, 2, 3], $seq->all());
+        $this->assertEquals([3, 2, 1], $seq->reverse()->all());
     }
 
-    public function testLastIndexOf()
+    public function testLastIndexOf(): void
     {
         $this->assertSame(3, $this->seq->lastIndexOf(0));
         $this->assertSame(1, $this->seq->lastIndexOf($this->a));
@@ -43,10 +52,10 @@ class SequenceTest extends TestCase
         $this->assertSame(-1, $this->seq->lastIndexOf(1));
     }
 
-    public function testFilter()
+    public function testFilter(): void
     {
-        $seq = new Sequence(array(1, 2, 3));
-        $newSeq = $seq->filter(function($n) { return $n === 2; });
+        $seq = new Sequence([1, 2, 3]);
+        $newSeq = $seq->filter(fn ($n) => 2 === $n);
 
         $this->assertNotSame($newSeq, $seq);
         $this->assertCount(3, $seq);
@@ -54,10 +63,10 @@ class SequenceTest extends TestCase
         $this->assertSame(2, $newSeq->get(0));
     }
 
-    public function testFilterNot()
+    public function testFilterNot(): void
     {
-        $seq = new Sequence(array(1, 2, 3));
-        $newSeq = $seq->filterNot(function($n) { return $n === 2; });
+        $seq = new Sequence([1, 2, 3]);
+        $newSeq = $seq->filterNot(fn ($n) => 2 === $n);
 
         $this->assertNotSame($newSeq, $seq);
         $this->assertCount(3, $seq);
@@ -66,17 +75,17 @@ class SequenceTest extends TestCase
         $this->assertSame(3, $newSeq->get(1));
     }
 
-    public function testFoldLeftRight()
+    public function testFoldLeftRight(): void
     {
-        $seq = new Sequence(array('a', 'b', 'c'));
-        $rsLeft = $seq->foldLeft('', function($a, $b) { return $a.$b; });
-        $rsRight = $seq->foldRight('', function($a, $b) { return $a.$b; });
+        $seq = new Sequence(['a', 'b', 'c']);
+        $rsLeft = $seq->foldLeft('', fn ($a, $b) => $a.$b);
+        $rsRight = $seq->foldRight('', fn ($a, $b) => $a.$b);
 
         $this->assertEquals('abc', $rsLeft);
         $this->assertEquals('abc', $rsRight);
     }
 
-    public function testAddSequence()
+    public function testAddSequence(): void
     {
         $seq = new Sequence();
         $seq->add(1);
@@ -84,47 +93,47 @@ class SequenceTest extends TestCase
 
         $this->seq->addSequence($seq);
 
-        $this->assertSame(array(
+        $this->assertSame([
             0,
             $this->a,
             $this->b,
             0,
             1,
             0,
-        ), $this->seq->all());
+        ], $this->seq->all());
     }
 
-    public function testIsDefinedAt()
+    public function testIsDefinedAt(): void
     {
         $this->assertTrue($this->seq->isDefinedAt(0));
         $this->assertTrue($this->seq->isDefinedAt(1));
-        $this->assertFalse($this->seq->isDefinedAt(9999999));
+        $this->assertFalse($this->seq->isDefinedAt(9_999_999));
     }
 
-    public function testIndexWhere()
+    public function testIndexWhere(): void
     {
-        $this->assertSame(-1, $this->seq->indexWhere(function() { return false; }));
-        $this->assertSame(0, $this->seq->indexWhere(function() { return true; }));
+        $this->assertSame(-1, $this->seq->indexWhere(fn () => false));
+        $this->assertSame(0, $this->seq->indexWhere(fn () => true));
     }
 
-    public function testLastIndexWhere()
+    public function testLastIndexWhere(): void
     {
-        $this->assertSame(-1, $this->seq->lastIndexWhere(function() { return false; }));
-        $this->assertSame(3, $this->seq->lastIndexWhere(function() { return true; }));
+        $this->assertSame(-1, $this->seq->lastIndexWhere(fn () => false));
+        $this->assertSame(3, $this->seq->lastIndexWhere(fn () => true));
     }
 
-    public function testFirst()
+    public function testFirst(): void
     {
         $this->assertSame(0, $this->seq->first()->get());
         $this->assertSame(0, $this->seq->last()->get());
     }
 
-    public function testIndices()
+    public function testIndices(): void
     {
-        $this->assertSame(array(0, 1, 2, 3), $this->seq->indices());
+        $this->assertSame([0, 1, 2, 3], $this->seq->indices());
     }
 
-    public function testContains()
+    public function testContains(): void
     {
         $this->assertTrue($this->seq->contains(0));
         $this->assertTrue($this->seq->contains($this->a));
@@ -132,40 +141,40 @@ class SequenceTest extends TestCase
         $this->assertFalse($this->seq->contains(new stdClass()));
     }
 
-    public function testExists()
+    public function testExists(): void
     {
-        $this->assertTrue($this->seq->exists(function($v) { return $v === 0; }));
+        $this->assertTrue($this->seq->exists(fn ($v) => 0 === $v));
 
         $a = $this->a;
-        $this->assertTrue($this->seq->exists(function($v) use ($a) { return $v === $a; }));
+        $this->assertTrue($this->seq->exists(fn ($v) => $v === $a));
 
-        $this->assertFalse($this->seq->exists(function($v) { return $v === 9999; }));
-        $this->assertFalse($this->seq->exists(function($v) { return $v === new \stdClass; }));
+        $this->assertFalse($this->seq->exists(fn ($v) => 9999 === $v));
+        $this->assertFalse($this->seq->exists(fn ($v) => $v === new \stdClass()));
     }
 
-    public function testFind()
+    public function testFind(): void
     {
         $a = $this->a;
 
-        $this->assertSame($this->a, $this->seq->find(function($x) use ($a) { return $a === $x; })->get());
-        $this->assertFalse($this->seq->find(function() { return false; })->isDefined());
+        $this->assertSame($this->a, $this->seq->find(fn ($x) => $a === $x)->get());
+        $this->assertFalse($this->seq->find(fn () => false)->isDefined());
     }
 
-    public function testIsEmpty()
+    public function testIsEmpty(): void
     {
         $this->assertFalse($this->seq->isEmpty());
         $seq = new Sequence();
         $this->assertTrue($seq->isEmpty());
     }
 
-    public function testAdd()
+    public function testAdd(): void
     {
         $this->seq->add(1);
-        $this->assertSame(array(0, $this->a, $this->b, 0, 1), $this->seq->all());
+        $this->assertSame([0, $this->a, $this->b, 0, 1], $this->seq->all());
 
-        $this->seq->sortWith(function($a, $b) {
+        $this->seq->sortWith(function ($a, $b) {
             if (is_integer($a)) {
-                if ( ! is_integer($b)) {
+                if (!is_integer($b)) {
                     return -1;
                 }
 
@@ -178,38 +187,38 @@ class SequenceTest extends TestCase
 
             if ($a === $this->a && $b === $this->b) {
                 return -1;
-            } else if ($a === $this->b && $b === $this->a) {
+            } elseif ($a === $this->b && $b === $this->a) {
                 return 1;
             }
 
             return 1;
         });
 
-        $this->assertSame(array(0, 0, 1, $this->a, $this->b), $this->seq->all());
+        $this->assertSame([0, 0, 1, $this->a, $this->b], $this->seq->all());
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $this->assertSame(0, $this->seq->get(0));
         $this->seq->update(0, 5);
         $this->assertSame(5, $this->seq->get(0));
     }
 
-    public function testUpdateWithNonExistentIndex()
+    public function testUpdateWithNonExistentIndex(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('There is no element at index "99999".');
         $this->seq->update(99999, 0);
     }
 
-    public function testAddAll()
+    public function testAddAll(): void
     {
-        $this->seq->addAll(array(2, 1, 3));
-        $this->assertSame(array(0, $this->a, $this->b, 0, 2, 1, 3), $this->seq->all());
+        $this->seq->addAll([2, 1, 3]);
+        $this->assertSame([0, $this->a, $this->b, 0, 2, 1, 3], $this->seq->all());
 
-        $this->seq->sortWith(function($a, $b) {
+        $this->seq->sortWith(function ($a, $b) {
             if (is_integer($a)) {
-                if ( ! is_integer($b)) {
+                if (!is_integer($b)) {
                     return -1;
                 }
 
@@ -223,112 +232,106 @@ class SequenceTest extends TestCase
             return -1;
         });
 
-        $this->assertSame(array(0, 0, 1, 2, 3, $this->a, $this->b), $this->seq->all());
+        $this->assertSame([0, 0, 1, 2, 3, $this->a, $this->b], $this->seq->all());
     }
 
-    public function testTake()
+    public function testTake(): void
     {
-        $this->assertSame(array(0), $this->seq->take(1)->all());
-        $this->assertSame(array(0, $this->a), $this->seq->take(2)->all());
-        $this->assertSame(array(0, $this->a, $this->b, 0), $this->seq->take(9999)->all());
+        $this->assertSame([0], $this->seq->take(1)->all());
+        $this->assertSame([0, $this->a], $this->seq->take(2)->all());
+        $this->assertSame([0, $this->a, $this->b, 0], $this->seq->take(9999)->all());
     }
 
-    public function testTakeWithNegativeNumber()
+    public function testTakeWithNegativeNumber(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('$number must be greater than 0, but got -5.');
         $this->seq->take(-5);
     }
 
-    public function testTakeWhile()
+    public function testTakeWhile(): void
     {
-        $this->assertSame(array(0), $this->seq->takeWhile('is_integer')->all());
+        $this->assertSame([0], $this->seq->takeWhile('is_integer')->all());
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $this->assertCount(4, $this->seq);
     }
 
-    public function testTraverse()
+    public function testTraverse(): void
     {
-        $this->assertSame(array(0, $this->a, $this->b, 0), iterator_to_array($this->seq));
+        $this->assertSame([0, $this->a, $this->b, 0], iterator_to_array($this->seq));
     }
 
-    public function testDrop()
+    public function testDrop(): void
     {
-        $this->assertSame(array($this->a, $this->b, 0), $this->seq->drop(1)->all());
-        $this->assertSame(array($this->b, 0), $this->seq->drop(2)->all());
-        $this->assertSame(array(), $this->seq->drop(9999)->all());
+        $this->assertSame([$this->a, $this->b, 0], $this->seq->drop(1)->all());
+        $this->assertSame([$this->b, 0], $this->seq->drop(2)->all());
+        $this->assertSame([], $this->seq->drop(9999)->all());
     }
 
-    public function testDropWithNegativeIndex()
+    public function testDropWithNegativeIndex(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The number must be greater than 0, but got -5.');
         $this->seq->drop(-5);
     }
 
-    public function testDropRight()
+    public function testDropRight(): void
     {
-        $this->assertSame(array(0, $this->a, $this->b), $this->seq->dropRight(1)->all());
-        $this->assertSame(array(0, $this->a), $this->seq->dropRight(2)->all());
-        $this->assertSame(array(), $this->seq->dropRight(9999)->all());
+        $this->assertSame([0, $this->a, $this->b], $this->seq->dropRight(1)->all());
+        $this->assertSame([0, $this->a], $this->seq->dropRight(2)->all());
+        $this->assertSame([], $this->seq->dropRight(9999)->all());
     }
 
-    public function testDropRightWithNegativeIndex()
+    public function testDropRightWithNegativeIndex(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The number must be greater than 0, but got -5.');
         $this->seq->dropRight(-5);
     }
 
-    public function testDropWhile()
+    public function testDropWhile(): void
     {
-        $this->assertSame(array(0, $this->a, $this->b, 0), $this->seq->dropWhile(function() { return false; })->all());
-        $this->assertSame(array(), $this->seq->dropWhile(function() { return true; })->all());
+        $this->assertSame([0, $this->a, $this->b, 0], $this->seq->dropWhile(fn () => false)->all());
+        $this->assertSame([], $this->seq->dropWhile(fn () => true)->all());
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $this->assertSame(0, $this->seq->remove(0));
         $this->assertSame($this->a, $this->seq->remove(0));
         $this->assertSame(0, $this->seq->remove(1));
     }
 
-    public function testRemoveWithInvalidIndex()
+    public function testRemoveWithInvalidIndex(): void
     {
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('The index "9999" is not in the interval [0, 4).');
         $this->seq->remove(9999);
     }
 
-    public function testMap()
+    public function testMap(): void
     {
         $seq = new Sequence();
         $seq->add('a');
         $seq->add('b');
 
         $self = $this;
-        $newSeq = $seq->map(function($elem) use ($self) {
-            switch ($elem) {
-                case 'a':
-                    return 'c';
-
-                case 'b':
-                    return 'd';
-
-                default:
-                    $self->fail('Unexpected element: ' . var_export($elem, true));
-            }
+        $newSeq = $seq->map(fn ($elem) => match ($elem) {
+            'a' => 'c',
+            'b' => 'd',
+            default => $self->fail('Unexpected element: '.var_export($elem, true)),
         });
 
-        $this->assertInstanceOf('PhpCollection\Sequence', $newSeq);
+        $this->assertInstanceOf(\PhpCollection\Sequence::class, $newSeq);
         $this->assertNotSame($newSeq, $seq);
-        $this->assertEquals(array('c', 'd'), $newSeq->all());
+        $this->assertEquals(['c', 'd'], $newSeq->all());
     }
 
-    public function testIterator() {
+    public function testIterator(): void
+    {
         $seq = new Sequence([1, 2, 3]);
         $this->assertIsIterable($seq);
         $i = 1;
@@ -337,16 +340,5 @@ class SequenceTest extends TestCase
             $i++;
         }
         $this->assertSame(4, $i);
-    }
-
-    protected function setUp(): void
-    {
-        $this->seq = new Sequence();
-        $this->seq->addAll(array(
-            0,
-            $this->a = new \stdClass(),
-            $this->b = new \stdClass(),
-            0
-        ));
     }
 }

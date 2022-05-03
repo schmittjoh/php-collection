@@ -1,6 +1,7 @@
 <?php
 
 namespace PhpCollection;
+
 use PhpCollection\ObjectBasicsHandler\IdentityHandler;
 
 /**
@@ -13,12 +14,16 @@ use PhpCollection\ObjectBasicsHandler\IdentityHandler;
  */
 abstract class ObjectBasicsHandlerRegistry
 {
-    private static $handlers = array(
-        'DateTime' => 'PhpCollection\\ObjectBasicsHandler\\DateTimeHandler',
-    );
+    private static array $handlers = [
+        \DateTime::class => \PhpCollection\ObjectBasicsHandler\DateTimeHandler::class,
+    ];
     private static $defaultObjectHandler;
 
-    private static $aliases = array();
+    private static array $aliases = [];
+
+    final private function __construct()
+    {
+    }
 
     /**
      * Defines an alias.
@@ -40,7 +45,7 @@ abstract class ObjectBasicsHandlerRegistry
 
     public static function addHandlerFor($handlingClass, $handlerInstanceOrClassName)
     {
-        if ( ! $handlerInstanceOrClassName instanceof ObjectBasicsHandler && ! is_string($handlerInstanceOrClassName)) {
+        if (!$handlerInstanceOrClassName instanceof ObjectBasicsHandler && !is_string($handlerInstanceOrClassName)) {
             throw new \LogicException('$handler must be an instance of ObjectBasicsHandler, or a string referring to the handlers class.');
         }
 
@@ -53,8 +58,8 @@ abstract class ObjectBasicsHandlerRegistry
             $className = self::$aliases[$className];
         }
 
-        if ( ! isset(self::$handlers[$className])) {
-            if (self::$defaultObjectHandler === null) {
+        if (!isset(self::$handlers[$className])) {
+            if (null === self::$defaultObjectHandler) {
                 self::$defaultObjectHandler = new IdentityHandler();
             }
 
@@ -77,6 +82,4 @@ abstract class ObjectBasicsHandlerRegistry
             $className
         ));
     }
-
-    private final function __construct() { }
 }

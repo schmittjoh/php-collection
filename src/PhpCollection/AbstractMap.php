@@ -18,8 +18,9 @@
 
 namespace PhpCollection;
 
-use PhpOption\Some;
 use PhpOption\None;
+use PhpOption\Option;
+use PhpOption\Some;
 
 /**
  * A simple map implementation which basically wraps an array with an object oriented interface.
@@ -28,22 +29,28 @@ use PhpOption\None;
  */
 class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapInterface
 {
-    protected $elements;
+    /**
+     * @var array
+     */
+    protected array $elements;
 
-    public function __construct(array $elements = array())
+    /**
+     * @param array $elements
+     */
+    public function __construct(array $elements = [])
     {
         $this->elements = $elements;
     }
 
-    public function set($key, $value)
+    public function set(mixed $key, mixed $value): void
     {
         $this->elements[$key] = $value;
     }
 
-    public function exists($callable)
+    public function exists(\Closure $callable): bool
     {
         foreach ($this as $k => $v) {
-            if ($callable($k, $v) === true) {
+            if (true === $callable($k, $v)) {
                 return true;
             }
         }
@@ -63,14 +70,16 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         $this->elements = array_merge($this->elements, $kvMap);
     }
 
-    public function addMap(MapInterface $map)
+    public function addMap(MapInterface $map): MapInterface
     {
         foreach ($map as $k => $v) {
             $this->elements[$k] = $v;
         }
+
+        return $this;
     }
 
-    public function get($key)
+    public function get($key): Some|None
     {
         if (isset($this->elements[$key])) {
             return new Some($this->elements[$key]);
@@ -78,15 +87,15 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
         return None::create();
     }
-    
-    public function all()
+
+    public function all(): array
     {
         return $this->elements;
     }
 
-    public function remove($key)
+    public function remove(mixed $key): mixed
     {
-        if ( ! isset($this->elements[$key])) {
+        if (!isset($this->elements[$key])) {
             throw new \InvalidArgumentException(sprintf('The map has no key named "%s".', $key));
         }
 
@@ -98,10 +107,10 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
     public function clear()
     {
-        $this->elements = array();
+        $this->elements = [];
     }
 
-    public function first()
+    public function first(): Some|None
     {
         if (empty($this->elements)) {
             return None::create();
@@ -109,10 +118,10 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
         $elem = reset($this->elements);
 
-        return new Some(array(key($this->elements), $elem));
+        return new Some([key($this->elements), $elem]);
     }
 
-    public function last()
+    public function last(): Some|None
     {
         if (empty($this->elements)) {
             return None::create();
@@ -120,13 +129,13 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
 
         $elem = end($this->elements);
 
-        return new Some(array(key($this->elements), $elem));
+        return new Some([key($this->elements), $elem]);
     }
 
-    public function contains($elem)
+    public function contains(mixed $searchedElement): bool
     {
         foreach ($this->elements as $existingElem) {
-            if ($existingElem === $elem) {
+            if ($existingElem === $searchedElement) {
                 return true;
             }
         }
@@ -134,12 +143,12 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return false;
     }
 
-    public function containsKey($key)
+    public function containsKey(mixed $key): bool
     {
         return isset($this->elements[$key]);
     }
 
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return empty($this->elements);
     }
@@ -147,11 +156,11 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     /**
      * Returns a new filtered map.
      *
-     * @param callable $callable receives the element and must return true (= keep), or false (= remove).
+     * @param callable $callable receives the element and must return true (= keep), or false (= remove)
      *
-     * @return AbstractMap
+     * @return MapInterface
      */
-    public function filter($callable)
+    public function filter($callable): MapInterface
     {
         return $this->filterInternal($callable, true);
     }
@@ -159,34 +168,16 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
     /**
      * Returns a new filtered map.
      *
-     * @param callable $callable receives the element and must return true (= remove), or false (= keep).
+     * @param callable $callable receives the element and must return true (= remove), or false (= keep)
      *
-     * @return AbstractMap
+     * @return MapInterface
      */
-    public function filterNot($callable)
+    public function filterNot($callable): MapInterface
     {
         return $this->filterInternal($callable, false);
     }
 
-    /**
-     * @param callable $callable
-     * @param boolean $booleanKeep
-     */
-    private function filterInternal($callable, $booleanKeep)
-    {
-        $newElements = array();
-        foreach ($this->elements as $k => $element) {
-            if ($booleanKeep !== call_user_func($callable, $element)) {
-                continue;
-            }
-
-            $newElements[$k] = $element;
-        }
-
-        return $this->createNew($newElements);
-    }
-
-    public function foldLeft($initialValue, $callable)
+    public function foldLeft(mixed $initialValue, \Closure $callable): mixed
     {
         $value = $initialValue;
         foreach ($this->elements as $elem) {
@@ -196,7 +187,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $value;
     }
 
-    public function foldRight($initialValue, $callable)
+    public function foldRight(mixed $initialValue, \Closure $callable): mixed
     {
         $value = $initialValue;
         foreach (array_reverse($this->elements) as $elem) {
@@ -206,13 +197,13 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $value;
     }
 
-    public function dropWhile($callable)
+    public function dropWhile(\Closure $callable): MapInterface
     {
-        $newElements = array();
+        $newElements = [];
         $stopped = false;
         foreach ($this->elements as $k => $v) {
-            if ( ! $stopped) {
-                if (call_user_func($callable, $k, $v) === true) {
+            if (!$stopped) {
+                if (true === call_user_func($callable, $k, $v)) {
                     continue;
                 }
 
@@ -225,7 +216,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $this->createNew($newElements);
     }
 
-    public function drop($number)
+    public function drop(int $number): MapInterface
     {
         if ($number <= 0) {
             throw new \InvalidArgumentException(sprintf('The number must be greater than 0, but got %d.', $number));
@@ -234,7 +225,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $this->createNew(array_slice($this->elements, $number, null, true));
     }
 
-    public function dropRight($number)
+    public function dropRight($number): MapInterface
     {
         if ($number <= 0) {
             throw new \InvalidArgumentException(sprintf('The number must be greater than 0, but got %d.', $number));
@@ -243,7 +234,7 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $this->createNew(array_slice($this->elements, 0, -1 * $number, true));
     }
 
-    public function take($number)
+    public function take(int $number): MapInterface
     {
         if ($number <= 0) {
             throw new \InvalidArgumentException(sprintf('The number must be greater than 0, but got %d.', $number));
@@ -252,11 +243,11 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $this->createNew(array_slice($this->elements, 0, $number, true));
     }
 
-    public function takeWhile($callable)
+    public function takeWhile($callable): MapInterface
     {
-        $newElements = array();
+        $newElements = [];
         foreach ($this->elements as $k => $v) {
-            if (call_user_func($callable, $k, $v) !== true) {
+            if (true !== call_user_func($callable, $k, $v)) {
                 break;
             }
 
@@ -266,39 +257,57 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return $this->createNew($newElements);
     }
 
-    public function find($callable)
+    public function find(\Closure $callable): Option
     {
         foreach ($this->elements as $k => $v) {
-            if (call_user_func($callable, $k, $v) === true) {
-                return new Some(array($k, $v));
+            if (true === call_user_func($callable, $k, $v)) {
+                return new Some([$k, $v]);
             }
         }
 
         return None::create();
     }
 
-    public function keys()
+    public function keys(): array
     {
         return array_keys($this->elements);
     }
 
-    public function values()
+    public function values(): array
     {
         return array_values($this->elements);
     }
 
-    public function count()
+    public function count(): int
     {
         return count($this->elements);
     }
 
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->elements ?: []);
     }
 
-    protected function createNew(array $elements)
+    protected function createNew(array $elements): MapInterface
     {
         return new static($elements);
+    }
+
+    /**
+     * @param callable $callable
+     * @param bool $booleanKeep
+     */
+    private function filterInternal($callable, $booleanKeep)
+    {
+        $newElements = [];
+        foreach ($this->elements as $k => $element) {
+            if ($booleanKeep !== call_user_func($callable, $element)) {
+                continue;
+            }
+
+            $newElements[$k] = $element;
+        }
+
+        return $this->createNew($newElements);
     }
 }

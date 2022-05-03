@@ -18,7 +18,9 @@
 
 namespace PhpCollection;
 
+use PhpOption\None;
 use PhpOption\Option;
+use PhpOption\Some;
 
 /**
  * Basic map interface.
@@ -30,50 +32,50 @@ interface MapInterface extends CollectionInterface
     /**
      * Returns the first element in the collection if available.
      *
-     * @return Option on array<K,V>
+     * @return Some|None on array<K,V>
      */
-    public function first();
+    public function first(): Some|None;
 
     /**
      * Returns the last element in the collection if available.
      *
-     * @return Option on array<K,V>
+     * @return Some|None on array<K,V>
      */
-    public function last();
-    
+    public function last(): Some|None;
+
     /**
      * Returns all elements in this collection.
      *
      * @return array
      */
-    public function all();
+    public function all(): array;
 
     /**
      * Searches the collection for an element.
      *
-     * @param callable $callable receives the element as first argument, and returns true, or false
+     * @param \Closure $callable receives the element as first argument, and returns true, or false
      *
      * @return Option on array<K,V>
      */
-    public function find($callable);
+    public function find(\Closure $callable): Option;
 
     /**
      * Returns the value associated with the given key.
      *
      * @param mixed $key
      *
-     * @return Option on V
+     * @return Some|None on V
      */
-    public function get($key);
+    public function get(mixed $key): Some|None;
 
     /**
      * Returns whether this map contains a given key.
      *
      * @param mixed $key
      *
-     * @return boolean
+     * @return bool
      */
-    public function containsKey($key);
+    public function containsKey(mixed $key): bool;
 
     /**
      * Puts a new element in the map.
@@ -83,7 +85,7 @@ interface MapInterface extends CollectionInterface
      *
      * @return void
      */
-    public function set($key, $value);
+    public function set(mixed $key, mixed $value): void;
 
     /**
      * Removes an element from the map.
@@ -92,7 +94,7 @@ interface MapInterface extends CollectionInterface
      *
      * @return mixed
      */
-    public function remove($key);
+    public function remove(mixed $key): mixed;
 
     /**
      * Adds all another map to this map, and returns itself.
@@ -101,52 +103,52 @@ interface MapInterface extends CollectionInterface
      *
      * @return MapInterface
      */
-    public function addMap(MapInterface $map);
+    public function addMap(MapInterface $map): MapInterface;
 
     /**
      * Returns an array with the keys.
      *
      * @return array
      */
-    public function keys();
+    public function keys(): array;
 
     /**
      * Returns an array with the values.
      *
      * @return array
      */
-    public function values();
+    public function values(): array;
 
     /**
      * Returns a new sequence by omitting the given number of elements from the beginning.
      *
      * If the passed number is greater than the available number of elements, all will be removed.
      *
-     * @param integer $number
+     * @param int $number
      *
      * @return MapInterface
      */
-    public function drop($number);
+    public function drop(int $number): MapInterface;
 
     /**
      * Returns a new sequence by omitting the given number of elements from the end.
      *
      * If the passed number is greater than the available number of elements, all will be removed.
      *
-     * @param integer $number
+     * @param int $number
      *
      * @return MapInterface
      */
-    public function dropRight($number);
+    public function dropRight(int $number): MapInterface;
 
     /**
      * Returns a new sequence by omitting elements from the beginning for as long as the callable returns true.
      *
-     * @param callable $callable Receives the element to drop as first argument, and returns true (drop), or false (stop).
+     * @param \Closure $callable receives the element to drop as first argument, and returns true (drop), or false (stop)
      *
      * @return MapInterface
      */
-    public function dropWhile($callable);
+    public function dropWhile(\Closure $callable): MapInterface;
 
     /**
      * Creates a new collection by taking the given number of elements from the beginning
@@ -155,19 +157,19 @@ interface MapInterface extends CollectionInterface
      * If the passed number is greater than the available number of elements, then all elements
      * will be returned as a new collection.
      *
-     * @param integer $number
+     * @param int $number
      *
      * @return MapInterface
      */
-    public function take($number);
+    public function take(int $number): MapInterface;
 
     /**
      * Creates a new collection by taking elements from the current collection
      * for as long as the callable returns true.
      *
-     * @param callable $callable
+     * @param \Closure $callable
      *
      * @return MapInterface
      */
-    public function takeWhile($callable);
+    public function takeWhile(\Closure $callable): MapInterface;
 }
