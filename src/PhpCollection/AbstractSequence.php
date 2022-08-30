@@ -20,7 +20,6 @@ namespace PhpCollection;
 
 use PhpOption\Some;
 use PhpOption\None;
-use PhpOption\Option;
 use OutOfBoundsException;
 
 /**
@@ -348,12 +347,12 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return false;
     }
 
-    public function count(): void
+    public function count(): int
     {
         return count($this->elements);
     }
 
-    public function getIterator(): Traversal
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->elements ?: []);
     }

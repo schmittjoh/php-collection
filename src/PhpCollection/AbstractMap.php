@@ -287,12 +287,12 @@ class AbstractMap extends AbstractCollection implements \IteratorAggregate, MapI
         return array_values($this->elements);
     }
 
-    public function count()
+    public function count(): int
     {
         return count($this->elements);
     }
 
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->elements ?: []);
     }
