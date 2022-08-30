@@ -348,12 +348,12 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return false;
     }
 
-    public function count()
+    public function count(): void
     {
         return count($this->elements);
     }
 
-    public function getIterator()
+    public function getIterator(): Traversal
     {
         return new \ArrayIterator($this->elements ?: []);
     }
