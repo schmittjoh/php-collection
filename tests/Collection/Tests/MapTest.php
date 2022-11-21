@@ -4,8 +4,9 @@ namespace Collection\Tests;
 
 use Collection\Map;
 use PhpOption\LazyOption;
+use PHPUnit\Framework\TestCase;
 
-class MapTest extends \PHPUnit_Framework_TestCase
+final class MapTest extends TestCase
 {
     /** @var Map */
     protected $map;
@@ -76,12 +77,10 @@ class MapTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $this->map);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The map has no key named "asdfasdf".
-     */
     public function testRemoveWithUnknownIndex()
     {
+        $this->expectExceptionMessage("The map has no key named \"asdfasdf\".");
+        $this->expectException(\InvalidArgumentException::class);
         $this->map->remove('asdfasdf');
     }
 
@@ -197,12 +196,10 @@ class MapTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(3, $this->map);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The number must be greater than 0, but got -4.
-     */
     public function testDropWithNegativeNumber()
     {
+        $this->expectExceptionMessage("The number must be greater than 0, but got -4.");
+        $this->expectException(\InvalidArgumentException::class);
         $this->map->drop(-4);
     }
 
@@ -213,12 +210,10 @@ class MapTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(3, $this->map);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The number must be greater than 0, but got -5.
-     */
     public function testDropRightWithNegativeNumber()
     {
+        $this->expectExceptionMessage("The number must be greater than 0, but got -5.");
+        $this->expectException(\InvalidArgumentException::class);
         $this->map->dropRight(-5);
     }
 
@@ -229,12 +224,10 @@ class MapTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(3, $this->map);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The number must be greater than 0, but got -5.
-     */
     public function testTakeWithNegativeNumber()
     {
+        $this->expectExceptionMessage("The number must be greater than 0, but got -5.");
+        $this->expectException(\InvalidArgumentException::class);
         $this->map->take(-5);
     }
 
@@ -278,7 +271,7 @@ class MapTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['bar', 'baz', 'boo'], $this->map->values());
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->map = new Map();
         $this->map->setAll(

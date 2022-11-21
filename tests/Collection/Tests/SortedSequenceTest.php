@@ -3,8 +3,9 @@
 namespace Collection\Tests;
 
 use Collection\SortedSequence;
+use PHPUnit\Framework\TestCase;
 
-class SortedSequenceTest extends \PHPUnit_Framework_TestCase
+final class SortedSequenceTest extends TestCase
 {
     /** @var SortedSequence */
     private $seq;
@@ -36,7 +37,7 @@ class SortedSequenceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame([0, 0], $seq->all());
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->seq = new SortedSequence(
             function ($a, $b) {

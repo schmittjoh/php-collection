@@ -1,11 +1,11 @@
 <?php
 namespace Collection;
 
+use PhpOption\Option;
+
 class LRUMap extends Map
 {
-
-    /** @var int */
-    protected $maximumSize;
+    protected int $maximumSize;
 
     /**
      * Create a LRU Map
@@ -13,9 +13,9 @@ class LRUMap extends Map
      * @param int $size
      * @throws \InvalidArgumentException
      */
-    public function __construct($size)
+    public function __construct(int $size)
     {
-        if (!is_int($size) || $size <= 0) {
+        if ($size <= 0) {
             throw new \InvalidArgumentException();
         }
 
@@ -28,9 +28,9 @@ class LRUMap extends Map
      *
      * @param int|string $key The key. Strings that are ints are cast to ints.
      *
-     * @return \PhpOption\Option
+     * @return Option
      */
-    public function get($key)
+    public function get($key): Option
     {
         $this->recordAccess($key);
 
@@ -45,7 +45,7 @@ class LRUMap extends Map
      *
      * @return LRUMap
      */
-    public function set($key, $value)
+    public function set(int|string $key, mixed $value): self
     {
 
         if (parent::get($key)->isDefined()) {
@@ -68,7 +68,7 @@ class LRUMap extends Map
     /**
      * @return LRUMap|MapInterface
      */
-    public function tail()
+    public function tail(): self
     {
         return $this->createNew(array_slice($this->elements, 1));
     }
@@ -79,7 +79,7 @@ class LRUMap extends Map
      * @param int|string $key The key
      * @return LRUMap
      */
-    protected function recordAccess($key)
+    protected function recordAccess(int|string $key): self
     {
         foreach (parent::get($key) as $value) {
             unset($this->elements[$key]);
@@ -89,7 +89,7 @@ class LRUMap extends Map
         return $this;
     }
 
-    protected function createNew(array $elements)
+    protected function createNew(array $elements): self
     {
         $newMap = new static($this->maximumSize);
         $newMap->setAll($elements);

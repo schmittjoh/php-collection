@@ -2,13 +2,13 @@
 
 namespace Collection\Tests;
 
-use Collection\ObjectBasicsInterface;
+use Collection\HashableInterface;
 use Collection\Set;
+use PHPUnit\Framework\TestCase;
 
-class SetTest extends \PHPUnit_Framework_TestCase
+final class SetTest extends TestCase
 {
-    /** @var Set */
-    private $set;
+    private Set $set;
 
     public function testHead()
     {
@@ -43,49 +43,50 @@ class SetTest extends \PHPUnit_Framework_TestCase
         $this->set->add('a');
 
         $this->assertFalse($this->set->contains('b'));
-        $this->assertFalse($this->set->contains(new ObjectThatImplementsBasicsInterface('foo')));
+        $this->assertFalse($this->set->contains(new HashableObject('foo')));
         $this->assertFalse($this->set->contains(new \DateTime('today')));
     }
 
     public function testContainsObjectWithHandler()
     {
-        $this->set->add(new \DateTime('today'));
+        $someObjectVal = new \DateTime('today');
+        $this->set->add($someObjectVal);
 
-        $this->assertFalse($this->set->contains(new ObjectThatImplementsBasicsInterface('foo')));
+        $this->assertFalse($this->set->contains(new HashableObject('foo')));
         $this->assertFalse($this->set->contains('a'));
 
-        $this->assertTrue($this->set->contains(new \DateTime('today')));
+        $this->assertTrue($this->set->contains($someObjectVal));
     }
 
     public function testContainsObject()
     {
-        $this->set->add(new ObjectThatImplementsBasicsInterface('foo'));
+        $this->set->add(new HashableObject('foo'));
 
-        $this->assertFalse($this->set->contains(new ObjectThatImplementsBasicsInterface('bar')));
+        $this->assertFalse($this->set->contains(new HashableObject('bar')));
         $this->assertFalse($this->set->contains('a'));
         $this->assertFalse($this->set->contains(new \DateTime()));
 
-        $this->assertTrue($this->set->contains(new ObjectThatImplementsBasicsInterface('foo')));
+        $this->assertTrue($this->set->contains(new HashableObject('foo')));
     }
 
     public function testReverse()
     {
         $this->set->add('a');
         $this->set->add('b');
-        $this->assertEquals(array('a', 'b'), $this->set->all());
+        $this->assertEquals(['a', 'b'], $this->set->all());
 
         $reversedSet = $this->set->reverse();
-        $this->assertEquals(array('a', 'b'), $this->set->all());
-        $this->assertEquals(array('b', 'a'), $reversedSet->all());
+        $this->assertEquals(['a', 'b'], $this->set->all());
+        $this->assertEquals(['b', 'a'], $reversedSet->all());
     }
 
     public function testMap()
     {
         $this->set->add('a');
         $this->set->add('b');
-        $this->assertEquals(array('a', 'b'), $this->set->all());
+        $this->assertEquals(['a', 'b'], $this->set->all());
 
-        $newSet = $this->set->map(function($char) {
+        $newSet = $this->set->map(function ($char) {
             if ($char === 'a') {
                 return 'c';
             } elseif ($char === 'b') {
@@ -95,8 +96,8 @@ class SetTest extends \PHPUnit_Framework_TestCase
             return $char;
         });
 
-        $this->assertEquals(array('a', 'b'), $this->set->all());
-        $this->assertEquals(array('c', 'd'), $newSet->all());
+        $this->assertEquals(['a', 'b'], $this->set->all());
+        $this->assertEquals(['c', 'd'], $newSet->all());
     }
 
     public function testRemoveScalar()
@@ -114,26 +115,33 @@ class SetTest extends \PHPUnit_Framework_TestCase
 
     public function testRemoveObjectWithHandler()
     {
-        $this->set->add(new \DateTime('today'));
+        $someObjectVal = new \DateTime('today');
+
+        $this->set->add($someObjectVal);
         $this->assertCount(1, $this->set);
 
         $this->set->remove(new \DateTime('-2 days'));
         $this->assertCount(1, $this->set);
 
         $this->set->remove(new \DateTime('today'));
+        $this->assertCount(1, $this->set);
+
+        $this->set->remove($someObjectVal);
         $this->assertCount(0, $this->set);
         $this->assertTrue($this->set->isEmpty());
     }
 
     public function testRemoveObject()
     {
-        $this->set->add(new ObjectThatImplementsBasicsInterface('foo'));
+        $someObjectVal = new HashableObject('foo');
+
+        $this->set->add($someObjectVal);
         $this->assertCount(1, $this->set);
 
-        $this->set->remove(new ObjectThatImplementsBasicsInterface('bar'));
+        $this->set->remove(new HashableObject('bar'));
         $this->assertCount(1, $this->set);
 
-        $this->set->remove(new ObjectThatImplementsBasicsInterface('foo'));
+        $this->set->remove($someObjectVal);
         $this->assertCount(0, $this->set);
         $this->assertTrue($this->set->isEmpty());
     }
@@ -144,68 +152,67 @@ class SetTest extends \PHPUnit_Framework_TestCase
         $this->set->add('b');
         $this->set->add('a');
 
-        $this->assertEquals(array('a', 'b'), $this->set->all());
+        $this->assertEquals(['a', 'b'], $this->set->all());
     }
 
     public function testAddObject()
     {
-        $this->set->add(new ObjectThatImplementsBasicsInterface('foo'));
-        $this->set->add(new ObjectThatImplementsBasicsInterface('bar'));
-        $this->set->add(new ObjectThatImplementsBasicsInterface('foo'));
+        $this->set->add(new HashableObject('foo'));
+        $this->set->add(new HashableObject('bar'));
+        $this->set->add(new HashableObject('foo'));
 
         $this->assertEquals(
-            array(
-                new ObjectThatImplementsBasicsInterface('foo'),
-                new ObjectThatImplementsBasicsInterface('bar')
-            ),
+            [
+                new HashableObject('foo'),
+                new HashableObject('bar'),
+            ],
             $this->set->all()
         );
     }
 
     public function testAddObjectWithHandler()
     {
-        $this->set->add((new \DateTime('today'))->setTimezone(new \DateTimeZone('UTC')));
-        $this->set->add((new \DateTime('today'))->setTimezone(new \DateTimeZone('UTC')));
-        $this->set->add((new \DateTime('today'))->setTimezone(new \DateTimeZone('US/Pacific')));
+        $date1 = (new DateTimeHashable('today'))->setTimezone(new \DateTimeZone('UTC'));
+
+        $dates = [];
+        $dates[] = (new DateTimeHashable('today'))->setTimezone(new \DateTimeZone('UTC'));
+        $dates[] = (new DateTimeHashable('-2 days'))->setTimezone(new \DateTimeZone('UTC'));
+        $dates[] = (new DateTimeHashable('today'))->setTimezone(new \DateTimeZone('US/Pacific'));
+
+        $this->set->addAll($dates);
+        $this->set->add($date1);
 
         $this->assertEquals(
-            array(
-                (new \DateTime('today'))->setTimezone(new \DateTimeZone('UTC')),
-                (new \DateTime('today'))->setTimezone(new \DateTimeZone('US/Pacific')),
-            ),
+            $dates,
             $this->set->all()
         );
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->set = new Set();
     }
 }
 
-class ObjectThatImplementsBasicsInterface implements ObjectBasicsInterface
+class HashableObject implements HashableInterface
 {
-    private $value;
+    private string $value;
 
-    public function __construct($value)
+    public function __construct(string $value)
     {
         $this->value = $value;
     }
 
-    public function hash()
+    public function hash(): string
     {
-        return 'foo'; // This is not recommended in the real-world.
+        return sha1($this->value); // This is not recommended in the real-world.
     }
+}
 
-    public function equals(ObjectBasicsInterface $other)
+class DateTimeHashable extends \DateTime implements HashableInterface
+{
+    public function hash(): string
     {
-        if ($this === $other) {
-            return true;
-        }
-        if ( ! $other instanceof ObjectThatImplementsBasicsInterface) {
-            return false;
-        }
-
-        return $this->value === $other->value;
+        return $this->format("YmdP");
     }
 }

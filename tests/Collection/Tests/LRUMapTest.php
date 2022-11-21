@@ -3,10 +3,9 @@
 namespace Collection\Tests;
 
 use Collection\LRUMap;
-use Collection\Map;
-use Collection\Tests\MapTest;
+use PHPUnit\Framework\TestCase;
 
-class LRUMapTest extends MapTest
+final class LRUMapTest extends TestCase
 {
     public function testRecentHead()
     {
@@ -46,7 +45,7 @@ class LRUMapTest extends MapTest
         $this->assertEquals(['bar', 'baz'], $this->map->tail()->headOption()->get());
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->map = new LRUMap(4);
         $this->map->setAll(

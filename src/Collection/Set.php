@@ -1,8 +1,11 @@
 <?php
+
 namespace Collection;
 
 use PhpOption\None;
+use PhpOption\Option;
 use PhpOption\Some;
+use function PHPUnit\Framework\throwException;
 
 /**
  * Implementation of a Set.
@@ -12,19 +15,13 @@ use PhpOption\Some;
  * This implementation constraints Sets to either consist of objects that implement ObjectBasics, or objects that have
  * an external ObjectBasicsHandler implementation, or simple scalars. These types cannot be mixed within the same Set.
  *
- * @author Artyom Sukharev , J. M. Schmitt
+ * @author J. M. Schmitt, A. Sukharev
  */
 class Set implements SetInterface, \JsonSerializable
 {
-    const ELEM_TYPE_SCALAR = 1;
-    const ELEM_TYPE_OBJECT = 2;
-    const ELEM_TYPE_OBJECT_WITH_HANDLER = 3;
-
-    private $elementType;
-
-    private $elements = [];
-    private $elementCount = 0;
-    private $lookup = [];
+    private array $elements     = [];
+    private int   $elementCount = 0;
+    private array $lookup       = [];
 
     public function __construct(array $elements = [])
     {
@@ -32,25 +29,24 @@ class Set implements SetInterface, \JsonSerializable
     }
 
     /**
-     * @param \Traversable|array $elements
+     * @param iterable $elements
      *
      * @return SetInterface
      */
-    public function addAll($elements)
+    public function addAll(iterable|SetInterface $elements): self
     {
-        if (is_array($elements) || ($elements instanceof \Traversable)) {
-            foreach ($elements as $elem) {
-                $this->add($elem);
-            }
+        if ($elements instanceof SetInterface) {
+            $elements = $elements->all();
         }
-        else {
-            $this->add($elements);
+
+        foreach ($elements as $elem) {
+            $this->add($elem);
         }
 
         return $this;
     }
 
-    public function head()
+    public function head(): null|int|string|object
     {
         if (empty($this->elements)) {
             return null;
@@ -59,7 +55,7 @@ class Set implements SetInterface, \JsonSerializable
         return reset($this->elements);
     }
 
-    public function tail()
+    public function tail(): self
     {
         return $this->createNew(array_slice($this->elements, 1));
     }
@@ -67,7 +63,7 @@ class Set implements SetInterface, \JsonSerializable
     /**
      * @return None|Some
      */
-    public function headOption()
+    public function headOption(): Option
     {
         if (empty($this->elements)) {
             return None::create();
@@ -76,7 +72,7 @@ class Set implements SetInterface, \JsonSerializable
         return new Some(reset($this->elements));
     }
 
-    public function last()
+    public function last(): null|int|string|object
     {
         if (empty($this->elements)) {
             return null;
@@ -88,7 +84,7 @@ class Set implements SetInterface, \JsonSerializable
     /**
      * @return None|Some
      */
-    public function lastOption()
+    public function lastOption(): Option
     {
         if (empty($this->elements)) {
             return None::create();
@@ -100,21 +96,9 @@ class Set implements SetInterface, \JsonSerializable
     /**
      * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator(array_values($this->elements));
-    }
-
-    /**
-     * @param SetInterface $set
-     *
-     * @return SetInterface
-     */
-    public function addSet(SetInterface $set)
-    {
-        $this->addAll($set);
-
-        return $this;
     }
 
     /**
@@ -122,7 +106,7 @@ class Set implements SetInterface, \JsonSerializable
      *
      * @return SetInterface
      */
-    public function take($number)
+    public function take(int $number): self
     {
         if ($number <= 0) {
             throw new \InvalidArgumentException(sprintf('$number must be greater than 0, but got %d.', $number));
@@ -138,7 +122,7 @@ class Set implements SetInterface, \JsonSerializable
      *
      * @return SetInterface
      */
-    public function takeWhile(callable $callable)
+    public function takeWhile(callable $callable): self
     {
         $newElements = [];
 
@@ -158,7 +142,7 @@ class Set implements SetInterface, \JsonSerializable
      *
      * @return SetInterface
      */
-    public function drop($number)
+    public function drop(int $number): self
     {
         if ($number <= 0) {
             throw new \InvalidArgumentException(
@@ -174,7 +158,7 @@ class Set implements SetInterface, \JsonSerializable
      *
      * @return SetInterface
      */
-    public function dropRight($number)
+    public function dropRight(int $number): self
     {
         if ($number <= 0) {
             throw new \InvalidArgumentException(
@@ -190,7 +174,7 @@ class Set implements SetInterface, \JsonSerializable
      *
      * @return SetInterface
      */
-    public function dropWhile(callable $callable)
+    public function dropWhile(callable $callable): self
     {
         for ($i = 0, $c = count($this->elements); $i < $c; $i++) {
             if (true !== $callable($this->elements[$i])) {
@@ -206,7 +190,7 @@ class Set implements SetInterface, \JsonSerializable
      *
      * @return SetInterface
      */
-    public function map(callable $callable)
+    public function map(callable $callable): self
     {
         $newElements = [];
         foreach ($this->elements as $i => $element) {
@@ -221,7 +205,7 @@ class Set implements SetInterface, \JsonSerializable
      *
      * @return SetInterface
      */
-    public function flatMap(callable $callable)
+    public function flatMap(callable $callable): self
     {
         $newElements = new Set();
         foreach ($this->elements as $element) {
@@ -234,7 +218,7 @@ class Set implements SetInterface, \JsonSerializable
     /**
      * @return SetInterface
      */
-    public function reverse()
+    public function reverse(): self
     {
         return $this->createNew(array_reverse($this->elements));
     }
@@ -242,7 +226,7 @@ class Set implements SetInterface, \JsonSerializable
     /**
      * @return array
      */
-    public function all()
+    public function all(): array
     {
         return array_values($this->elements);
     }
@@ -252,7 +236,7 @@ class Set implements SetInterface, \JsonSerializable
      *
      * @return SetInterface
      */
-    public function filterNot(callable $callable)
+    public function filterNot(callable $callable): self
     {
         return $this->filterInternal($callable, false);
     }
@@ -262,7 +246,7 @@ class Set implements SetInterface, \JsonSerializable
      *
      * @return SetInterface
      */
-    public function filter(callable $callable)
+    public function filter(callable $callable): self
     {
         return $this->filterInternal($callable, true);
     }
@@ -273,7 +257,7 @@ class Set implements SetInterface, \JsonSerializable
      *
      * @return mixed
      */
-    public function foldLeft($initialValue, callable $callable)
+    public function foldLeft(mixed $initialValue, callable $callable): mixed
     {
         $value = $initialValue;
         foreach ($this->elements as $elem) {
@@ -289,7 +273,7 @@ class Set implements SetInterface, \JsonSerializable
      *
      * @return mixed
      */
-    public function foldRight($initialValue, callable $callable)
+    public function foldRight(mixed $initialValue, callable $callable): mixed
     {
         $value = $initialValue;
         foreach (array_reverse($this->elements) as $elem) {
@@ -302,9 +286,9 @@ class Set implements SetInterface, \JsonSerializable
     /**
      * @param int $size
      *
-     * @return SequenceInterface<SetInterface<A>>
+     * @return SequenceInterface
      */
-    public function sliding($size)
+    public function sliding(int $size): Sequence
     {
         if ($size <= 0) {
             throw new \InvalidArgumentException(
@@ -323,11 +307,7 @@ class Set implements SetInterface, \JsonSerializable
         return $slices;
     }
 
-    /**
-     * @return int
-     * @deprecated Use length()
-     */
-    public function count()
+    public function count(): int
     {
         return $this->length();
     }
@@ -335,7 +315,7 @@ class Set implements SetInterface, \JsonSerializable
     /**
      * @return int
      */
-    public function length()
+    public function length(): int
     {
         return $this->elementCount;
     }
@@ -345,25 +325,11 @@ class Set implements SetInterface, \JsonSerializable
      *
      * @return bool
      */
-    public function contains($elem)
+    public function contains(mixed $elem): bool
     {
-        if (($this->elementType === self::ELEM_TYPE_OBJECT) && ($elem instanceof ObjectBasicsInterface)) {
-            $contains = $this->containsObject($elem);
-        }
-        else if (($this->elementType === self::ELEM_TYPE_OBJECT_WITH_HANDLER) && is_object($elem)) {
-            $contains = $this->containsObjectWithHandler(
-                $elem,
-                ObjectBasicsHandlerRegistry::getHandler(get_class($elem))
-            );
-        }
-        else if (($this->elementType === self::ELEM_TYPE_SCALAR) && is_scalar($elem)) {
-            $contains = $this->containsScalar($elem);
-        }
-        else {
-            $contains = false;
-        }
+        $lookup = $this->getValueHash($elem);
 
-        return $contains;
+        return array_key_exists($lookup, $this->lookup);
     }
 
     /**
@@ -371,20 +337,14 @@ class Set implements SetInterface, \JsonSerializable
      *
      * @return SetInterface
      */
-    public function remove($elem)
+    public function remove(int|string|object $elem): self
     {
-        if (($this->elementType === self::ELEM_TYPE_OBJECT) && ($elem instanceof ObjectBasicsInterface)) {
-            $this->removeObject($elem);
+        $lookup = $this->getValueHash($elem);
+        if (!array_key_exists($lookup, $this->lookup)) {
+            return $this;
         }
-        else if (($this->elementType === self::ELEM_TYPE_OBJECT_WITH_HANDLER) && is_object($elem)) {
-            $this->removeObjectWithHandler(
-                $elem,
-                ObjectBasicsHandlerRegistry::getHandler(get_class($elem))
-            );
-        }
-        else if (($this->elementType === self::ELEM_TYPE_SCALAR) && is_scalar($elem)) {
-            $this->removeScalar($elem);
-        }
+
+        $this->removeElement($lookup, $this->lookup[$lookup]);
 
         return $this;
     }
@@ -392,7 +352,7 @@ class Set implements SetInterface, \JsonSerializable
     /**
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return empty($this->elements);
     }
@@ -402,74 +362,15 @@ class Set implements SetInterface, \JsonSerializable
      *
      * @return SetInterface
      */
-    public function add($elem)
+    public function add(int|string|object $elem): self
     {
-        switch ($this->elementType) {
-            case null:
-                if ($elem instanceof ObjectBasicsInterface) {
-                    $this->addObject($elem);
-                }
-                else if (is_scalar($elem)) {
-                    $this->addScalar($elem);
-                }
-                else if (is_object($elem)) {
-                    $this->addObjectWithHandler(
-                        $elem,
-                        ObjectBasicsHandlerRegistry::getHandler(get_class($elem))
-                    );
-                }
-                else {
-                    throw new \LogicException(sprintf('The type of $elem ("%s") is not supported in sets.', gettype($elem)));
-                }
-                break;
-            case self::ELEM_TYPE_OBJECT:
-                if ($elem instanceof ObjectBasicsInterface) {
-                    $this->addObject($elem);
-                }
-                else if (is_object($elem)) {
-                    throw new \LogicException(
-                        sprintf(
-                            'This Set already contains object implement ObjectBasics, and cannot be mixed with objects that do not implement this interface like "%s".',
-                            get_class($elem)
-                        )
-                    );
-                }
-                else {
-                    throw new \LogicException(
-                        sprintf(
-                            'This Set already contains objects, and cannot be mixed with elements of type "%s".',
-                            gettype($elem)
-                        )
-                    );
-                }
-                break;
-            case self::ELEM_TYPE_OBJECT_WITH_HANDLER:
-                if (!is_object($elem)) {
-                    throw new \LogicException(
-                        sprintf(
-                            'This Set already contains object with an external handler, and cannot be mixed with elements of type "%s".',
-                            gettype($elem)
-                        )
-                    );
-                }
+        $lookup = $this->getValueHash($elem);
 
-                $this->addObjectWithHandler($elem, ObjectBasicsHandlerRegistry::getHandler(get_class($elem)));
-                break;
-            case self::ELEM_TYPE_SCALAR:
-                if (!is_scalar($elem)) {
-                    throw new \LogicException(
-                        sprintf(
-                            'This Set already contains scalars, and cannot be mixed with elements of type "%s".',
-                            gettype($elem)
-                        )
-                    );
-                }
-
-                $this->addScalar($elem);
-                break;
-            default:
-                throw new \LogicException('Unknown element type in Set');
+        if (array_key_exists($lookup, $this->lookup)) {
+            return $this;
         }
+
+        $this->insertElement($elem, $lookup);
 
         return $this;
     }
@@ -477,7 +378,7 @@ class Set implements SetInterface, \JsonSerializable
     /**
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->all();
     }
@@ -487,22 +388,39 @@ class Set implements SetInterface, \JsonSerializable
      *
      * @return SetInterface
      */
-    protected function createNew(array $elements)
+    protected function createNew(array $elements): self
     {
         return new static($elements);
     }
 
+    protected function getValueHash(int|string|object $value): string
+    {
+        if (is_scalar($value)) {
+            return (string)$value;
+        }
+
+        if ($value instanceof HashableInterface) {
+            return $value->hash();
+        }
+
+        if (is_object($value)) {
+            return spl_object_hash($value);
+        }
+
+        throw new \InvalidArgumentException("Set support scalar values and objects only");
+    }
+
     /**
      * @param callable $callable
-     * @param          $booleanKeep
+     * @param          $keep
      *
      * @return SetInterface
      */
-    private function filterInternal(callable $callable, $booleanKeep)
+    private function filterInternal(callable $callable, bool $keep): self
     {
         $newElements = [];
         foreach ($this->elements as $element) {
-            if ($booleanKeep !== $callable($element)) {
+            if ($keep !== $callable($element)) {
                 continue;
             }
 
@@ -512,161 +430,26 @@ class Set implements SetInterface, \JsonSerializable
         return $this->createNew($newElements);
     }
 
-    /**
-     * @param $elem
-     *
-     * @return bool
-     */
-    private function containsScalar($elem)
+    private function removeElement(string $hash, int $storageIndex): self
     {
-        if (!isset($this->lookup[$elem])) {
-            return false;
-        }
-
-        foreach ($this->lookup[$elem] as $index) {
-            if ($elem === $this->elements[$index]) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private function containsObjectWithHandler($object, ObjectBasicsHandlerInterface $handler)
-    {
-        $hash = $handler->hash($object);
-        if (!isset($this->lookup[$hash])) {
-            return false;
-        }
-
-        foreach ($this->lookup[$hash] as $index) {
-            if ($handler->equals($object, $this->elements[$index])) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private function containsObject(ObjectBasicsInterface $object)
-    {
-        $hash = $object->hash();
-        if (!isset($this->lookup[$hash])) {
-            return false;
-        }
-
-        foreach ($this->lookup[$hash] as $index) {
-            if ($object->equals($this->elements[$index])) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private function removeScalar($elem)
-    {
-        if (!isset($this->lookup[$elem])) {
-            return;
-        }
-
-        foreach ($this->lookup[$elem] as $k => $index) {
-            if ($elem === $this->elements[$index]) {
-                $this->removeElement($elem, $k, $index);
-                break;
-            }
-        }
-    }
-
-    private function removeObjectWithHandler($object, ObjectBasicsHandlerInterface $handler)
-    {
-        $hash = $handler->hash($object);
-        if (!isset($this->lookup[$hash])) {
-            return;
-        }
-
-        foreach ($this->lookup[$hash] as $k => $index) {
-            if ($handler->equals($object, $this->elements[$index])) {
-                $this->removeElement($hash, $k, $index);
-                break;
-            }
-        }
-    }
-
-    private function removeObject(ObjectBasicsInterface $object)
-    {
-        $hash = $object->hash();
-        if (!isset($this->lookup[$hash])) {
-            return;
-        }
-
-        foreach ($this->lookup[$hash] as $k => $index) {
-            if ($object->equals($this->elements[$index])) {
-                $this->removeElement($hash, $k, $index);
-                break;
-            }
-        }
-    }
-
-    private function removeElement($hash, $lookupIndex, $storageIndex)
-    {
-        unset($this->lookup[$hash][$lookupIndex]);
-        if (empty($this->lookup[$hash])) {
-            unset($this->lookup[$hash]);
-        }
-
+        unset($this->lookup[$hash]);
         unset($this->elements[$storageIndex]);
         $this->elementCount--;
+
+        return $this;
     }
 
-    private function addScalar($elem)
-    {
-        if (isset($this->lookup[$elem])) {
-            foreach ($this->lookup[$elem] as $index) {
-                if ($this->elements[$index] === $elem) {
-                    return;
-                }
-            }
-        }
-
-        $this->insertElement($elem, $elem);
-        $this->elementType = self::ELEM_TYPE_SCALAR;
-    }
-
-    private function addObjectWithHandler($object, ObjectBasicsHandlerInterface $handler)
-    {
-        $hash = $handler->hash($object);
-        if (isset($this->lookup[$hash])) {
-            foreach ($this->lookup[$hash] as $index) {
-                if ($handler->equals($object, $this->elements[$index])) {
-                    return;
-                }
-            }
-        }
-
-        $this->insertElement($object, $hash);
-        $this->elementType = self::ELEM_TYPE_OBJECT_WITH_HANDLER;
-    }
-
-    private function addObject(ObjectBasicsInterface $elem)
-    {
-        $hash = $elem->hash();
-        if (isset($this->lookup[$hash])) {
-            foreach ($this->lookup[$hash] as $index) {
-                if ($elem->equals($this->elements[$index])) {
-                    return;
-                }
-            }
-        }
-
-        $this->insertElement($elem, $hash);
-        $this->elementType = self::ELEM_TYPE_OBJECT;
-    }
-
-    private function insertElement($elem, $hash)
+    private function insertElement(mixed $elem, string $hash): self
     {
         $index = $this->elementCount++;
         $this->elements[$index] = $elem;
-        $this->lookup[$hash][] = $index;
+        $this->lookup[$hash] = $index;
+
+        return $this;
+    }
+
+    function getLookup(): array
+    {
+        return $this->lookup;
     }
 }

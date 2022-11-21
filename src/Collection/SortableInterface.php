@@ -4,7 +4,7 @@ namespace Collection;
 /**
  * Interface for sortable collections.
  *
- * @author Artyom Sukharev , J. M. Schmitt
+ * @author J. M. Schmitt, A. Sukharev
  */
 interface SortableInterface
 {

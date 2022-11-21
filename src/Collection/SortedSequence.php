@@ -4,13 +4,13 @@ namespace Collection;
 /**
  * A sequence with a fixed sort-order.
  *
- * @author Artyom Sukharev , J. M. Schmitt
+ * @author J. M. Schmitt, A. Sukharev
  */
-class SortedSequence extends AbstractSequence implements \JsonSerializable
+class SortedSequence extends Sequence implements \JsonSerializable
 {
     private $sortFunc;
 
-    public function __construct(callable $sortFunc, array $elements = [])
+    public function __construct(callable $sortFunc, iterable $elements = [])
     {
         $this->sortFunc = $sortFunc;
 
@@ -20,7 +20,7 @@ class SortedSequence extends AbstractSequence implements \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function add($newElement)
+    public function add(mixed $newElement): self
     {
         /** @var callable $sortFunc */
         $sortFunc = $this->sortFunc;
@@ -47,20 +47,18 @@ class SortedSequence extends AbstractSequence implements \JsonSerializable
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function addAll($addedElements)
+    public function addAll(iterable $values): self
     {
-        /** @var callable $sortFunc */
         $sortFunc = $this->sortFunc;
 
-        usort($addedElements, $sortFunc);
+        $elements = [];
+        array_push ($elements, ...$values);
+        usort($elements, $sortFunc);
 
         $newElements = [];
         foreach ($this->elements as $element) {
-            if (!empty($addedElements)) {
-                foreach ($addedElements as $i => $newElement) {
+            if (!empty($elements)) {
+                foreach ($elements as $i => $newElement) {
                     // If the currently looked at $newElement is not smaller than $element, then we can also conclude
                     // that all other new elements are also not smaller than $element as we have ordered them before.
                     if ((int)$sortFunc($newElement, $element) > -1) {
@@ -68,15 +66,15 @@ class SortedSequence extends AbstractSequence implements \JsonSerializable
                     }
 
                     $newElements[] = $newElement;
-                    unset($addedElements[$i]);
+                    unset($elements[$i]);
                 }
             }
 
             $newElements[] = $element;
         }
 
-        if (!empty($addedElements)) {
-            foreach ($addedElements as $newElement) {
+        if (!empty($elements)) {
+            foreach ($elements as $newElement) {
                 $newElements[] = $newElement;
             }
         }
@@ -89,13 +87,8 @@ class SortedSequence extends AbstractSequence implements \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    protected function createNew($elements)
+    protected function createNew($elements): self
     {
         return new static($this->sortFunc, $elements);
-    }
-
-    public function jsonSerialize()
-    {
-        return $this->all();
     }
 }

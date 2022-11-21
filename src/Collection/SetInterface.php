@@ -8,208 +8,171 @@ use PhpOption\Option;
  *
  * Each Set contains equal values only once.
  *
- * @author Artyom Sukharev , J. M. Schmitt
+ * @author J. M. Schmitt, A. Sukharev
  */
 interface SetInterface extends \Countable, \IteratorAggregate
 {
-    /**
-     * @param object|scalar $elem
-     * @return SetInterface
-     */
-    public function add($elem);
+    public function addAll(iterable $elements): self;
+
+    public function head(): null|int|string|object;
+
+    public function tail(): self;
 
     /**
-     * @param \Traversable|array $elements
-     * @return SetInterface
-     */
-    public function addAll($elements);
-
-    /**
-     * @param object|scalar $elem
-     * @return SetInterface
-     */
-    public function remove($elem);
-
-    /**
-     * Returns the first element in the collection if available.
-     *
      * @return Option
      */
-    public function headOption();
+    public function headOption(): Option;
+
+    public function last(): null|int|string|object;
 
     /**
-     * Returns the first element in the collection if available.
-     *
-     * @return null|mixed
-     */
-    public function head();
-
-    /**
-     * Returns the last element in the collection if available.
-     *
      * @return Option
      */
-    public function lastOption();
+    public function lastOption(): Option;
 
     /**
-     * Returns the last element in the collection if available.
-     *
-     * @return null|mixed
+     * @return \ArrayIterator
      */
-    public function tail();
+    public function getIterator(): \ArrayIterator;
+
 
     /**
-     * Returns all elements in this Set.
+     * @param int $number
      *
+     * @return SetInterface
+     */
+    public function take(int $number): self;
+
+    /**
+     * Extracts element from the head while the passed callable returns true.
+     *
+     * @param callable $callable receives elements of this Set as first argument, and returns true/false.
+     *
+     * @return SetInterface
+     */
+    public function takeWhile(callable $callable): self;
+
+    /**
+     * @param int $number
+     *
+     * @return SetInterface
+     */
+    public function drop(int $number): self;
+
+    /**
+     * @param int $number
+     *
+     * @return SetInterface
+     */
+    public function dropRight(int $number): self;
+
+    /**
+     * @param callable $callable
+     *
+     * @return SetInterface
+     */
+    public function dropWhile(callable $callable): self;
+
+    /**
+     * @param callable $callable
+     *
+     * @return SetInterface
+     */
+    public function map(callable $callable): self;
+
+    /**
+     * @param callable $callable
+     *
+     * @return SetInterface
+     */
+    public function flatMap(callable $callable): self;
+
+    /**
+     * @return SetInterface
+     */
+    public function reverse(): self;
+
+    /**
      * @return array
      */
-    public function all();
+    public function all(): array;
 
     /**
-     * @return int - number of elements in collection
-     */
-    public function length();
-
-    /**
-     * Returns a new Set with all elements in reverse order.
-     *
-     * @return SetInterface
-     */
-    public function reverse();
-
-    /**
-     * Adds the elements of another Set to this Set.
-     *
-     * @param SetInterface $seq
-     *
-     * @return SetInterface
-     */
-    public function addSet(SetInterface $seq);
-
-    /**
-     * Returns a new Set by omitting the given number of elements from the beginning.
-     *
-     * If the passed number is greater than the available number of elements, all will be removed.
-     *
-     * @param integer $number
-     *
-     * @return SetInterface
-     */
-    public function drop($number);
-
-    /**
-     * Returns a new Set by omitting the given number of elements from the end.
-     *
-     * If the passed number is greater than the available number of elements, all will be removed.
-     *
-     * @param integer $number
-     *
-     * @return SetInterface
-     */
-    public function dropRight($number);
-
-    /**
-     * Returns a new Set by omitting elements from the beginning for as long as the callable returns true.
-     *
-     * @param callable $callable Receives the element to drop as first argument, and returns true (drop), or false (stop).
-     *
-     * @return SetInterface
-     */
-    public function dropWhile(callable $callable);
-
-    /**
-     * Creates a new collection by taking the given number of elements from the beginning
-     * of the current collection.
-     *
-     * If the passed number is greater than the available number of elements, then all elements
-     * will be returned as a new collection.
-     *
-     * @param integer $number
-     *
-     * @return SetInterface
-     */
-    public function take($number);
-
-    /**
-     * Creates a new collection by taking elements from the current collection
-     * for as long as the callable returns true.
-     *
      * @param callable $callable
      *
      * @return SetInterface
      */
-    public function takeWhile(callable $callable);
+    public function filterNot(callable $callable): self;
 
     /**
-     * Builds a new set by applying a function to all elements of this immutable set
-     * and using the elements of the resulting collections.
-     *
      * @param callable $callable
+     *
      * @return SetInterface
      */
-    public function flatMap(callable $callable);
+    public function filter(callable $callable): self;
 
     /**
-     * Builds a new collection by applying a function to all elements of this immutable set.
-     *
+     * @param mixed    $initialValue
      * @param callable $callable
-     * @return SetInterface
+     *
+     * @return mixed
      */
-    public function map(callable $callable);
+    public function foldLeft(mixed $initialValue, callable $callable): mixed;
 
     /**
-     * Returns a filtered sequence.
+     * @param mixed    $initialValue
+     * @param callable $callable
      *
-     * @param callable $callable receives the element and must return true (= keep) or false (= remove).
+     * @return mixed
+     */
+    public function foldRight(mixed $initialValue, callable $callable): mixed;
+
+    /**
+     * @param int $size
      *
      * @return SequenceInterface
      */
-    public function filter(callable $callable);
+    public function sliding(int $size): Sequence;
 
     /**
-     * Returns a filtered sequence.
+     * @return int
+     * @deprecated Use length()
+     */
+    public function count(): int;
+
+    /**
+     * @return int
+     */
+    public function length(): int;
+
+    /**
+     * @param $elem
      *
-     * @param callable $callable receives the element and must return true (= remove) or false (= keep).
+     * @return bool
+     */
+    public function contains(int|string|object $elem): bool;
+
+    /**
+     * @param mixed|object $elem
      *
      * @return SetInterface
      */
-    public function filterNot(callable $callable);
+    public function remove(int|string|object $elem): self;
 
     /**
-     * Applies a binary operator to a start value and all elements of this set, going left to right.
-     * foldLeft[B](z: B, op: (B, A) ⇒ B): B
-     *
-     * B - the result type of the binary operator.
-     * z - the start value.
-     * op -the binary operator.
-     *
-     * @param mixed $initialValue - the start value
-     * @param callable $callable - the binary operator
-     * @return mixed - the result of inserting op between consecutive elements of this set, going left to right with the start value z on the left:
+     * @return bool
      */
-    public function foldLeft($initialValue, callable $callable);
+    public function isEmpty(): bool;
 
     /**
-     * Applies a binary operator to all elements of this set and a start value, going right to left.
-     * foldRight[B](z: B, op: (A, B) ⇒ B): B
+     * @param mixed|object $elem
      *
-     * B - the result type of the binary operator.
-     * z - the start value.
-     * op -the binary operator.
-     *
-     * @param mixed $initialValue - the start value
-     * @param callable $callable - the binary operator
-     * @return mixed - the result of inserting op between consecutive elements of this set, going left to right with the start value z on the left:
+     * @return SetInterface
      */
-    public function foldRight($initialValue, callable $callable);
+    public function add(int|string|object $elem): self;
 
     /**
-     * sliding(size: Int): Sequence[Set[A]]
-     * Groups elements in fixed size blocks by passing a "sliding window" over them (as opposed to partitioning them, as is done in grouped.)
-     *
-     * @param int $size - the number of elements per group
-     * @return SequenceInterface - An iterator producing sets of size size,
-     * except the last and the only element will be truncated if there are fewer elements than size.
+     * @return array
      */
-    public function sliding($size);
+    public function jsonSerialize(): array;
 }
