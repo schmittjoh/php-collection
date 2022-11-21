@@ -18,5 +18,8 @@
         "psr-0": {
             "Collection": "src/"
         }
+    },
+    "scripts": {
+        "tests": "./vendor/bin/phpunit"
     }
 }
