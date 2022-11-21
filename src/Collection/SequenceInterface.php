@@ -126,9 +126,9 @@ interface SequenceInterface
      *
      * @param integer $index
      *
-     * @return mixed
+     * @return Option
      */
-    public function get(int $index): mixed;
+    public function get(int $index): Option;
 
     /**
      * Removes the element at the given index, and returns it.
@@ -139,7 +139,7 @@ interface SequenceInterface
      *
      * @throws \OutOfBoundsException If there is no element at the given index.
      */
-    public function remove(int $index): mixed;
+    public function remove(int $index): Option;
 
     /**
      * Updates the element at the given index (0-based).

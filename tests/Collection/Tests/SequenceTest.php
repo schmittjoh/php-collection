@@ -18,8 +18,8 @@ final class SequenceTest extends TestCase
 
     public function testGet()
     {
-        $this->assertSame(0, $this->seq->get(0));
-        $this->assertSame($this->a, $this->seq->get(1));
+        $this->assertSame(0, $this->seq->get(0)->get());
+        $this->assertSame($this->a, $this->seq->get(1)->get());
     }
 
     public function testIndexOf()
@@ -57,7 +57,7 @@ final class SequenceTest extends TestCase
         $this->assertNotSame($newSeq, $seq);
         $this->assertCount(3, $seq);
         $this->assertCount(1, $newSeq);
-        $this->assertSame(2, $newSeq->get(0));
+        $this->assertSame(2, $newSeq->get(0)->get());
     }
 
     public function testFilterNot()
@@ -72,28 +72,19 @@ final class SequenceTest extends TestCase
         $this->assertNotSame($newSeq, $seq);
         $this->assertCount(3, $seq);
         $this->assertCount(2, $newSeq);
-        $this->assertSame(1, $newSeq->get(0));
-        $this->assertSame(3, $newSeq->get(1));
+        $this->assertSame(1, $newSeq->get(0)->get());
+        $this->assertSame(3, $newSeq->get(1)->get());
     }
 
     public function testFoldLeftRight()
     {
-        $seq = new Sequence(['a', 'b', 'c']);
-        $rsLeft = $seq->foldLeft(
-            '',
-            function ($a, $b) {
-                return $a . $b;
-            }
-        );
-        $rsRight = $seq->foldRight(
-            '',
-            function ($a, $b) {
-                return $a . $b;
-            }
-        );
+        $seq = new Sequence(['a', 'b', 'c', 'd']);
 
-        $this->assertEquals('abc', $rsLeft);
-        $this->assertEquals('abc', $rsRight);
+        $rsLeft = $seq->foldLeft('', fn($s, $v) => ($s . $v));
+        $this->assertEquals('abcd', $rsLeft);
+
+        $rsRight = $seq->foldRight('', fn($s, $v) => ($s . $v));
+        $this->assertEquals('dcba', $rsRight);
     }
 
     public function testAddSequence()
@@ -126,42 +117,14 @@ final class SequenceTest extends TestCase
 
     public function testIndexWhere()
     {
-        $this->assertSame(
-            -1,
-            $this->seq->indexWhere(
-                function () {
-                    return false;
-                }
-            )
-        );
-        $this->assertSame(
-            0,
-            $this->seq->indexWhere(
-                function () {
-                    return true;
-                }
-            )
-        );
+        $this->assertSame(-1, $this->seq->indexWhere(fn() => false));
+        $this->assertSame(0, $this->seq->indexWhere(fn() => true));
     }
 
     public function testLastIndexWhere()
     {
-        $this->assertSame(
-            -1,
-            $this->seq->lastIndexWhere(
-                function () {
-                    return false;
-                }
-            )
-        );
-        $this->assertSame(
-            3,
-            $this->seq->lastIndexWhere(
-                function () {
-                    return true;
-                }
-            )
-        );
+        $this->assertSame(-1, $this->seq->lastIndexWhere(fn() => false));
+        $this->assertSame(3, $this->seq->lastIndexWhere(fn() => true));
     }
 
     public function testHead()
@@ -192,37 +155,12 @@ final class SequenceTest extends TestCase
 
     public function testExists()
     {
-        $this->assertTrue(
-            $this->seq->exists(
-                function ($v) {
-                    return $v === 0;
-                }
-            )
-        );
+        $this->assertTrue($this->seq->exists(fn($v) => ($v === 0)));
 
         $a = $this->a;
-        $this->assertTrue(
-            $this->seq->exists(
-                function ($v) use ($a) {
-                    return $v === $a;
-                }
-            )
-        );
-
-        $this->assertFalse(
-            $this->seq->exists(
-                function ($v) {
-                    return $v === 9999;
-                }
-            )
-        );
-        $this->assertFalse(
-            $this->seq->exists(
-                function ($v) {
-                    return $v === new \stdClass;
-                }
-            )
-        );
+        $this->assertTrue($this->seq->exists(fn($v) => ($v === $a)));
+        $this->assertFalse($this->seq->exists(fn($v) => ($v === 9999)));
+        $this->assertFalse($this->seq->exists(fn($v) => ($v === new \stdClass)));
     }
 
     public function testFind()
@@ -231,19 +169,11 @@ final class SequenceTest extends TestCase
 
         $this->assertSame(
             $this->a,
-            $this->seq->find(
-                function ($x) use ($a) {
-                    return $a === $x;
-                }
-            )->get()
+            $this->seq->find(fn($x) => ($a === $x))->get()
         );
 
         $this->assertFalse(
-            $this->seq->find(
-                function () {
-                    return false;
-                }
-            )->isDefined()
+            $this->seq->find(fn() => false)->isDefined()
         );
     }
 
@@ -282,15 +212,15 @@ final class SequenceTest extends TestCase
 
     public function testUpdate()
     {
-        $this->assertSame(0, $this->seq->get(0));
+        $this->assertSame(0, $this->seq->get(0)->get());
         $this->seq->update(0, 5);
-        $this->assertSame(5, $this->seq->get(0));
+        $this->assertSame(5, $this->seq->get(0)->get());
     }
 
     public function testUpdateWithNonExistentIndex()
     {
-        $this->expectExceptionMessage("There is no element at index \"99999\".");
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("no element at index \"99999\".");
+        $this->expectException(\OutOfBoundsException::class);
         $this->seq->update(99999, 0);
     }
 
@@ -382,35 +312,30 @@ final class SequenceTest extends TestCase
     {
         $this->assertSame(
             [0, $this->a, $this->b, 0],
-            $this->seq->dropWhile(
-                function () {
-                    return false;
-                }
-            )->all()
+            $this->seq->dropWhile(fn() => false)->all()
         );
 
         $this->assertSame(
             [],
-            $this->seq->dropWhile(
-                function () {
-                    return true;
-                }
-            )->all()
+            $this->seq->dropWhile(fn() => true)->all()
         );
     }
 
     public function testRemove()
     {
-        $this->assertSame(0, $this->seq->remove(0));
-        $this->assertSame($this->a, $this->seq->remove(0));
-        $this->assertSame(0, $this->seq->remove(1));
+        $this->assertSame(0, $this->seq->remove(0)->get());
+        $this->assertSame($this->a, $this->seq->remove(0)->get());
+        $this->assertSame(0, $this->seq->remove(1)->get());
     }
 
     public function testRemoveWithInvalidIndex()
     {
-        $this->expectExceptionMessage("The index \"9999\" is not in the interval [0, 4).");
         $this->expectException(OutOfBoundsException::class);
-        $this->seq->remove(9999);
+
+        $this->seq
+            ->remove(9999)
+            ->getOrThrow(new \OutOfBoundsException)
+        ;
     }
 
     public function testMap()
@@ -425,10 +350,8 @@ final class SequenceTest extends TestCase
                 switch ($elem) {
                     case 'a':
                         return 'c';
-
                     case 'b':
                         return 'd';
-
                     default:
                         $self->fail('Unexpected element: ' . var_export($elem, true));
                 }
@@ -448,15 +371,7 @@ final class SequenceTest extends TestCase
         $this->assertEquals(
             ['aA', 'bA', 'cA'],
             iterator_to_array(
-                $seq->flatMap(
-                    function ($x) {
-                        return $x->map(
-                            function ($v) {
-                                return $v . 'A';
-                            }
-                        );
-                    } // identity
-                )
+                $seq->flatMap(fn($x) => $x->map(fn($v) => ($v . 'A')))
             )
         );
 
@@ -466,15 +381,7 @@ final class SequenceTest extends TestCase
         $this->assertEquals(
             [2, 3, 4, 5, 6, 7, 8],
             iterator_to_array(
-                $seq->flatMap(
-                    function ($x) {
-                        return array_map(
-                            function ($v) {
-                                return $v + 1;
-                            }, $x
-                        );
-                    } // identity
-                )
+                $seq->flatMap(fn($x) => array_map(fn($v) => ($v + 1), $x)) // identity
             )
         );
 
@@ -495,13 +402,7 @@ final class SequenceTest extends TestCase
         $seq = new Sequence();
         $seq->addAll([[1, 2, 3, 4], [5, 6], [7]]);
 
-        $this->assertEquals(
-            [1, 2, 3, 4, 5, 6, 7],
-            iterator_to_array(
-                $seq->flatten()
-            )
-        );
-
+        $this->assertEquals([1, 2, 3, 4, 5, 6, 7], iterator_to_array($seq->flatten()));
     }
 
     protected function setUp(): void
@@ -512,7 +413,7 @@ final class SequenceTest extends TestCase
                 0,
                 $this->a = new \stdClass(),
                 $this->b = new \stdClass(),
-                0
+                0,
             ]
         );
     }

@@ -277,7 +277,7 @@ class Sequence implements SequenceInterface, SortableInterface, \JsonSerializabl
     {
         $value = $initialValue;
         foreach (array_reverse($this->elements) as $elem) {
-            $value = $callable($elem, $value);
+            $value = $callable($value, $elem);
         }
 
         return $value;
@@ -343,15 +343,15 @@ class Sequence implements SequenceInterface, SortableInterface, \JsonSerializabl
      *
      * @param integer $index
      *
-     * @return mixed
+     * @return Option
      */
-    public function get(int $index): mixed
+    public function get(int $index): Option
     {
         if (!isset($this->elements[$index])) {
-            throw new \OutOfBoundsException(sprintf('The index "%s" does not exist in this sequence.', $index));
+            return None::create();
         }
 
-        return $this->elements[$index];
+        return new Some($this->elements[$index]);
     }
 
     /**
@@ -359,16 +359,12 @@ class Sequence implements SequenceInterface, SortableInterface, \JsonSerializabl
      *
      * @param int $index
      *
-     * @return mixed
-     *
-     * @throws \OutOfBoundsException If there is no element at the given index.
+     * @return Option
      */
-    public function remove(int $index): mixed
+    public function remove(int $index): Option
     {
         if (!isset($this->elements[$index])) {
-            throw new \OutOfBoundsException(
-                sprintf('The index "%d" is not in the interval [0, %d).', $index, $this->length)
-            );
+            return None::create();
         }
 
         $element = $this->elements[$index];
@@ -378,7 +374,7 @@ class Sequence implements SequenceInterface, SortableInterface, \JsonSerializabl
 
         $this->elements = array_values($this->elements);
 
-        return $element;
+        return new Some($element);
     }
 
     /**
@@ -388,11 +384,12 @@ class Sequence implements SequenceInterface, SortableInterface, \JsonSerializabl
      * @param mixed   $value
      *
      * @return $this|SequenceInterface
+     * @throws \OutOfBoundsException
      */
     public function update(int $index, mixed $value): self
     {
         if (!array_key_exists($index, $this->elements)) {
-            throw new \InvalidArgumentException(sprintf('There is no element at index "%d".', $index));
+            throw new \OutOfBoundsException(sprintf('no element at index "%d".', $index));
         }
 
         $this->elements[$index] = $value;

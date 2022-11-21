@@ -4,9 +4,12 @@ PHP Collection
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/0448ddfd-68f8-4c77-a37b-2f3883652a68/mini.png)](https://insight.sensiolabs.com/projects/0448ddfd-68f8-4c77-a37b-2f3883652a68)
 [![Build Status](https://travis-ci.org/Imunhatep/php-collection.svg?branch=master)](https://travis-ci.org/Imunhatep/php-collection)
 
-This library adds basic collections for PHP. It's based on J. M. Schmitt work. The reason behind this fork is that original repository haven't been updated for quite some time and it laсks some of must-have functionality.
+PHP Collection library.
 
-Original code was refactored and now requires PHP 5.5, updated with several usefull methods like ::flatMap(), ::map(), ::foldLeft(), ::exists(), ::headOption(),  ::lastOption(), ::tail()  and e.t.c. Inspired by Scala collections. Added type-hinting.
+Based on J. M. Schmitt work, refactored and updated - now requires PHP 8.0. 
+Updated with several useful methods like ::flatMap(), ::map(), ::foldLeft(), ::exists(), ::headOption(),  ::lastOption(), ::tail()  and e.t.c. 
+Inspired by Scala collections. 
+Added types.
 
 Installation
 ------------
@@ -73,21 +76,29 @@ Sequence <a name="sequence-anchor"></a>
     // Write Operations
     $seq = new Sequence([1, 5]);
     $seq->get(0); // int(1)
-    $seq->update(0, 4);
-    $seq->get(0); // int(4)
-    $seq->remove(0);
-    $seq->get(0); // int(5)
+    
+    $seq
+      ->update(0, 4);
+      ->get(0); // int(4)
+    
+    $seq
+      ->remove(0)
+      ->get(0); // int(5)
 
     $seq = new Sequence([1, 4]);
-    $seq->add(2);
-    $seq->all(); // [1, 4, 2]
-    $seq->addAll(array(4, 5, 2));
-    $seq->all(); // [1, 4, 2, 4, 5, 2]
+    $seq
+      ->add(2)
+      ->all(); // [1, 4, 2]
+    
+    $seq
+      ->addAll([4, 5, 2])
+      ->all(); // [1, 4, 2, 4, 5, 2]
 
     // Sort
     $seq = new Sequence([0, 5, 4, 2]);
-    $seq->sortWith(function($a, $b) { return $a - $b; });
-    $seq->all(); // [0, 2, 4, 5]
+    $seq
+      ->sortWith(fn($a, $b) => ($a - $b));
+      ->all(); // [0, 2, 4, 5]
 ```
 
 Maps <a name="map-anchor"></a>
@@ -118,17 +129,18 @@ Maps <a name="map-anchor"></a>
     // Write Operations
     $map = new Map();
     $map->set('foo', 'bar');
-    $map->setAll(array('bar' => 'baz', 'baz' => 'boo'));
+    $map->setAll(['bar' => 'baz', 'baz' => 'boo']);
     $map->remove('foo');
 
     // Sort
     $map->sortWith('strcmp');
 
     // Transformation
-    $map->map(function($key, $value) { return $value * 2; });
-    $map->flatMap(function($key, $value) { return (new Map())->set($key, $value * 2); });
+    $map->map(fn($k,$v) => ($value * 2));
     
-    $map->foldLeft(Object $s, function(SomeObject $s, $k, $v){ $s->add([$k, $v * 2]); return $s; })
+    $map->flatMap(fn($k,$v) => (new Map())->set($k, $v * 2) );
+    
+    $map->foldLeft(SomeObject $s, fn($s, $k, $v) => $s->add([$k, $v * 2]))
 ```
 
 Set <a name="set-anchor"></a>
@@ -142,10 +154,17 @@ is determined via the following steps.
 
 
 ```php
-
+    class DateTimeHashable extends \DateTime implements HashableInterface
+    {
+        public function hash(): string
+        {
+            return $this->format("YmdP");
+        }
+    }
+    
     $set = new Set();
-    $set->add(new \DateTime('today'));
-    $set->add(new \DateTime('today'));
+    $set->add(new DateTimeHashable('today'));
+    $set->add(new DateTimeHashable('today'));
 
     var_dump(count($set)); // int(1) -> the same date is not added twice
 
