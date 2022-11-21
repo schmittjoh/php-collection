@@ -447,9 +447,4 @@ class Set implements SetInterface, \JsonSerializable
 
         return $this;
     }
-
-    function getLookup(): array
-    {
-        return $this->lookup;
-    }
 }
