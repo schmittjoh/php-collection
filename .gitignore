@@ -1,4 +1,6 @@
 *.iml
 vendor/
 phpunit.xml
+.phpunit.result.cache
+composer.lock
 
